@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assortment Plan - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="items-grid.css">
+    <link rel="stylesheet" href="attribute-styles.css">
+</head>
+
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div>
+                    <div class="header-subtitle">MOBILE PLANNER</div>
+                    <h1 class="header-title">Assortment Plan</h1>
+                </div>
+                <button class="upload-btn" id="upload-trigger">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                </button>
+                <input type="file" id="csv-upload" accept=".csv" style="display: none;">
+            </div>
+        </header>
+
+        <!-- Dashboard View -->
+        <main class="main-content" id="dashboard-view">
+            <!-- Filters -->
+            <section class="filters-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label-small">Class</label>
+                        <select class="filter-select" id="filter-class">
+                            <option value="All">All</option>
+                            <option value="Shirts">Shirts</option>
+                            <option value="Trousers">Trousers</option>
+                            <option value="Jackets">Jackets</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label-small">Season</label>
+                        <select class="filter-select" id="filter-season">
+                            <option value="All">All</option>
+                            <option value="SS25">SS25</option>
+                            <option value="FW24">FW24</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label-small">Country</label>
+                        <select class="filter-select" id="filter-country">
+                            <option value="All">All</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Current Season Overview -->
+            <section class="section">
+                <h2 class="section-title">CURRENT SEASON</h2>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div>
+                            <div class="kpi-label">Total Sales Budget</div>
+                            <div class="kpi-value" id="total-budget">$125.5k</div>
+                        </div>
+                        <div class="badge badge-success" id="vs-ly-badge">+12% vs LY</div>
+                    </div>
+
+                    <div class="progress-group">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-label">Sales %</span>
+                                <span class="progress-percent" id="sales-progress">68%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="sales-fill" style="width: 68%"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span class="progress-label">Margin %</span>
+                                <span class="progress-percent" id="margin-progress">72%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-fill-warning" id="margin-fill" style="width: 72%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            </section>
+
+            <!-- Last Season Performance -->
+            <section class="section">
+                <h2 class="section-title">LAST SEASON PERFORMANCE</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Sales (Actual)</div>
+                        <div class="metric-value" id="last-sales">$1.2M</div>
+                        <div class="metric-change positive">▲ 20% vs Plan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Margin %</div>
+                        <div class="metric-value" id="last-margin">45%</div>
+                        <div class="metric-change positive">▲ 3% vs Plan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">ROI</div>
+                        <div class="metric-value" id="last-roi">2.5</div>
+                        <div class="metric-change positive">▲ 19% vs Plan</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Sell Thru</div>
+                        <div class="metric-value">88%</div>
+                        <div class="metric-change neutral">Flat</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Class Performance -->
+            <section class="section">
+                <h2 class="section-title">CLASS PERFORMANCE</h2>
+                <div class="table-card">
+                    <div class="table-header">
+                        <div class="table-cell">Class</div>
+                        <div class="table-cell text-right">Sales</div>
+                        <div class="table-cell text-right">Margin %</div>
+                        <div class="table-cell text-right">ROI</div>
+                    </div>
+                    <div class="table-row class-row">
+                        <div class="table-cell class-name">Shirts</div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-sales">$500k</div>
+                            <div class="cell-change positive">+5%</div>
+                        </div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-margin">48%</div>
+                            <div class="cell-change negative">-2%</div>
+                        </div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-roi">2.8</div>
+                        </div>
+                    </div>
+                    <div class="table-row class-row">
+                        <div class="table-cell class-name">Trousers</div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-sales">$300k</div>
+                            <div class="cell-change positive">+2%</div>
+                        </div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-margin">45%</div>
+                            <div class="cell-change neutral">Flat</div>
+                        </div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-roi">2.5</div>
+                        </div>
+                    </div>
+                    <div class="table-row class-row">
+                        <div class="table-cell class-name">Jackets</div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-sales">$200k</div>
+                            <div class="cell-change negative">-5%</div>
+                        </div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-margin">50%</div>
+                            <div class="cell-change positive">+8%</div>
+                        </div>
+                        <div class="table-cell text-right">
+                            <div class="cell-value class-roi">1.9</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Regional Heatmap -->
+            <section class="section">
+                <h2 class="section-title">REGIONAL HEATMAP</h2>
+                <div class="heatmap-card">
+                    <div class="heatmap-grid">
+                        <div class="heatmap-row">
+                            <div class="heatmap-label"></div>
+                            <div class="heatmap-col-label">Shirts</div>
+                            <div class="heatmap-col-label">Pants</div>
+                            <div class="heatmap-col-label">Jackets</div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">North</div>
+                            <div class="heatmap-cell" style="opacity: 0.8">
+                                <span class="heatmap-value">$420k</span>
+                            </div>
+                            <div class="heatmap-cell" style="opacity: 0.3">
+                                <span class="heatmap-value">$180k</span>
+                            </div>
+                            <div class="heatmap-cell" style="opacity: 0.95">
+                                <span class="heatmap-value">$510k</span>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">South</div>
+                            <div class="heatmap-cell" style="opacity: 0.4">
+                                <span class="heatmap-value">$220k</span>
+                            </div>
+                            <div class="heatmap-cell" style="opacity: 0.9">
+                                <span class="heatmap-value">$480k</span>
+                            </div>
+                            <div class="heatmap-cell" style="opacity: 0.1">
+                                <span class="heatmap-value">$50k</span>
+                            </div>
+                        </div>
+                        <div class="heatmap-row">
+                            <div class="heatmap-label">East</div>
+                            <div class="heatmap-cell" style="opacity: 0.6">
+                                <span class="heatmap-value">$310k</span>
+                            </div>
+                            <div class="heatmap-cell" style="opacity: 0.2">
+                                <span class="heatmap-value">$95k</span>
+                            </div>
+                            <div class="heatmap-cell" style="opacity: 0.5">
+                                <span class="heatmap-value">$260k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Item List View -->
+        <main class="main-content" id="items-view" style="display: none;">
+            <section class="filters-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label-small">Class</label>
+                        <select class="filter-select" id="item-filter-class">
+                            <option value="All">All</option>
+                            <option value="Shirts">Shirts</option>
+                            <option value="Trousers">Trousers</option>
+                            <option value="Jackets">Jackets</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label-small">Season</label>
+                        <select class="filter-select" id="item-filter-season">
+                            <option value="All">All</option>
+                            <option value="SS25">SS25</option>
+                            <option value="FW24">FW24</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label-small">Country</label>
+                        <select class="filter-select" id="item-filter-country">
+                            <option value="All">All</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            </section>
+
+            <!-- Summary Header -->
+            <section class="section collapsible-section">
+                <div class="section-header-collapsible" onclick="toggleSection('kpi-summary')">
+                    <h2 class="section-title">ASSORTED & SUGGESTED</h2>
+                    <svg class="collapse-icon" id="kpi-summary-icon" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="collapsible-content" id="kpi-summary">
+                    <div class="summary-card-new">
+                        <div class="summary-column">
+                            <div class="summary-main-label">ASSORTED</div>
+                            <div class="summary-main-value" id="assorted-total">0</div>
+                            <div class="summary-breakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Approved:</span>
+                                    <span class="breakdown-value" id="assorted-count">0</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Under Review:</span>
+                                    <span class="breakdown-value" id="under-review-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-column">
+                            <div class="summary-main-label">SUGGESTED</div>
+                            <div class="summary-main-value" id="suggested-total">0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Attribute Distribution -->
+            <section class="section collapsible-section">
+                <div class="section-header-collapsible" onclick="toggleSection('attr-distribution')">
+                    <h2 class="section-title">ATTRIBUTE DISTRIBUTION</h2>
+                    <svg class="collapse-icon" id="attr-distribution-icon" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="collapsible-content" id="attr-distribution">
+                    <div class="attribute-grid">
+                        <div class="attribute-column">
+                            <div class="attribute-header">MATERIAL</div>
+                            <div class="attribute-item" id="material-1"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                            <div class="attribute-item" id="material-2"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                            <div class="attribute-item" id="material-3"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                        </div>
+                        <div class="attribute-column">
+                            <div class="attribute-header">FIT</div>
+                            <div class="attribute-item" id="fit-1"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                            <div class="attribute-item" id="fit-2"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                            <div class="attribute-item" id="fit-3"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                        </div>
+                        <div class="attribute-column">
+                            <div class="attribute-header">COLOR</div>
+                            <div class="attribute-item" id="color-1"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                            <div class="attribute-item" id="color-2"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                            <div class="attribute-item" id="color-3"><span class="attr-name">-</span><span
+                                    class="attr-percent">0%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Item List -->
+            <section class="section">
+                <div id="items-container">
+                    <!-- Items will be dynamically inserted here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-view="dashboard">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-btn" data-view="items">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                <span>Items</span>
+            </button>
+        </nav>
+
+        <!-- Item Detail Modal -->
+        <div class="modal" id="item-detail-modal">
+            <div class="modal-content">
+                <button class="modal-close" id="close-modal">×</button>
+                <div id="item-detail-content">
+                    <!-- Detail content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

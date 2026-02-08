@@ -1,0 +1,134 @@
+/* Attribute Distribution Grid */
+.attribute-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.attribute-column {
+    background: var(--gradient-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(var(--border-subtle), 0.3);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.attribute-column::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    opacity: 0.5;
+}
+
+.attribute-column:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(var(--color-primary), 0.3);
+}
+
+.attribute-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgb(var(--text-secondary));
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.attribute-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(var(--border-subtle), 0.2);
+    transition: all var(--transition-fast);
+}
+
+.attribute-item:last-child {
+    border-bottom: none;
+}
+
+.attribute-item:hover {
+    padding-left: 0.25rem;
+    background: rgba(var(--color-primary), 0.05);
+    border-radius: 0.25rem;
+}
+
+.attr-name {
+    font-size: 0.75rem;
+    color: rgb(var(--text-primary));
+    font-weight: 500;
+}
+
+.attr-percent {
+    font-size: 0.75rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* Reduce KPI Card Size */
+.kpi-card {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid #334155;
+    border-radius: 0.75rem;
+    padding: 0.75rem !important;
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem !important;
+}
+
+.kpi-label {
+    font-size: 0.7rem !important;
+    color: #94a3b8;
+    margin-bottom: 0.25rem !important;
+}
+
+.kpi-value {
+    font-size: 1.5rem !important;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+
+.progress-item {
+    margin-bottom: 0.75rem !important;
+}
+
+.progress-item:last-child {
+    margin-bottom: 0;
+}
+
+.progress-label {
+    font-size: 0.7rem !important;
+    color: #94a3b8;
+}
+
+.progress-percent {
+    font-size: 0.75rem !important;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+
+.progress-bar {
+    height: 0.4rem !important;
+    background: rgba(51, 65, 85, 0.5);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    margin-top: 0.25rem !important;
+}
