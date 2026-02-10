@@ -3,13 +3,21 @@ import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 import { LogBox } from 'react-native';
 import { DataProvider } from "../context/DataContext";
+import { AuthProvider, useAuth } from "../context/AuthContext";
+import LoginScreen from "./login";
 import "../global.css";
 
 LogBox.ignoreLogs([
   'SafeAreaView has been deprecated',
 ]);
 
-export default function RootLayout() {
+function AppContent() {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
+
   return (
     <DataProvider>
       <View className="flex-1 bg-primary">
@@ -31,8 +39,17 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
           <Stack.Screen name="docs" options={{ presentation: "modal", headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
         </Stack>
       </View>
     </DataProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

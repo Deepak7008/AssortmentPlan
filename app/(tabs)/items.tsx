@@ -10,6 +10,7 @@ import { ItemDetailModal } from '../../components/ItemDetailModal';
 import { AttributeDistribution } from '../../components/AttributeDistribution';
 import { UploadButton } from '../../components/UploadButton';
 import { DocsButton } from '../../components/DocsButton';
+import { ProfileButton } from '../../components/ProfileButton';
 import { FilterBar } from '../../components/FilterBar';
 import { useData } from '../../context/DataContext';
 
@@ -93,12 +94,12 @@ export default function ItemsScreen() {
             <SafeAreaView edges={['top']} className="flex-1">
                 <GlassView intensity={10} className="px-5 py-4 flex-row justify-between items-center border-b border-glass-border">
                     <View>
-                        <Text className="text-sky-400 text-[10px] uppercase tracking-[0.2em] font-bold mb-0.5">Item Explorer</Text>
-                        <Text className="text-white text-xl font-bold">Assortment Items</Text>
+                        <Text className="text-white text-xl font-bold">Stratos</Text>
                     </View>
                     <View className="flex-row items-center">
                         <DocsButton />
                         <UploadButton onUpload={handleCSVUpload} />
+                        <ProfileButton />
                     </View>
                 </GlassView>
 

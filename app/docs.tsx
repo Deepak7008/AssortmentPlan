@@ -3,11 +3,10 @@ import { View, Text, Image, TouchableOpacity, Linking, Platform } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlassView } from '../components/ui/GlassView';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter, useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function DocsScreen() {
     const router = useRouter();
-    const navigation = useNavigation();
     const expoUrl = "exp://192.168.1.4:8081";
     // Increased size for better visibility
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(expoUrl)}&bgcolor=1e293b&color=38bdf8`;
@@ -19,19 +18,22 @@ export default function DocsScreen() {
     return (
         <View className="flex-1 bg-slate-950">
             <SafeAreaView edges={['top']} className="flex-1">
-                <GlassView intensity={10} className="px-5 py-4 border-b border-glass-border flex-row justify-between items-center">
-                    <View>
-                        <Text className="text-sky-400 text-[10px] uppercase tracking-[0.2em] font-bold mb-0.5">Reference</Text>
-                        <Text className="text-white text-xl font-bold">Mobile Access</Text>
-                    </View>
+                <View className="relative">
+                    <GlassView intensity={10} className="px-5 py-4 border-b border-glass-border flex-row justify-between items-center">
+                        <View>
+                            <Text className="text-sky-400 text-[10px] uppercase tracking-[0.2em] font-bold mb-0.5">Reference</Text>
+                            <Text className="text-white text-xl font-bold">Mobile Access</Text>
+                        </View>
+                        <View className="w-10 h-10" />
+                    </GlassView>
                     <TouchableOpacity
-                        onPress={() => navigation.goBack()}
-                        className="bg-slate-800/80 w-10 h-10 rounded-full border border-slate-700 items-center justify-center z-50 cursor-pointer"
+                        onPress={() => router.back()}
+                        style={{ position: 'absolute', right: 20, top: 12, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(30, 41, 59, 0.8)', borderWidth: 1, borderColor: 'rgba(51, 65, 85, 1)', alignItems: 'center', justifyContent: 'center', zIndex: 999 }}
                         activeOpacity={0.7}
                     >
                         <Ionicons name="close" size={24} color="#fff" />
                     </TouchableOpacity>
-                </GlassView>
+                </View>
 
                 <View className="flex-1 px-4 items-center justify-center -mt-20">
                     <View className="bg-slate-900 rounded-3xl p-8 items-center border border-slate-700 w-full max-w-sm shadow-2xl">
