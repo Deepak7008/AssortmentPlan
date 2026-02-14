@@ -56,12 +56,53 @@ This document captures the design iteration process and key decisions made durin
 
 ---
 
+### 6. Home Screen & Planner Progress
+
+**Problem**: No visibility into planner-level progress and no way to navigate contextually from planners to their data.
+
+**Solution**: Added a dedicated Home tab with `PlannerProgressTable`, showing per-planner rows with color-coded milestone statuses and progress bars. Tapping a row opens an action sheet to navigate to Dashboard or Items with pre-applied filters.
+
+---
+
+### 7. Cross-Page Filter Synchronization
+
+**Problem**: Selecting a planner on Home and navigating to Dashboard/Items lost the filter context.
+
+**Solution**: Introduced `FilterContext` to manage `selectedClass`, `selectedCountry`, and `selectedSeason` globally. Home sets these values from the planner row before navigation; Dashboard and Items consume them.
+
+---
+
+### 8. Multi-File Upload
+
+**Problem**: Only one CSV (assortment data) could be uploaded. Planner data was hardcoded.
+
+**Solution**: Updated `UploadButton` to support `multiple: true` file selection. `DataContext` auto-detects file type by checking for `Planner Name` header. Both planner and item data are now managed centrally in context.
+
+---
+
+### 9. Dynamic Filters
+
+**Problem**: Filter dropdowns had hardcoded options that didn't match uploaded data.
+
+**Solution**: All filter options (Home: Category, Business Location, Season; Dashboard/Items: Class, Country, Season) are derived dynamically from the actual data using `useMemo`.
+
+---
+
+### 10. Consistent Header Layout
+
+**Problem**: Home had a greeting/date header style while Dashboard and Items showed "Stratos" with icon buttons.
+
+**Solution**: Aligned all pages to use the same header: "Stratos" title + DocsButton + UploadButton + ProfileButton. Moved date display to the Planner Progress section header.
+
+---
+
 ## Key Design Principles Applied
 
 1. **User Feedback Driven**: All major UI changes (Filter, Layout) were based on direct user testing feedback.
 2. **Platform Consistency**: Used Ghost Picker to ensure identical experience on iOS, Android, and Web.
 3. **Progressive Enhancement**: Started with minimal viable features, then added premium polish.
 4. **Dark Mode First**: Designed for dark theme with appropriate contrast ratios.
+5. **Data-Driven UI**: Filters and visualizations adapt dynamically to uploaded data.
 
 ---
 
@@ -72,7 +113,8 @@ This document captures the design iteration process and key decisions made durin
 | Filters | Bottom Sheet Modal | Poor one-handed usability |
 | Filters | Raw Native Picker | Inconsistent styling across platforms |
 | Data Storage | AsyncStorage | CSV upload is ephemeral per session (intentional) |
+| Header | Greeting + Date header on Home | Inconsistent with Dashboard/Items; moved to section-level |
 
 ---
 
-> **Last Updated**: February 8, 2026
+> **Last Updated**: February 14, 2026

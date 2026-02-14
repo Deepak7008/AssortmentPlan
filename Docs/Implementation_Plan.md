@@ -7,9 +7,10 @@
 | **Framework** | React Native (Expo SDK 52) |
 | **Routing** | Expo Router (File-based) |
 | **Styling** | NativeWind (Tailwind CSS for RN) |
-| **State Management** | React Context API |
-| **CSV Parsing** | PapaParse |
+| **State Management** | React Context API (DataContext, FilterContext, AuthContext) |
+| **CSV Parsing** | Custom parser (dataService.ts, plannerService.ts) |
 | **Icons** | @expo/vector-icons (Ionicons) |
+| **File Picker** | expo-document-picker |
 
 ---
 
@@ -35,6 +36,14 @@
 }
 ```
 
+### Data & File Handling
+```json
+{
+  "expo-document-picker": "~13.0.0",
+  "expo-file-system": "~18.0.0"
+}
+```
+
 ### Web Support
 ```json
 {
@@ -51,20 +60,29 @@
 assortment-plan-app/
 ├── app/                    # Expo Router screens
 │   ├── (tabs)/            # Tab-based navigation
+│   │   ├── _layout.tsx    # Tab navigator config
+│   │   ├── home.tsx       # Home (Planner Progress)
 │   │   ├── index.tsx      # Dashboard
 │   │   └── items.tsx      # Item Explorer
-│   └── _layout.tsx        # Root layout
+│   ├── _layout.tsx        # Root layout (providers)
+│   └── login.tsx          # Login screen
 ├── components/            # Reusable UI components
 │   ├── ui/               # Core UI (GlassView, GradientCard)
 │   ├── FilterBar.tsx     # Ghost Picker filters
 │   ├── ItemCard.tsx      # Item grid cards
-│   └── ...
+│   ├── PlannerProgressTable.tsx  # Planner rows with milestones
+│   ├── UploadButton.tsx  # Multi-file CSV upload
+│   ├── DocsButton.tsx    # Documentation link
+│   └── ProfileButton.tsx # User profile / logout
 ├── context/              # React Context providers
-│   └── DataContext.tsx   # Shared data state
+│   ├── AuthContext.tsx   # Authentication state
+│   ├── DataContext.tsx   # Shared data (items + planners)
+│   └── FilterContext.tsx # Cross-page filter sync
 ├── services/             # Data services
-│   └── dataService.ts    # CSV parsing & types
+│   ├── dataService.ts    # Item CSV parsing & types
+│   └── plannerService.ts # Planner CSV parsing & types
 ├── Docs/                 # Project documentation
-└── assets/               # Images & fonts
+└── assets/               # Images, CSVs & fonts
 ```
 
 ---
@@ -78,14 +96,11 @@ assortment-plan-app/
 
 ### Installation
 ```bash
-# Clone the repository
 git clone <repository-url>
 cd assortment-plan-app
 
-# Install dependencies
 npm install
 
-# Start development server
 npx expo start
 ```
 
@@ -106,12 +121,18 @@ Custom filter component that overlays an invisible native `Picker` on top of a s
 - 100% Custom UI (Tailwind styling)
 - 100% Native Behavior (System picker/dialog)
 
-### Shared Data Context
-CSV data is uploaded once and shared across all screens via `DataContext`, enabling:
-- Single source of truth
-- Consistent filtering across Dashboard and Items
+### Multi-File Upload
+`UploadButton` supports selecting multiple CSV files. `DataContext.handleMultiUpload` auto-detects file type by header:
+- `Planner Name` header → Planner Progress data
+- Any other → Item/Assortment data
+
+### Cross-Page Filter Context
+`FilterContext` stores `selectedClass`, `selectedCountry`, `selectedSeason` globally. Home sets these when navigating from a planner row; Dashboard and Items consume them.
+
+### Dynamic Filter Options
+All filter dropdowns derive their options from the actual data via `useMemo`, ensuring filters always reflect the uploaded dataset.
 
 ---
 
-> **Author**: AI Assistant  
-> **Last Updated**: February 8, 2026
+> **Author**: AI Assistant
+> **Last Updated**: February 14, 2026

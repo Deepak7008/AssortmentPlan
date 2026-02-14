@@ -16,7 +16,8 @@ A premium dark-mode aesthetic with vibrant gradient accents and glassmorphism ef
 | `text-sky-400` | `#38bdf8` | Primary accent |
 | `text-green-400` | `#4ade80` | Success/Approved |
 | `text-yellow-400` | `#facc15` | Warning/Under Review |
-| `text-rose-500` | `#f43f5e` | Error states |
+| `text-rose-500` | `#f43f5e` | Error/Overdue states |
+| Cyan→Purple gradient | `#0ea5e9` → `#a855f7` | Progress bars |
 
 ---
 
@@ -24,8 +25,8 @@ A premium dark-mode aesthetic with vibrant gradient accents and glassmorphism ef
 
 | Style | Class | Usage |
 |-------|-------|-------|
-| **Page Title** | `text-xl font-bold text-white` | Screen headers |
-| **Section Header** | `text-xs font-bold uppercase tracking-widest text-slate-400` | Collapsible titles |
+| **Page Title** | `text-xl font-bold text-white` | Screen headers ("Stratos") |
+| **Section Header** | `text-xs font-bold uppercase tracking-widest text-slate-400` | Section titles |
 | **Metric Value** | `text-3xl font-bold` | Large KPI numbers |
 | **Label** | `text-[10px] uppercase font-bold text-slate-400` | Field labels |
 | **Body** | `text-sm text-slate-300` | General content |
@@ -40,16 +41,10 @@ Glassmorphic container with blur effect.
 - **Web**: CSS `backdrop-filter: blur(20px)`
 - **Usage**: Headers, modals, floating elements
 
-```tsx
-<GlassView intensity={10} className="...">
-  {children}
-</GlassView>
-```
-
 ### 2. GradientCard
 Gradient background container using `expo-linear-gradient`.
 - **Colors**: Configurable start/end colors
-- **Usage**: Hero sections, KPI highlights
+- **Usage**: Hero sections, KPI highlights, team progress
 
 ### 3. Ghost Picker (FilterSelect)
 Custom-styled dropdown with native behavior.
@@ -67,7 +62,34 @@ Image-dominant card for item display.
 Expandable content wrapper with toggle.
 - **Header**: Title + chevron icon
 - **State**: Controlled expand/collapse
-- **Animation**: Smooth content reveal
+
+### 6. PlannerProgressTable
+Per-planner row display with milestone tracking.
+- **Columns**: Name, Filter (Class/Country), Progress bar, milestone dates
+- **Status Indicators**: Color-coded circles (green=done, yellow=today, red=overdue, gray=future)
+- **Interaction**: Tappable rows → action sheet for contextual navigation
+
+### 7. UploadButton
+Multi-file CSV upload with auto-detection.
+- **Web**: HTML file input with `multiple` attribute
+- **Mobile**: Document picker with "Load Demo Data" option
+- **Detection**: Routes files to planner or item data by header content
+
+---
+
+## Page Header Pattern
+
+Consistent across all pages:
+```tsx
+<GlassView className="px-5 py-4 flex-row justify-between items-center border-b border-glass-border">
+  <Text className="text-white text-xl font-bold">Stratos</Text>
+  <View className="flex-row items-center">
+    <DocsButton />
+    <UploadButton />
+    <ProfileButton />
+  </View>
+</GlassView>
+```
 
 ---
 
@@ -90,11 +112,15 @@ Expandable content wrapper with toggle.
 </View>
 ```
 
-### Responsive Grid
+### Action Sheet (Modal)
 ```tsx
-<View className="flex-row flex-wrap">
-  <View className="w-1/2 md:w-1/4 p-2">...</View>
-</View>
+<Modal transparent animationType="fade">
+  <Pressable style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' }}>
+    <LinearGradient colors={[...]} style={{ borderRadius: 20 }}>
+      {/* Action items */}
+    </LinearGradient>
+  </Pressable>
+</Modal>
 ```
 
 ---
@@ -106,8 +132,9 @@ Expandable content wrapper with toggle.
 | **Hover** (Web) | Scale 1.05x, subtle shadow |
 | **Press** | Opacity reduction (0.7) |
 | **Selected** | Blue accent color, checkmark icon |
-| **Loading** | Shimmer animation |
+| **Loading** | ActivityIndicator spinner |
 | **Empty** | Italic placeholder text |
+| **Row Tap** | Action sheet with navigation options |
 
 ---
 
@@ -123,4 +150,4 @@ Uses Tailwind's default spacing scale:
 
 ---
 
-> **Last Updated**: February 8, 2026
+> **Last Updated**: February 14, 2026

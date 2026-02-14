@@ -2,6 +2,51 @@
 
 ---
 
+## February 14, 2026
+
+### Home Screen & Planner Progress
+- [x] **Add Home Tab** - New tab with Planner Progress table, overall team progress bar, and date display
+- [x] **Planner Progress Table** - Per-planner rows with Class/Country, progress bars, and color-coded milestone indicators
+- [x] **Contextual Navigation** - Tap planner row → action sheet → navigate to Dashboard or Items with pre-applied filters
+- [x] **Date Display** - Current date shown in brackets next to "Planner Progress" section header
+
+### Cross-Page Data Sync
+- [x] **FilterContext** - Shared filter state (Class, Country, Season) across Home, Dashboard, and Items
+- [x] **Align Assortment Data** - Updated mock data to match planner classes, countries, and season (SS26)
+- [x] **Fix Dashboard Route** - Changed `/(tabs)/index` to `/(tabs)/` for proper Expo Router navigation
+
+### Multi-File Upload
+- [x] **UploadButton Multi-Select** - Support selecting multiple CSV files in a single action
+- [x] **Auto-Detection** - Routes files by header content (`Planner Name` → planner data, else → item data)
+- [x] **Planner State in Context** - Moved planner data from local `useMemo` to `DataContext` for upload support
+- [x] **Upload Summary Alert** - Shows file names with intersection counts after loading
+
+### Dynamic Filters
+- [x] **Home Filters from Data** - Category, Business Location, Season derived from planner data via `useMemo`
+- [x] **Dashboard Dynamic Classes** - Class performance and heatmap use data-derived class/region lists
+- [x] **Minimal Demo Data** - Trimmed hardcoded data to 1 planner row + 1 item for upload testing
+
+### UI Alignment
+- [x] **Consistent Header** - All pages now show "Stratos" + DocsButton + UploadButton + ProfileButton
+- [x] **Filter Spacing** - Added margin between filter bar and Planner Progress section
+
+### Documentation
+- [x] **Update README** - Added multi-file upload, contextual navigation, state management, updated date
+- [x] **Update BRD** - Added Home screen, multi-file upload, data source columns, bumped to v2.0
+- [x] **Update Walkthrough** - Added design decisions for Home, filters, upload, header alignment
+- [x] **Update Implementation Plan** - Added project structure, FilterContext, plannerService, upload patterns
+- [x] **Update UI/UX** - Added PlannerProgressTable, UploadButton, header pattern, action sheet
+
+---
+
+## February 10, 2026
+
+### Login & Branding
+- [x] **Update Tagline** - Changed to "Strategic Oversight for the Retail Frontier"
+- [x] **Logo Refinement** - Centered dark logo in circular container
+
+---
+
 ## February 8, 2026
 
 ### UI Refinements
