@@ -13,6 +13,7 @@ import { DocsButton } from '../../components/DocsButton';
 import { ProfileButton } from '../../components/ProfileButton';
 import { FilterBar } from '../../components/FilterBar';
 import { useData } from '../../context/DataContext';
+import { useFilters } from '../../context/FilterContext';
 
 const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title: string, children: React.ReactNode, defaultExpanded?: boolean }) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
@@ -32,11 +33,9 @@ const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title
 };
 
 export default function ItemsScreen() {
-    const { data, loading, handleCSVUpload } = useData();
+    const { data, loading, handleMultiUpload } = useData();
 
-    const [selectedClass, setSelectedClass] = useState('All');
-    const [selectedCountry, setSelectedCountry] = useState('All');
-    const [selectedSeason, setSelectedSeason] = useState('All');
+    const { selectedClass, setSelectedClass, selectedCountry, setSelectedCountry, selectedSeason, setSelectedSeason } = useFilters();
 
     const [selectedItem, setSelectedItem] = useState<AssortmentItem | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -98,7 +97,7 @@ export default function ItemsScreen() {
                     </View>
                     <View className="flex-row items-center">
                         <DocsButton />
-                        <UploadButton onUpload={handleCSVUpload} />
+                        <UploadButton onUpload={handleMultiUpload} />
                         <ProfileButton />
                     </View>
                 </GlassView>

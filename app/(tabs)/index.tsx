@@ -15,6 +15,7 @@ import { UploadButton } from '../../components/UploadButton';
 import { DocsButton } from '../../components/DocsButton';
 import { ProfileButton } from '../../components/ProfileButton';
 import { useData } from '../../context/DataContext';
+import { useFilters } from '../../context/FilterContext';
 
 const SectionHeader = ({ title, icon }: { title: string, icon?: keyof typeof Ionicons.glyphMap }) => (
   <View className="flex-row items-center mb-4 mt-6 pl-1">
@@ -47,10 +48,8 @@ const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }
 };
 
 export default function Dashboard() {
-  const { data, loading, handleCSVUpload } = useData();
-  const [selectedClass, setSelectedClass] = useState('All');
-  const [selectedCountry, setSelectedCountry] = useState('All');
-  const [selectedSeason, setSelectedSeason] = useState('All');
+  const { data, loading, handleMultiUpload } = useData();
+  const { selectedClass, setSelectedClass, selectedCountry, setSelectedCountry, selectedSeason, setSelectedSeason } = useFilters();
 
   const classes = useMemo(() => ['All', ...new Set(data.map(d => d.className))], [data]);
   const countries = useMemo(() => ['All', ...new Set(data.map(d => d.country))], [data]);
@@ -95,7 +94,7 @@ export default function Dashboard() {
   }), [approvedItems]);
 
   const classPerformanceData = useMemo(() => {
-    const classNames = ['Shirts', 'Trousers', 'Jackets'];
+    const classNames = [...new Set(approvedItems.map(i => i.className))];
     return classNames.map(className => {
       const classItems = approvedItems.filter(item => item.className === className);
       const sales = classItems.reduce((sum, item) => sum + (item.sellingPrice * item.ros * item.storeCount), 0);
@@ -117,8 +116,8 @@ export default function Dashboard() {
   }, [approvedItems]);
 
   const heatmapData = useMemo(() => {
-    const regions = ['North', 'South', 'East'];
-    const classNames = ['Shirts', 'Trousers', 'Jackets'];
+    const regions = [...new Set(approvedItems.map(i => i.region))];
+    const classNames = [...new Set(approvedItems.map(i => i.className))];
     const result: { region: string; className: string; sales: number }[] = [];
 
     regions.forEach(region => {
@@ -158,7 +157,7 @@ export default function Dashboard() {
           </View>
           <View className="flex-row items-center">
             <DocsButton />
-            <UploadButton onUpload={handleCSVUpload} />
+            <UploadButton onUpload={handleMultiUpload} />
             <ProfileButton />
           </View>
         </GlassView>

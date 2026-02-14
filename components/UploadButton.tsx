@@ -4,26 +4,34 @@ import { Ionicons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system/legacy';
 
+interface UploadedFile {
+    name: string;
+    text: string;
+}
+
 interface UploadButtonProps {
-    onUpload: (csvText: string) => void;
+    onUpload: (files: UploadedFile[]) => void;
 }
 
 export const UploadButton = ({ onUpload }: UploadButtonProps) => {
-    const pickDocument = async () => {
+    const pickDocuments = async () => {
         try {
             const result = await DocumentPicker.getDocumentAsync({
                 type: '*/*',
                 copyToCacheDirectory: true,
-                multiple: false,
+                multiple: true,
             });
 
-            if (!result.canceled && result.assets?.[0]) {
-                const fileUri = result.assets[0].uri;
-                const csvText = await FileSystem.readAsStringAsync(fileUri);
-                onUpload(csvText);
+            if (!result.canceled && result.assets?.length) {
+                const files: UploadedFile[] = [];
+                for (const asset of result.assets) {
+                    const text = await FileSystem.readAsStringAsync(asset.uri);
+                    files.push({ name: asset.name, text });
+                }
+                onUpload(files);
             }
         } catch (error) {
-            console.error('Error picking document:', error);
+            console.error('Error picking documents:', error);
         }
     };
 
@@ -32,23 +40,28 @@ export const UploadButton = ({ onUpload }: UploadButtonProps) => {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.csv';
+            input.multiple = true;
             input.onchange = async (e: any) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                    const text = await file.text();
-                    onUpload(text);
+                const fileList = e.target.files;
+                if (fileList?.length) {
+                    const files: UploadedFile[] = [];
+                    for (let i = 0; i < fileList.length; i++) {
+                        const file = fileList[i];
+                        const text = await file.text();
+                        files.push({ name: file.name, text });
+                    }
+                    onUpload(files);
                 }
             };
             input.click();
         } else {
-            // Mobile: Show options
             const { Alert } = require('react-native');
             Alert.alert(
                 "Data Options",
                 "Choose how to load data",
                 [
-                    { text: "Load Demo Data", onPress: () => onUpload('__RESET__') },
-                    { text: "Upload CSV", onPress: pickDocument },
+                    { text: "Load Demo Data", onPress: () => onUpload([{ name: '__RESET__', text: '__RESET__' }]) },
+                    { text: "Upload CSV(s)", onPress: pickDocuments },
                     { text: "Cancel", style: "cancel" }
                 ]
             );
