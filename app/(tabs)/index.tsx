@@ -5,15 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import clsx from 'clsx';
 
-import { GlassView } from '../../components/ui/GlassView';
 import { GradientCard } from '../../components/ui/GradientCard';
 import { FilterBar } from '../../components/FilterBar';
 import { LastSeasonKPIs } from '../../components/LastSeasonKPIs';
 import { ClassPerformanceTable } from '../../components/ClassPerformanceTable';
 import { RegionalHeatmap } from '../../components/RegionalHeatmap';
-import { UploadButton } from '../../components/UploadButton';
-import { DocsButton } from '../../components/DocsButton';
-import { ProfileButton } from '../../components/ProfileButton';
+import { AppHeader } from '../../components/AppHeader';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
 
@@ -48,23 +45,83 @@ const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }
 };
 
 export default function Dashboard() {
-  const { data, loading, handleMultiUpload } = useData();
-  const { selectedClass, setSelectedClass, selectedCountry, setSelectedCountry, selectedSeason, setSelectedSeason } = useFilters();
+  const { data, loading, handleMultiUpload, plannerData } = useData();
+  const {
+    selectedCategory, setSelectedCategory,
+    selectedClass, setSelectedClass,
+    selectedSeason, setSelectedSeason,
+    selectedBizLocation, setSelectedBizLocation,
+    selectedCountry, setSelectedCountry,
+  } = useFilters();
 
-  const classes = useMemo(() => ['All', ...new Set(data.map(d => d.className))], [data]);
-  const countries = useMemo(() => ['All', ...new Set(data.map(d => d.country))], [data]);
+  const categoryToClasses = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+    plannerData.forEach(r => {
+      if (!map[r.category]) map[r.category] = new Set();
+      map[r.category].add(r.class);
+    });
+    data.forEach(item => {
+      if (item.category && item.className) {
+        if (!map[item.category]) map[item.category] = new Set();
+        map[item.category].add(item.className);
+      }
+    });
+    return map;
+  }, [plannerData, data]);
+
+  const bizLocationToCountries = useMemo(() => {
+    const map: Record<string, Set<string>> = {};
+    plannerData.forEach(r => {
+      if (!map[r.businessLocation]) map[r.businessLocation] = new Set();
+      map[r.businessLocation].add(r.country);
+    });
+    data.forEach(item => {
+      if (item.businessLocation && item.country) {
+        if (!map[item.businessLocation]) map[item.businessLocation] = new Set();
+        map[item.businessLocation].add(item.country);
+      }
+    });
+    return map;
+  }, [plannerData, data]);
+
+  const categories = useMemo(() => ['All', ...Object.keys(categoryToClasses)], [categoryToClasses]);
+  const classes = useMemo(() => {
+    if (selectedCategory === 'All') return ['All', ...new Set(data.map(d => d.className))];
+    const allowed = categoryToClasses[selectedCategory];
+    return allowed ? ['All', ...allowed] : ['All'];
+  }, [data, selectedCategory, categoryToClasses]);
+
+  const bizLocations = useMemo(() => ['All', ...Object.keys(bizLocationToCountries)], [bizLocationToCountries]);
+  const countries = useMemo(() => {
+    if (selectedBizLocation === 'All') return ['All', ...new Set(data.map(d => d.country))];
+    const allowed = bizLocationToCountries[selectedBizLocation];
+    return allowed ? ['All', ...allowed] : ['All'];
+  }, [data, selectedBizLocation, bizLocationToCountries]);
+
   const seasons = useMemo(() => ['All', ...new Set(data.map(d => d.season))], [data]);
 
+  const handleCategoryChange = (val: string) => {
+    setSelectedCategory(val);
+    setSelectedClass('All');
+  };
+
+  const handleBizLocationChange = (val: string) => {
+    setSelectedBizLocation(val);
+    setSelectedCountry('All');
+  };
+
   const filteredData = data.filter(item =>
+    (selectedCategory === 'All' || item.category === selectedCategory) &&
     (selectedClass === 'All' || item.className === selectedClass) &&
     (selectedCountry === 'All' || item.country === selectedCountry) &&
+    (selectedBizLocation === 'All' || item.businessLocation === selectedBizLocation) &&
     (selectedSeason === 'All' || item.season === selectedSeason)
   );
 
   const approvedItems = filteredData.filter(i => i.status === 'Approved');
 
   const totalSales = approvedItems.reduce((sum, item) => sum + (item.sellingPrice * item.ros * item.storeCount), 0);
-  const budget = totalSales * 1.47;
+  const budget = approvedItems.reduce((sum, item) => sum + (item.budget || 0), 0);
   const salesPercent = budget > 0 ? Math.round((totalSales / budget) * 100) : 0;
 
   const totalMarginVal = approvedItems.reduce((sum, item) => sum + (item.margin * item.ros * item.storeCount), 0);
@@ -151,29 +208,21 @@ export default function Dashboard() {
     <View className="flex-1 bg-slate-950">
       <StatusBar barStyle="light-content" />
       <SafeAreaView edges={['top']} className="flex-1">
-        <GlassView intensity={10} className="px-5 py-4 flex-row justify-between items-center border-b border-glass-border">
-          <View>
-            <Text className="text-white text-xl font-bold">Stratos</Text>
-          </View>
-          <View className="flex-row items-center">
-            <DocsButton />
-            <UploadButton onUpload={handleMultiUpload} />
-            <ProfileButton />
-          </View>
-        </GlassView>
+        <AppHeader onUpload={handleMultiUpload} />
+
+        <FilterBar
+          categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
+          classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
+          seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
+          bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
+          countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
+        />
 
         <ScrollView
           className="flex-1"
-          stickyHeaderIndices={[0]}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
         >
-          <FilterBar
-            classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
-            countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
-            seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
-          />
-
           <View className="w-full md:max-w-7xl md:self-center">
             <View className="px-4 pt-4 pb-2">
               <SectionHeader title="Current Season" icon="calendar-outline" />

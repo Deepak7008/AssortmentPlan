@@ -4,13 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AssortmentItem } from '../../services/dataService';
 import { Ionicons } from '@expo/vector-icons';
 
-import { GlassView } from '../../components/ui/GlassView';
 import { ItemCard, ItemGrid } from '../../components/ItemCard';
 import { ItemDetailModal } from '../../components/ItemDetailModal';
 import { AttributeDistribution } from '../../components/AttributeDistribution';
-import { UploadButton } from '../../components/UploadButton';
-import { DocsButton } from '../../components/DocsButton';
-import { ProfileButton } from '../../components/ProfileButton';
+import { AppHeader } from '../../components/AppHeader';
 import { FilterBar } from '../../components/FilterBar';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
@@ -33,25 +30,85 @@ const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title
 };
 
 export default function ItemsScreen() {
-    const { data, loading, handleMultiUpload } = useData();
+    const { data, loading, handleMultiUpload, plannerData } = useData();
 
-    const { selectedClass, setSelectedClass, selectedCountry, setSelectedCountry, selectedSeason, setSelectedSeason } = useFilters();
+    const {
+        selectedCategory, setSelectedCategory,
+        selectedClass, setSelectedClass,
+        selectedSeason, setSelectedSeason,
+        selectedBizLocation, setSelectedBizLocation,
+        selectedCountry, setSelectedCountry,
+    } = useFilters();
 
     const [selectedItem, setSelectedItem] = useState<AssortmentItem | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
-    const classes = useMemo(() => ['All', ...new Set(data.map(d => d.className))], [data]);
-    const countries = useMemo(() => ['All', ...new Set(data.map(d => d.country))], [data]);
+    const categoryToClasses = useMemo(() => {
+        const map: Record<string, Set<string>> = {};
+        plannerData.forEach(r => {
+            if (!map[r.category]) map[r.category] = new Set();
+            map[r.category].add(r.class);
+        });
+        data.forEach(item => {
+            if (item.category && item.className) {
+                if (!map[item.category]) map[item.category] = new Set();
+                map[item.category].add(item.className);
+            }
+        });
+        return map;
+    }, [plannerData, data]);
+
+    const bizLocationToCountries = useMemo(() => {
+        const map: Record<string, Set<string>> = {};
+        plannerData.forEach(r => {
+            if (!map[r.businessLocation]) map[r.businessLocation] = new Set();
+            map[r.businessLocation].add(r.country);
+        });
+        data.forEach(item => {
+            if (item.businessLocation && item.country) {
+                if (!map[item.businessLocation]) map[item.businessLocation] = new Set();
+                map[item.businessLocation].add(item.country);
+            }
+        });
+        return map;
+    }, [plannerData, data]);
+
+    const categories = useMemo(() => ['All', ...Object.keys(categoryToClasses)], [categoryToClasses]);
+    const classes = useMemo(() => {
+        if (selectedCategory === 'All') return ['All', ...new Set(data.map(d => d.className))];
+        const allowed = categoryToClasses[selectedCategory];
+        return allowed ? ['All', ...allowed] : ['All'];
+    }, [data, selectedCategory, categoryToClasses]);
+
+    const bizLocations = useMemo(() => ['All', ...Object.keys(bizLocationToCountries)], [bizLocationToCountries]);
+    const countries = useMemo(() => {
+        if (selectedBizLocation === 'All') return ['All', ...new Set(data.map(d => d.country))];
+        const allowed = bizLocationToCountries[selectedBizLocation];
+        return allowed ? ['All', ...allowed] : ['All'];
+    }, [data, selectedBizLocation, bizLocationToCountries]);
+
     const seasons = useMemo(() => ['All', ...new Set(data.map(d => d.season))], [data]);
+
+    const handleCategoryChange = (val: string) => {
+        setSelectedCategory(val);
+        setSelectedClass('All');
+    };
+
+    const handleBizLocationChange = (val: string) => {
+        setSelectedBizLocation(val);
+        setSelectedCountry('All');
+    };
 
     const filteredData = useMemo(() => {
         return data.filter(item => {
+            const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
             const matchesClass = selectedClass === 'All' || item.className === selectedClass;
             const matchesCountry = selectedCountry === 'All' || item.country === selectedCountry;
+            const matchesBizLocation = selectedBizLocation === 'All' || item.businessLocation === selectedBizLocation;
             const matchesSeason = selectedSeason === 'All' || item.season === selectedSeason;
-            return matchesClass && matchesCountry && matchesSeason;
+            return matchesCategory && matchesClass && matchesCountry && matchesBizLocation && matchesSeason;
         });
-    }, [data, selectedClass, selectedCountry, selectedSeason]);
+    }, [data, selectedCategory, selectedClass, selectedCountry, selectedBizLocation, selectedSeason]);
 
     const approvedCount = filteredData.filter(i => i.status === 'Approved').length;
     const underReviewCount = filteredData.filter(i => i.status === 'Under Review').length;
@@ -91,24 +148,17 @@ export default function ItemsScreen() {
     return (
         <View className="flex-1 bg-slate-950">
             <SafeAreaView edges={['top']} className="flex-1">
-                <GlassView intensity={10} className="px-5 py-4 flex-row justify-between items-center border-b border-glass-border">
-                    <View>
-                        <Text className="text-white text-xl font-bold">Stratos</Text>
-                    </View>
-                    <View className="flex-row items-center">
-                        <DocsButton />
-                        <UploadButton onUpload={handleMultiUpload} />
-                        <ProfileButton />
-                    </View>
-                </GlassView>
+                <AppHeader onUpload={handleMultiUpload} />
 
-                <ScrollView className="flex-1" showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]} contentContainerStyle={{ paddingBottom: 100 }}>
-                    <FilterBar
-                        classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
-                        countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
-                        seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
-                    />
+                <FilterBar
+                    categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
+                    classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
+                    seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
+                    bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
+                    countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
+                />
 
+                <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
                     <View className="w-full md:max-w-7xl md:self-center">
                         <View className="px-4 mt-4">
 

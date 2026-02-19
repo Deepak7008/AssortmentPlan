@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { GradientCard } from './ui/GradientCard';
 
 interface HeatmapCell {
@@ -13,8 +13,8 @@ interface RegionalHeatmapProps {
 }
 
 export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
-    const regions = ['North', 'South', 'East'];
-    const classes = ['Shirts', 'Trousers', 'Jackets'];
+    const regions = [...new Set(data.map(d => d.region))];
+    const classes = [...new Set(data.map(d => d.className))];
 
     const maxSales = Math.max(...data.map(d => d.sales), 1);
 
@@ -34,41 +34,48 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                 Regional Heatmap
             </Text>
             <GradientCard className="p-3" colors={['rgba(30, 41, 59, 0.8)', 'rgba(15, 23, 42, 0.9)']}>
-                {/* Header Row */}
-                <View className="flex-row mb-2">
-                    <View className="w-14" />
-                    {classes.map(cls => (
-                        <View key={cls} className="flex-1 items-center">
-                            <Text className="text-slate-400 text-[10px] font-bold uppercase">{cls}</Text>
-                        </View>
-                    ))}
-                </View>
-
-                {/* Data Rows */}
-                {regions.map(region => (
-                    <View key={region} className="flex-row mb-1">
-                        <View className="w-14 justify-center">
-                            <Text className="text-slate-300 text-xs font-semibold">{region}</Text>
-                        </View>
-                        {classes.map(cls => {
-                            const sales = getCellData(region, cls);
-                            const opacity = getOpacity(sales);
-                            return (
-                                <View
-                                    key={cls}
-                                    className="flex-1 mx-0.5 h-12 rounded-lg items-center justify-center"
-                                    style={{
-                                        backgroundColor: `rgba(56, 189, 248, ${opacity})`,
-                                    }}
-                                >
-                                    <Text className="text-white text-xs font-bold">
-                                        ${(sales / 1000).toFixed(0)}k
-                                    </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <View>
+                        <View className="flex-row mb-2">
+                            <View style={{ width: 80 }} />
+                            {regions.map(region => (
+                                <View key={region} style={{ width: 64 }} className="items-center">
+                                    <Text className="text-slate-400 text-[10px] font-bold uppercase">{region}</Text>
                                 </View>
-                            );
-                        })}
+                            ))}
+                        </View>
+
+                        {classes.map(cls => (
+                            <View key={cls} className="flex-row mb-1">
+                                <View style={{ width: 80 }} className="justify-center">
+                                    <Text className="text-slate-300 text-xs font-semibold" numberOfLines={1}>{cls}</Text>
+                                </View>
+                                {regions.map(region => {
+                                    const sales = getCellData(region, cls);
+                                    const opacity = getOpacity(sales);
+                                    return (
+                                        <View
+                                            key={region}
+                                            style={{
+                                                width: 60,
+                                                height: 40,
+                                                marginHorizontal: 2,
+                                                borderRadius: 8,
+                                                backgroundColor: `rgba(56, 189, 248, ${opacity})`,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <Text className="text-white text-[11px] font-bold">
+                                                ${(sales / 1000).toFixed(0)}k
+                                            </Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                        ))}
                     </View>
-                ))}
+                </ScrollView>
             </GradientCard>
         </View>
     );

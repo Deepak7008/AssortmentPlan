@@ -16,6 +16,16 @@ interface UploadButtonProps {
 export const UploadButton = ({ onUpload }: UploadButtonProps) => {
     const pickDocuments = async () => {
         try {
+            const cacheDir = FileSystem.cacheDirectory;
+            if (cacheDir) {
+                const files = await FileSystem.readDirectoryAsync(cacheDir).catch(() => []);
+                for (const file of files) {
+                    if (file.endsWith('.csv')) {
+                        await FileSystem.deleteAsync(`${cacheDir}${file}`, { idempotent: true }).catch(() => { });
+                    }
+                }
+            }
+
             const result = await DocumentPicker.getDocumentAsync({
                 type: '*/*',
                 copyToCacheDirectory: true,
@@ -23,12 +33,12 @@ export const UploadButton = ({ onUpload }: UploadButtonProps) => {
             });
 
             if (!result.canceled && result.assets?.length) {
-                const files: UploadedFile[] = [];
+                const uploadedFiles: UploadedFile[] = [];
                 for (const asset of result.assets) {
                     const text = await FileSystem.readAsStringAsync(asset.uri);
-                    files.push({ name: asset.name, text });
+                    uploadedFiles.push({ name: asset.name, text });
                 }
-                onUpload(files);
+                onUpload(uploadedFiles);
             }
         } catch (error) {
             console.error('Error picking documents:', error);
