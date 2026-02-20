@@ -42,9 +42,11 @@ Tap the upload button (cloud icon) on any page → select one or more CSV files 
 ## Documentation
 
 See the [Docs](./Docs/) folder for detailed documentation:
+- [Project_Overview.md](./Docs/Project_Overview.md) - Project Overview
 - [BRD.md](./Docs/BRD.md) - Business Requirements
 - [Implementation_Plan.md](./Docs/Implementation_Plan.md) - Tech Stack & Setup
 - [UI_UX.md](./Docs/UI_UX.md) - Design System
+- [Metrics.md](./Docs/Metrics.md) - Metric Formulas & Data Dictionary
 - [Walkthrough.md](./Docs/Walkthrough.md) - Design Decisions
 - [Task_Plan.md](./Docs/Task_Plan.md) - Changelog
 

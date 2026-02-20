@@ -1,16 +1,6 @@
 # Implementation Plan
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| **Framework** | React Native (Expo SDK 52) |
-| **Routing** | Expo Router (File-based) |
-| **Styling** | NativeWind (Tailwind CSS for RN) |
-| **State Management** | React Context API (DataContext, FilterContext, AuthContext) |
-| **CSV Parsing** | Custom parser (dataService.ts, plannerService.ts) |
-| **Icons** | @expo/vector-icons (Ionicons) |
-| **File Picker** | expo-document-picker |
+> For a high-level overview of the app (tech stack, screens, project structure), see [Project_Overview.md](./Project_Overview.md).
 
 ---
 
@@ -19,70 +9,38 @@
 ### Core
 ```json
 {
-  "expo": "~52.0.0",
-  "react": "18.3.1",
-  "react-native": "0.76.6",
-  "expo-router": "~4.0.0"
+  "expo": "~54.0.33",
+  "react": "19.1.0",
+  "react-native": "0.81.5",
+  "expo-router": "~6.0.23"
 }
 ```
 
 ### UI Components
 ```json
 {
-  "nativewind": "^4.1.23",
-  "expo-blur": "~14.0.0",
-  "expo-linear-gradient": "~14.0.0",
-  "@react-native-picker/picker": "^2.10.2"
+  "nativewind": "^4.2.1",
+  "expo-blur": "~15.0.8",
+  "expo-linear-gradient": "~15.0.8",
+  "@react-native-picker/picker": "^2.11.4"
 }
 ```
 
 ### Data & File Handling
 ```json
 {
-  "expo-document-picker": "~13.0.0",
-  "expo-file-system": "~18.0.0"
+  "papaparse": "^5.5.3",
+  "expo-document-picker": "^14.0.8",
+  "expo-file-system": "^19.0.21"
 }
 ```
 
 ### Web Support
 ```json
 {
-  "react-dom": "18.3.1",
-  "react-native-web": "~0.19.13"
+  "react-dom": "19.1.0",
+  "react-native-web": "~0.21.0"
 }
-```
-
----
-
-## Project Structure
-
-```
-assortment-plan-app/
-├── app/                    # Expo Router screens
-│   ├── (tabs)/            # Tab-based navigation
-│   │   ├── _layout.tsx    # Tab navigator config
-│   │   ├── home.tsx       # Home (Planner Progress)
-│   │   ├── index.tsx      # Dashboard
-│   │   └── items.tsx      # Item Explorer
-│   ├── _layout.tsx        # Root layout (providers)
-│   └── login.tsx          # Login screen
-├── components/            # Reusable UI components
-│   ├── ui/               # Core UI (GlassView, GradientCard)
-│   ├── FilterBar.tsx     # Ghost Picker filters
-│   ├── ItemCard.tsx      # Item grid cards
-│   ├── PlannerProgressTable.tsx  # Planner rows with milestones
-│   ├── UploadButton.tsx  # Multi-file CSV upload
-│   ├── DocsButton.tsx    # Documentation link
-│   └── ProfileButton.tsx # User profile / logout
-├── context/              # React Context providers
-│   ├── AuthContext.tsx   # Authentication state
-│   ├── DataContext.tsx   # Shared data (items + planners)
-│   └── FilterContext.tsx # Cross-page filter sync
-├── services/             # Data services
-│   ├── dataService.ts    # Item CSV parsing & types
-│   └── plannerService.ts # Planner CSV parsing & types
-├── Docs/                 # Project documentation
-└── assets/               # Images, CSVs & fonts
 ```
 
 ---
@@ -134,5 +92,4 @@ All filter dropdowns derive their options from the actual data via `useMemo`, en
 
 ---
 
-> **Author**: AI Assistant
-> **Last Updated**: February 14, 2026
+> **Last Updated**: February 20, 2026
