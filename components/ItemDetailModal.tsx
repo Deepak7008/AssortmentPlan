@@ -1,19 +1,14 @@
 import React from 'react';
-import { View, Text, Modal, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { View, Text, Modal, ScrollView, TouchableOpacity, Image, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AssortmentItem } from '../services/dataService';
-import { GradientCard } from './ui/GradientCard';
 import clsx from 'clsx';
-import { GlassView } from './ui/GlassView';
 
 interface ItemDetailModalProps {
     visible: boolean;
     item: AssortmentItem | null;
     onClose: () => void;
 }
-
-const { width, height } = Dimensions.get('window');
 
 const MetricBox = ({ label, value, isPrimary = false }: { label: string, value: string, isPrimary?: boolean }) => (
     <View className={clsx("p-2.5 rounded-xl flex-1 mx-0.5 border", isPrimary ? "bg-slate-700 border-sky-500/50" : "bg-slate-800 border-slate-700")}>
@@ -28,6 +23,9 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
     const salesDollar = (item.sellingPrice * item.ros * item.storeCount).toFixed(0);
     const marginDollar = (item.margin * item.ros * item.storeCount).toFixed(0);
 
+    // Safely get dimensions at render time
+    const { width, height } = Dimensions.get('window');
+
     return (
         <Modal
             animationType="slide"
@@ -35,40 +33,75 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
             visible={visible}
             onRequestClose={onClose}
         >
-            <View className="flex-1 justify-center items-center">
-                <BlurView intensity={20} tint="dark" className="absolute inset-0" />
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {/* Dark backdrop — no BlurView, just a semi-transparent overlay */}
                 <TouchableOpacity
-                    className="absolute inset-0 bg-black/80"
+                    style={{
+                        position: 'absolute',
+                        top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    }}
                     activeOpacity={1}
                     onPress={onClose}
                 />
 
                 <View
-                    style={{ width: Math.min(width * 0.9, 480), maxHeight: height * 0.85 }}
-                    className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-700 shadow-2xl"
+                    style={{
+                        width: Math.min(width * 0.9, 480),
+                        maxHeight: height * 0.85,
+                        backgroundColor: '#0f172a',
+                        borderRadius: 16,
+                        overflow: 'hidden',
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                    }}
                 >
                     <ScrollView bounces={false} contentContainerStyle={{ paddingBottom: 20 }}>
-                        <View className="h-56 w-full relative">
+                        {/* Hero Image */}
+                        <View style={{ height: 224, width: '100%', position: 'relative' }}>
                             <Image
                                 source={{ uri: item.imageUrl }}
-                                className="w-full h-full"
+                                style={{ width: '100%', height: '100%' }}
                                 resizeMode="cover"
                             />
+                            {/* Close button */}
                             <TouchableOpacity
                                 onPress={onClose}
-                                className="absolute top-4 right-4 bg-black/50 p-2 rounded-full"
+                                style={{
+                                    position: 'absolute',
+                                    top: 16,
+                                    right: 16,
+                                    backgroundColor: 'rgba(0,0,0,0.5)',
+                                    padding: 8,
+                                    borderRadius: 20,
+                                }}
                             >
                                 <Ionicons name="close" size={24} color="white" />
                             </TouchableOpacity>
 
-                            <GlassView intensity={40} className="absolute bottom-4 left-4 right-4 p-4 rounded-xl border-none">
-                                <Text className="text-white text-xl font-bold leading-6 mb-1">{item.name}</Text>
-                                <Text className="text-slate-300 text-sm">{item.className} • {item.season}</Text>
-                            </GlassView>
+                            {/* Item info overlay at bottom of image */}
+                            <View style={{
+                                position: 'absolute',
+                                bottom: 16,
+                                left: 16,
+                                right: 16,
+                                padding: 16,
+                                borderRadius: 12,
+                                backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                                borderWidth: 1,
+                                borderColor: 'rgba(255, 255, 255, 0.08)',
+                            }}>
+                                <Text style={{ color: '#ffffff', fontSize: 20, fontWeight: '700', lineHeight: 24, marginBottom: 4 }}>
+                                    {item.name}
+                                </Text>
+                                <Text style={{ color: '#cbd5e1', fontSize: 14 }}>
+                                    {item.className} • {item.season}
+                                </Text>
+                            </View>
                         </View>
 
-                        <View className="p-5">
-                            {/* Status (left) + Lifecycle (right) */}
+                        <View style={{ padding: 20 }}>
+                            {/* Status + Lifecycle */}
                             <View className="flex-row justify-between items-center mb-5 pb-4 border-b border-slate-800">
                                 <View>
                                     <Text className="text-slate-400 text-[10px] font-bold uppercase mb-1">Status</Text>
@@ -78,7 +111,7 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
                                 </View>
                                 <View className="items-end">
                                     <Text className="text-slate-400 text-[10px] font-bold uppercase mb-1">Lifecycle</Text>
-                                    <Text className="text-lg font-bold text-white">{item.lifecycle}</Text>
+                                    <Text className="text-lg font-bold text-white">{item.lifecycle || 'N/A'}</Text>
                                 </View>
                             </View>
 
@@ -89,7 +122,7 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
                             <View className="flex-row mb-2">
                                 <MetricBox label="Selling Price" value={`$${item.sellingPrice}`} isPrimary />
                                 <MetricBox label="Cost Price" value={`$${item.cost}`} />
-                                <MetricBox label="ROS" value={item.ros.toFixed(1)} />
+                                <MetricBox label="ROS" value={item.ros?.toFixed(1) ?? '0'} />
                             </View>
 
                             {/* Row 2: Sales $, Margin $, Store Count */}
@@ -98,8 +131,6 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
                                 <MetricBox label="Margin $" value={`$${marginDollar}`} />
                                 <MetricBox label="Store Count" value={`${item.storeCount}`} />
                             </View>
-
-
                         </View>
                     </ScrollView>
                 </View>

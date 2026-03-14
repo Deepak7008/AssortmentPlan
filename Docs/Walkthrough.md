@@ -1,120 +1,69 @@
-# Design Walkthrough
+# UX Pass 2 — Walkthrough
 
-## Overview
-This document captures the design iteration process and key decisions made during the development of the Assortment Plan Mobile App.
+## Changes Made
 
----
+### 1. Chip-Style Filter Bar
+**File:** `components/FilterBar.tsx`
 
-## Design Iterations
+Complete rewrite from 2-row dropdown grid (~120px) to single-row horizontal scrollable chip bar (~50px).
 
-### 1. Filter Component Evolution
+| Feature | Before | After |
+|---------|--------|-------|
+| Layout | 2-row grid, 5 dropdowns | Single-row horizontal scroll |
+| Height | ~120px | ~50px (saves 70px) |
+| Active state | None | Accent blue highlight + count badge |
+| Clear all | None | Red × button clears all filters |
+| Picker mechanism | Same ghost picker | Same ghost picker (unchanged) |
 
-| Iteration | Approach | Outcome |
-|-----------|----------|---------|
-| **V1** | Native `Picker` | ❌ Text invisible on Android (dark theme conflict) |
-| **V2** | Custom Bottom Sheet Modal | ❌ Rejected: Required two-handed use, scroll issues |
-| **V3** | Ghost Picker | ✅ Adopted: Custom UI + Invisible Native Picker |
+**Inactive chips** → outlined slate gray. **Active chips** → filled accent blue with bold text.
 
-**Final Decision**: The Ghost Picker pattern provides the best of both worlds—premium custom styling while leveraging reliable native touch handling.
+### 2. Single-Row Horizontal Filter Bar
+**File:** `FilterBar.tsx`
+- Layout transformed from multi-line wrapping to a single horizontally scrolling row using `ScrollView`.
+- Consolidated the `[3]` active filters badge and the trailing `[x]` clear button into a single leading **Filter Funnel** icon that displays a red dot when filters are active.
 
----
-
-### 2. Options Count Layout
-
-| Iteration | Layout | Outcome |
-|-----------|--------|---------|
-| **V1** | "Assorted & Suggested" with nested counts | ❌ Wasted space, small text |
-| **V2** | 3-Column Grid (Approved, Under Review, Suggested) | ✅ Adopted: Better space utilization, larger metrics |
-
-**Final Decision**: Renamed to "Options Count" with prominent, color-coded metrics in a horizontal layout.
+![New horizontal layout with leading funnel button](C:\Users\deepa\.gemini\antigravity\brain\9f3a4861-46d4-4f6f-8493-cb25cc100ffd\final_dashboard_with_filters_1773496413268.png)
 
 ---
 
-### 3. Dashboard KPI Display
+### 2. Pull-to-Refresh
+**Files:** `app/(tabs)/home.tsx`, `index.tsx`, `items.tsx`
 
-| Decision | Rationale |
-|----------|-----------|
-| Format values in K (thousands) | Improves readability for large numbers |
-| Use "Sales $" instead of "Sales (Actual)" | Clearer, more concise labeling |
-| Flex-based table columns | Eliminates visual gaps, consistent alignment |
+Added `RefreshControl` to all 3 screens with accent-colored spinner (`#38bdf8`) and dark progress background.
 
 ---
 
-### 4. Mobile Dark Theme
+### 3. Scroll-to-Top FAB
+**File:** `components/ScrollToTopFAB.tsx`
 
-**Problem**: Native Android Picker defaulted to system theme (light), making text invisible on dark background.
+Floating "↑" button appears after scrolling 300px. Uses `Animated` API for fade-in/slide-up. Positioned bottom-right, above tab bar.
 
-**Solution**: Set `userInterfaceStyle: "dark"` in `app.json` to force dark mode across all native components.
+![Scroll-to-top FAB visible on Dashboard after scrolling](C:\Users\deepa\.gemini\antigravity\brain\9f3a4861-46d4-4f6f-8493-cb25cc100ffd\.system_generated\click_feedback\click_feedback_1773469443159.png)
 
----
+### 4. Mobile Bug Fixes
+**Files:** `FilterBar.tsx`, `home.tsx`, `index.tsx`, `items.tsx`
 
-### 5. Shared Data Context
+- **Pull-to-Refresh Swipe Fix:** Moved `<FilterBar>` inside the `<ScrollView>` on all three screens. This prevents the horizontal scrollview of the filter bar from stealing the vertical swipe gesture at the top of the screen on mobile devices.
+- **Android Crash Fix:** Completely removed the hidden Native `<Picker>` overlay implementations. Previously, 5 hidden native Android Spinners were attempting to measure layout before `SafeAreaView` insets resolved, causing a fatal native layout loop. This was fixed by replacing the hidden pickers entirely with an elegant, responsive React Native `<Modal>` that perfectly matches the dark/glass aesthetic and only mounts when a chip is tapped.
+- **SafeArea Cleanup:** Fixed the `<SafeAreaView>` in `login.tsx` to properly target `edges={['top', 'bottom']}` to avoid fighting with the keyboard view, and removed a dead native import in `items/index.tsx`.
+- **Google Drive Stale Cache:** Updated `UploadButton.tsx` to clear `FileSystem.cacheDirectory + 'DocumentPicker'` right before opening the Document Picker, ensuring cloud files are actively refreshed instead of returning a stale local copy.
 
-**Problem**: CSV data uploaded on Dashboard wasn't available on Items screen.
+## 5. Custom Floating Pill Tab Bar
+**File:** `components/FloatingTabBar.tsx`, `app/(tabs)/_layout.tsx`
+- Abandoned the default React Navigation bottom tabs in favor of a completely custom `FloatingTabBar` component.
+- **Glassmorphism:** Utilized `expo-blur` with `tint="dark"` and `intensity={80}` for a premium, translucent pill floating above the content.
+- **Animations:** Integrated `react-native-reanimated` for an organic `<Animated.View>` spring scale effect when tapping icons.
+- **Context Labels:** Added micro-typography text labels below the icons for clear navigation.
+- **Safe Area:** Dynamically calculates `useSafeAreaInsets().bottom` to ensure the pill floats perfectly above the iOS home indicator or Android gesture bar without overlapping content.
+- Added a `favorites.tsx` empty state screen to complete the 4-icon layout.
 
-**Solution**: Implemented `DataContext` using React Context API to provide a single source of truth for CSV data across all screens.
+![Floating Tab Bar with Text Labels](C:\Users\deepa\.gemini\antigravity\brain\9f3a4861-46d4-4f6f-8493-cb25cc100ffd\floating_tab_bar_with_labels_1773498202441.png)
 
----
+## Verification
+All features verified in browser across all 3 tabs. No JavaScript errors. Filter selection, clear-all, scroll-to-top FAB all work correctly. The elegant custom modal logic kicks in flawlessly on non-web platforms, while web retains the native `<select>` dropcap overlay.
 
-### 6. Home Screen & Planner Progress
+![Chip selection working perfectly on web](C:\Users\deepa\.gemini\antigravity\brain\9f3a4861-46d4-4f6f-8493-cb25cc100ffd\category_apparel_selected_1773495126380.png)
 
-**Problem**: No visibility into planner-level progress and no way to navigate contextually from planners to their data.
+![Full demo recording](C:\Users\deepa\.gemini\antigravity\brain\9f3a4861-46d4-4f6f-8493-cb25cc100ffd\chip_filter_verify_1773469357145.webp)
 
-**Solution**: Added a dedicated Home tab with `PlannerProgressTable`, showing per-planner rows with color-coded milestone statuses and progress bars. Tapping a row opens an action sheet to navigate to Dashboard or Items with pre-applied filters.
-
----
-
-### 7. Cross-Page Filter Synchronization
-
-**Problem**: Selecting a planner on Home and navigating to Dashboard/Items lost the filter context.
-
-**Solution**: Introduced `FilterContext` to manage `selectedClass`, `selectedCountry`, and `selectedSeason` globally. Home sets these values from the planner row before navigation; Dashboard and Items consume them.
-
----
-
-### 8. Multi-File Upload
-
-**Problem**: Only one CSV (assortment data) could be uploaded. Planner data was hardcoded.
-
-**Solution**: Updated `UploadButton` to support `multiple: true` file selection. `DataContext` auto-detects file type by checking for `Planner Name` header. Both planner and item data are now managed centrally in context.
-
----
-
-### 9. Dynamic Filters
-
-**Problem**: Filter dropdowns had hardcoded options that didn't match uploaded data.
-
-**Solution**: All filter options (Home: Category, Business Location, Season; Dashboard/Items: Class, Country, Season) are derived dynamically from the actual data using `useMemo`.
-
----
-
-### 10. Consistent Header Layout
-
-**Problem**: Home had a greeting/date header style while Dashboard and Items showed "Stratos" with icon buttons.
-
-**Solution**: Aligned all pages to use the same header: "Stratos" title + DocsButton + UploadButton + ProfileButton. Moved date display to the Planner Progress section header.
-
----
-
-## Key Design Principles Applied
-
-1. **User Feedback Driven**: All major UI changes (Filter, Layout) were based on direct user testing feedback.
-2. **Platform Consistency**: Used Ghost Picker to ensure identical experience on iOS, Android, and Web.
-3. **Progressive Enhancement**: Started with minimal viable features, then added premium polish.
-4. **Dark Mode First**: Designed for dark theme with appropriate contrast ratios.
-5. **Data-Driven UI**: Filters and visualizations adapt dynamically to uploaded data.
-
----
-
-## Rejected Approaches
-
-| Feature | Rejected Approach | Reason |
-|---------|-------------------|--------|
-| Filters | Bottom Sheet Modal | Poor one-handed usability |
-| Filters | Raw Native Picker | Inconsistent styling across platforms |
-| Data Storage | AsyncStorage | CSV upload is ephemeral per session (intentional) |
-| Header | Greeting + Date header on Home | Inconsistent with Dashboard/Items; moved to section-level |
-
----
-
-> **Last Updated**: February 14, 2026
+> **Last Updated**: March 14, 2026

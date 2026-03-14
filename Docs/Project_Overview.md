@@ -76,8 +76,10 @@ The app consumes **two CSV file types**:
 |---------|-------------|
 | **Multi-File Upload** | Select multiple CSVs at once; auto-detected by header content |
 | **Cascading Filters** | Cross-page filter sync via FilterContext; options derived dynamically from data |
-| **Ghost Picker** | Custom-styled dropdowns with invisible native Picker underneath |
+| **Chip Filter Bar** | Horizontal scrolling pill-style filters replacing bulky dropdowns |
+| **Floating Tab Bar** | Custom glassmorphism pill navigation with animated icons |
 | **Glassmorphism UI** | Dark theme ("Future Dark") with blur effects, gradients, and rich shadows |
+| **Data Interaction** | Pull-to-refresh, smooth scroll-to-top FAB |
 | **Sticky Filter Bar** | Filters remain visible while scrolling content |
 | **Demo Data** | Built-in sample data; reset via upload menu |
 
@@ -93,11 +95,13 @@ assortment-plan-app/
 │   └── login.tsx           # Login screen
 ├── components/             # Reusable UI components
 │   ├── ui/                 # Core primitives (GlassView, GradientCard)
-│   ├── FilterBar.tsx       # Ghost Picker filter bar
+│   ├── FilterBar.tsx       # Horizontal scrolling chip filters
+│   ├── FloatingTabBar.tsx  # Custom bottom navigation
 │   ├── ItemCard.tsx        # Item grid card
 │   ├── PlannerProgressTable.tsx
 │   ├── RegionalHeatmap.tsx
 │   ├── UploadButton.tsx    # Multi-file CSV upload
+│   ├── ScrollToTopFAB.tsx
 │   └── ...
 ├── context/                # React Context providers
 │   ├── AuthContext.tsx
@@ -134,6 +138,7 @@ Scan the QR code with **Expo Go** (iOS/Android) or press `w` for web.
 | [Metrics.md](./Metrics.md) | Metric formulas & data dictionary |
 | [Task_Plan.md](./Task_Plan.md) | Changelog & task tracking |
 | [Walkthrough.md](./Walkthrough.md) | Design decisions & implementation notes |
+| [UX_Audit.md](./UX_Audit.md) | UX priorities, bugs, and feature completion tracker |
 
 ---
 
@@ -146,5 +151,5 @@ Scan the QR code with **Expo Go** (iOS/Android) or press `w` for web.
 
 ---
 
-> **Version**: 1.0
-> **Last Updated**: February 20, 2026
+> **Version**: 1.1
+> **Last Updated**: March 14, 2026

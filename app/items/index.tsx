@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Stack, useRouter } from 'expo-router';
 import { fetchAssortmentData, AssortmentItem } from '../../services/dataService';
 import { Ionicons } from '@expo/vector-icons';
@@ -83,7 +83,7 @@ export default function ItemList() {
                 headerShown: true,
                 headerStyle: { backgroundColor: '#0f172a' },
                 headerTintColor: 'white',
-                headerBackTitleVisible: false
+                headerBackVisible: false
             }} />
 
             <View className="p-4 border-b border-slate-800">

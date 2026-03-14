@@ -1,13 +1,17 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
     userEmail: string | null;
     userName: string | null;
+    isLoading: boolean;
     login: (email: string, password: string) => void;
     loginWithGoogle: () => void;
     logout: () => void;
 }
+
+const AUTH_STORAGE_KEY = '@stratos_auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -21,27 +25,66 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [userName, setUserName] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const login = (email: string, _password: string) => {
+    // Restore auth state on mount
+    useEffect(() => {
+        const restoreAuth = async () => {
+            try {
+                const stored = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
+                if (stored) {
+                    const { email, name } = JSON.parse(stored);
+                    setUserEmail(email);
+                    setUserName(name);
+                    setIsAuthenticated(true);
+                }
+            } catch (e) {
+                // Silently fail — user will just see login
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        restoreAuth();
+    }, []);
+
+    const login = async (email: string, _password: string) => {
+        const name = extractName(email);
         setUserEmail(email);
-        setUserName(extractName(email));
+        setUserName(name);
         setIsAuthenticated(true);
+        try {
+            await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ email, name }));
+        } catch (e) {
+            // Storage write failed — login still works in memory
+        }
     };
 
-    const loginWithGoogle = () => {
-        setUserEmail('user@gmail.com');
-        setUserName('User');
+    const loginWithGoogle = async () => {
+        const email = 'user@gmail.com';
+        const name = 'User';
+        setUserEmail(email);
+        setUserName(name);
         setIsAuthenticated(true);
+        try {
+            await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ email, name }));
+        } catch (e) {
+            // Storage write failed
+        }
     };
 
-    const logout = () => {
+    const logout = async () => {
         setUserEmail(null);
         setUserName(null);
         setIsAuthenticated(false);
+        try {
+            await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+        } catch (e) {
+            // Storage removal failed
+        }
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, userEmail, userName, login, loginWithGoogle, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, userEmail, userName, isLoading, login, loginWithGoogle, logout }}>
             {children}
         </AuthContext.Provider>
     );

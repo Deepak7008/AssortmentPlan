@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, ScrollView, ActivityIndicator, StatusBar } from 'react-native';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import { View, Text, ScrollView, ActivityIndicator, StatusBar, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,6 +13,7 @@ import { RegionalHeatmap } from '../../components/RegionalHeatmap';
 import { AppHeader } from '../../components/AppHeader';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
+import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
 
 const SectionHeader = ({ title, icon }: { title: string, icon?: keyof typeof Ionicons.glyphMap }) => (
   <View className="flex-row items-center mb-4 mt-6 pl-1">
@@ -46,6 +47,23 @@ const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }
 
 export default function Dashboard() {
   const { data, loading, handleMultiUpload, plannerData } = useData();
+  const [refreshing, setRefreshing] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const scrollRef = useRef<ScrollView>(null);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 800);
+  }, []);
+
+  const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setShowScrollTop(e.nativeEvent.contentOffset.y > 300);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
   const {
     selectedCategory, setSelectedCategory,
     selectedClass, setSelectedClass,
@@ -210,19 +228,30 @@ export default function Dashboard() {
       <SafeAreaView edges={['top']} className="flex-1">
         <AppHeader onUpload={handleMultiUpload} />
 
-        <FilterBar
-          categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
-          classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
-          seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
-          bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
-          countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
-        />
-
-        <ScrollView
+                <ScrollView
+          ref={scrollRef}
           className="flex-1"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#38bdf8"
+              colors={['#38bdf8']}
+              progressBackgroundColor="#0f172a"
+            />
+          }
         >
+          <FilterBar
+            categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
+            classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
+            seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
+            bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
+            countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
+          />
           <View className="w-full md:max-w-7xl md:self-center">
             <View className="px-4 pt-4 pb-2">
               <SectionHeader title="Current Season" icon="calendar-outline" />
@@ -256,6 +285,8 @@ export default function Dashboard() {
             </View>
           </View>
         </ScrollView>
+
+        <ScrollToTopFAB visible={showScrollTop} onPress={scrollToTop} />
       </SafeAreaView>
     </View>
   );

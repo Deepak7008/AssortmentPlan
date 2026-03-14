@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, ScrollView, StatusBar, TouchableOpacity, Modal, Pressable } from 'react-native';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import { View, Text, ScrollView, StatusBar, TouchableOpacity, Modal, Pressable, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,6 +12,7 @@ import { AppHeader } from '../../components/AppHeader';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
 import { PlannerRow } from '../../services/plannerService';
+import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
 
 const CURRENT_DATE = new Date();
 
@@ -28,6 +29,22 @@ export default function HomeScreen() {
     const router = useRouter();
 
     const [selectedRow, setSelectedRow] = useState<PlannerRow | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
+    const scrollRef = useRef<ScrollView>(null);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => setRefreshing(false), 800);
+    }, []);
+
+    const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        setShowScrollTop(e.nativeEvent.contentOffset.y > 300);
+    }, []);
+
+    const scrollToTop = useCallback(() => {
+        scrollRef.current?.scrollTo({ y: 0, animated: true });
+    }, []);
 
     const categoryToClasses = useMemo(() => {
         const map: Record<string, Set<string>> = {};
@@ -107,24 +124,35 @@ export default function HomeScreen() {
     });
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#0f172a' }}>
+        <View className="flex-1 bg-slate-950">
             <StatusBar barStyle="light-content" />
-            <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+            <SafeAreaView edges={['top']} className="flex-1">
                 <AppHeader onUpload={handleMultiUpload} />
 
-                <FilterBar
-                    categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
-                    classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
-                    seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
-                    bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
-                    countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
-                />
-
                 <ScrollView
+                    ref={scrollRef}
                     style={{ flex: 1 }}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 100 }}
+                    onScroll={onScroll}
+                    scrollEventThrottle={16}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            tintColor="#38bdf8"
+                            colors={['#38bdf8']}
+                            progressBackgroundColor="#0f172a"
+                        />
+                    }
                 >
+                    <FilterBar
+                        categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
+                        classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
+                        seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
+                        bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
+                        countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
+                    />
                     <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
                         <GradientCard
                             colors={['rgba(56, 189, 248, 0.12)', 'rgba(168, 85, 247, 0.08)']}
@@ -294,6 +322,8 @@ export default function HomeScreen() {
                         </Pressable>
                     </Pressable>
                 </Modal>
+
+                <ScrollToTopFAB visible={showScrollTop} onPress={scrollToTop} />
             </SafeAreaView>
         </View>
     );

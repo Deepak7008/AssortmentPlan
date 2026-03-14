@@ -16,14 +16,10 @@ interface UploadButtonProps {
 export const UploadButton = ({ onUpload }: UploadButtonProps) => {
     const pickDocuments = async () => {
         try {
-            const cacheDir = FileSystem.cacheDirectory;
-            if (cacheDir) {
-                const files = await FileSystem.readDirectoryAsync(cacheDir).catch(() => []);
-                for (const file of files) {
-                    if (file.endsWith('.csv')) {
-                        await FileSystem.deleteAsync(`${cacheDir}${file}`, { idempotent: true }).catch(() => { });
-                    }
-                }
+            const documentPickerCache = `${FileSystem.cacheDirectory}DocumentPicker`;
+            const dirInfo = await FileSystem.getInfoAsync(documentPickerCache);
+            if (dirInfo.exists) {
+                await FileSystem.deleteAsync(documentPickerCache, { idempotent: true }).catch(() => { });
             }
 
             const result = await DocumentPicker.getDocumentAsync({

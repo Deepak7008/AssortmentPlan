@@ -30,7 +30,8 @@ The **Assortment Plan Mobile App (Stratos)** is a premium, visually stunning mob
 - **Home Filters**: Category, Business Location, Season — derived dynamically from planner data.
 - **Dashboard/Items Filters**: Class, Country, Season — derived dynamically from item data.
 - **Cross-Page Sync**: FilterContext ensures selections propagate when navigating between pages.
-- **Ghost Picker UI**: Premium custom styling with native picker behavior.
+- **Chip Filter Bar**: Sleek horizontal scrollable pills with active blue state and leading filter funnel icon.
+- **Pull-to-Refresh**: Native pull-to-refresh gestures implemented across all screens.
 - **Sticky Headers**: Filters remain accessible while scrolling.
 
 ### 📤 Multi-File Upload
@@ -74,10 +75,11 @@ The app reads **two types of CSV files**:
 
 - **Theme**: "Future Dark" - Deep blues/blacks with neon gradients (Cyan/Purple)
 - **Glassmorphism**: Extensive use of blur effects and semi-transparent backgrounds
+- **Floating Tab Bar**: Pill-shaped custom bottom navigation bar with fluid animations
 - **Premium Feel**: Smooth animations, gradient accents, and rich shadows
 - **Consistent Header**: "Stratos" branding with Docs, Upload, and Profile buttons across all pages
 
 ---
 
-> **Version**: 2.0
-> **Last Updated**: February 14, 2026
+> **Version**: 2.1
+> **Last Updated**: March 14, 2026

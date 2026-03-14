@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AssortmentItem } from '../../services/dataService';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ import { AppHeader } from '../../components/AppHeader';
 import { FilterBar } from '../../components/FilterBar';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
+import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
 
 const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title: string, children: React.ReactNode, defaultExpanded?: boolean }) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
@@ -42,6 +43,22 @@ export default function ItemsScreen() {
 
     const [selectedItem, setSelectedItem] = useState<AssortmentItem | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
+    const scrollRef = useRef<ScrollView>(null);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => setRefreshing(false), 800);
+    }, []);
+
+    const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        setShowScrollTop(e.nativeEvent.contentOffset.y > 300);
+    }, []);
+
+    const scrollToTop = useCallback(() => {
+        scrollRef.current?.scrollTo({ y: 0, animated: true });
+    }, []);
 
     const categoryToClasses = useMemo(() => {
         const map: Record<string, Set<string>> = {};
@@ -150,15 +167,26 @@ export default function ItemsScreen() {
             <SafeAreaView edges={['top']} className="flex-1">
                 <AppHeader onUpload={handleMultiUpload} />
 
-                <FilterBar
-                    categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
-                    classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
-                    seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
-                    bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
-                    countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
-                />
-
-                <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+        <ScrollView ref={scrollRef} className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}
+                    onScroll={onScroll}
+                    scrollEventThrottle={16}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            tintColor="#38bdf8"
+                            colors={['#38bdf8']}
+                            progressBackgroundColor="#0f172a"
+                        />
+                    }
+                >
+                    <FilterBar
+                        categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
+                        classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
+                        seasons={seasons} selectedSeason={selectedSeason} setSelectedSeason={setSelectedSeason}
+                        bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
+                        countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
+                    />
                     <View className="w-full md:max-w-7xl md:self-center">
                         <View className="px-4 mt-4">
 
@@ -187,6 +215,8 @@ export default function ItemsScreen() {
                         <View className="h-20" />
                     </View>
                 </ScrollView>
+
+                <ScrollToTopFAB visible={showScrollTop} onPress={scrollToTop} />
 
                 <ItemDetailModal
                     visible={modalVisible}
