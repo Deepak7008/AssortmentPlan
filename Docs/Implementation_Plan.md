@@ -50,7 +50,6 @@
 ### Prerequisites
 - Node.js 18+
 - npm or yarn
-- Expo Go app (iOS/Android) for mobile testing
 
 ### Installation
 ```bash
@@ -58,17 +57,18 @@ git clone <repository-url>
 cd assortment-plan-app
 
 npm install
-
-npx expo start
 ```
 
 ### Running on Different Platforms
 
+The app is **web-first**: build once, open the same link from any device.
+
 | Platform | Command |
 |----------|---------|
-| **iOS** | Scan QR code with Expo Go app |
-| **Android** | Scan QR code with Expo Go app |
-| **Web** | Press `w` in terminal or visit `localhost:8081` |
+| **Web (dev)** | `npm run web` or `npx expo start` then press `w` |
+| **Static build** | `npm run web:build` (exports to `./dist`) |
+| **Local preview** | `npm run web:preview` → open `http://localhost:3000` (or `http://<PC-IP>:3000` from other devices) |
+| **iOS/Android (optional)** | `npx expo start` + Expo Go, or `npx expo run:ios/android` with a dev client |
 
 ---
 

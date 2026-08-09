@@ -17,19 +17,32 @@ A **premium, mobile-first application** for Planners and Executives to review an
 
 | Layer | Technology |
 |-------|------------|
-| Framework | React Native (Expo SDK 52) |
+| Framework | React Native (Expo SDK 54) |
 | Styling | NativeWind (Tailwind CSS) |
 | Routing | Expo Router |
 | State | React Context (AuthContext, DataContext, FilterContext) |
+| Deployment | Static web build (`expo export --platform web`) — works on any device via a link |
 
 ## Quick Start
 
 ```bash
 npm install
-npx expo start
+npm run web        # development server (press w / open the printed URL)
 ```
 
-Scan the QR code with **Expo Go** (iOS/Android) or press `w` for web.
+## Deploy & Use (Web-First)
+
+The app is a **static website** — no Expo Go, no app install needed. The same link
+works on desktop, tablet, and mobile browsers.
+
+```bash
+npm run web:build    # exports the static site to ./dist
+npm run web:preview  # serves it locally at http://localhost:3000
+```
+
+For other devices on the same network, open `http://<your-PC-IP>:3000` in any
+browser (or deploy the `dist/` folder to Vercel / Netlify / GitHub Pages for a
+public URL). Native iOS/Android builds remain possible via EAS if ever required.
 
 ## Data Upload
 

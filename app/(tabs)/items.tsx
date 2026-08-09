@@ -11,10 +11,13 @@ import { AppHeader } from '../../components/AppHeader';
 import { FilterBar } from '../../components/FilterBar';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
+import { useTheme } from '../../context/ThemeContext';
 import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
+import { TopGradient } from '../../components/TopGradient';
 
 const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title: string, children: React.ReactNode, defaultExpanded?: boolean }) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
+    const { colors } = useTheme();
 
     return (
         <View className="mb-4">
@@ -22,8 +25,8 @@ const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title
                 onPress={() => setExpanded(!expanded)}
                 className="flex-row items-center justify-between py-2"
             >
-                <Text className="text-xs font-bold text-slate-400 uppercase tracking-widest">{title}</Text>
-                <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={16} color="#94a3b8" />
+                <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{title}</Text>
+                <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={16} color={colors.textSecondary} />
             </TouchableOpacity>
             {expanded && children}
         </View>
@@ -32,6 +35,7 @@ const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title
 
 export default function ItemsScreen() {
     const { data, loading, handleMultiUpload, plannerData } = useData();
+    const { isDark, colors } = useTheme();
 
     const {
         selectedCategory, setSelectedCategory,
@@ -163,7 +167,8 @@ export default function ItemsScreen() {
     }, [filteredData]);
 
     return (
-        <View className="flex-1 bg-slate-950">
+        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+            <TopGradient />
             <SafeAreaView edges={['top']} className="flex-1">
                 <AppHeader onUpload={handleMultiUpload} />
 
@@ -174,9 +179,9 @@ export default function ItemsScreen() {
                         <RefreshControl
                             refreshing={refreshing}
                             onRefresh={onRefresh}
-                            tintColor="#38bdf8"
-                            colors={['#38bdf8']}
-                            progressBackgroundColor="#0f172a"
+                            tintColor={colors.accent}
+                            colors={[colors.accent]}
+                            progressBackgroundColor={colors.refreshBg}
                         />
                     }
                 >
@@ -187,22 +192,22 @@ export default function ItemsScreen() {
                         bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
                         countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
                     />
-                    <View className="w-full md:max-w-7xl md:self-center">
+                    <View className="w-full">
                         <View className="px-4 mt-4">
 
                             <CollapsibleSection title="Options Count">
-                                <View className="flex-row justify-between bg-slate-800/50 p-4 rounded-xl border border-dashed border-slate-700">
-                                    <View className="items-center flex-1 border-r border-slate-700/50">
-                                        <Text className="text-slate-400 text-[10px] uppercase font-bold mb-1">Approved</Text>
-                                        <Text className="text-green-400 text-3xl font-bold">{approvedCount}</Text>
+                                <View className="flex-row justify-between bg-white dark:bg-slate-900 p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
+                                    <View className="items-center flex-1 border-r border-slate-200 dark:border-slate-700/50">
+                                        <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold mb-1">Approved</Text>
+                                        <Text className="text-green-600 dark:text-green-400 text-3xl font-bold">{approvedCount}</Text>
                                     </View>
-                                    <View className="items-center flex-1 border-r border-slate-700/50">
-                                        <Text className="text-slate-400 text-[10px] uppercase font-bold mb-1">Under Review</Text>
-                                        <Text className="text-yellow-400 text-3xl font-bold">{underReviewCount}</Text>
+                                    <View className="items-center flex-1 border-r border-slate-200 dark:border-slate-700/50">
+                                        <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold mb-1">Under Review</Text>
+                                        <Text className="text-amber-600 dark:text-amber-400 text-3xl font-bold">{underReviewCount}</Text>
                                     </View>
                                     <View className="items-center flex-1">
-                                        <Text className="text-slate-400 text-[10px] uppercase font-bold mb-1">Suggested</Text>
-                                        <Text className="text-sky-400 text-3xl font-bold">{suggestedCount || 0}</Text>
+                                        <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold mb-1">Suggested</Text>
+                                        <Text className="text-sky-600 dark:text-sky-400 text-3xl font-bold">{suggestedCount || 0}</Text>
                                     </View>
                                 </View>
                             </CollapsibleSection>

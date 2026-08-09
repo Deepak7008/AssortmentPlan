@@ -28,9 +28,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="favorites"
+        name="simulator"
         options={{
-          title: 'Saved',
+          title: 'Simulator',
         }}
       />
     </Tabs>

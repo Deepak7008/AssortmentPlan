@@ -3,15 +3,17 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Home, Grid, List, Heart } from 'lucide-react-native';
+import { Home, Grid, List, Calculator } from 'lucide-react-native';
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useTheme } from '../context/ThemeContext';
 
 export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { isDark, colors } = useTheme();
 
   return (
     <View style={[styles.container, { bottom: Math.max(insets.bottom, 20) }]}>
-      <BlurView intensity={80} tint="dark" style={styles.blurView}>
+      <BlurView intensity={80} tint={isDark ? 'dark' : 'light'} style={[styles.blurView, { backgroundColor: isDark ? 'rgba(2, 6, 23, 0.65)' : 'rgba(255, 255, 255, 0.72)' }]}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const isFocused = state.index === index;
@@ -40,7 +42,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
           if (route.name === 'home') { IconComponent = Home; label = 'Home'; }
           if (route.name === 'index') { IconComponent = Grid; label = 'Dashboard'; }
           if (route.name === 'items') { IconComponent = List; label = 'Items'; }
-          if (route.name === 'favorites') { IconComponent = Heart; label = 'Saved'; }
+          if (route.name === 'simulator') { IconComponent = Calculator; label = 'Simulator'; }
 
           return (
             <TabItem 
@@ -59,6 +61,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
 }
 
 const TabItem = ({ isFocused, onPress, onLongPress, IconComponent, label }: any) => {
+  const { colors } = useTheme();
     
   // Spring animation for subtle scale when focused
   const animatedIconStyle = useAnimatedStyle(() => {
@@ -81,13 +84,13 @@ const TabItem = ({ isFocused, onPress, onLongPress, IconComponent, label }: any)
       <Animated.View style={[animatedIconStyle, styles.iconContainer]}>
           <IconComponent 
             size={22} 
-            color={isFocused ? '#38bdf8' : '#64748b'} 
+            color={isFocused ? colors.accent : colors.textSecondary} 
             strokeWidth={isFocused ? 2.5 : 2}
           />
           <Text style={[
             styles.tabLabel,
             { 
-              color: isFocused ? '#38bdf8' : '#64748b',
+              color: isFocused ? colors.accent : colors.textSecondary,
               fontWeight: isFocused ? '700' : '500'
             }
           ]}>
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     // Shadow for Android
     elevation: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: 'rgba(15,23,42,0.08)',
   },
   blurView: {
     flex: 1,
@@ -125,7 +128,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     paddingHorizontal: 10,
-    backgroundColor: 'rgba(2, 6, 23, 0.65)', // Deep slate overlay for stratos theme
   },
   tabContent: {
     flex: 1,

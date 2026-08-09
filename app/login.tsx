@@ -15,9 +15,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export default function LoginScreen() {
     const { login, loginWithGoogle } = useAuth();
+    const { isDark, colors } = useTheme();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -37,9 +40,12 @@ export default function LoginScreen() {
     };
 
     return (
-        <View className="flex-1 bg-slate-950">
-            <StatusBar barStyle="light-content" />
+        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+            <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
             <SafeAreaView edges={['top', 'bottom']} className="flex-1">
+                <View className="flex-row justify-end px-5 pt-4">
+                    <ThemeToggle />
+                </View>
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     className="flex-1"
@@ -50,41 +56,41 @@ export default function LoginScreen() {
                         keyboardShouldPersistTaps="handled"
                         showsVerticalScrollIndicator={false}
                     >
-                        <View className="px-6 py-10">
+                        <View className="px-6 py-10 w-full max-w-md self-center">
                             <View className="items-center mb-10">
                                 <Image
                                     source={require('../assets/images/stratos-logo.png')}
                                     style={{ width: 100, height: 100, borderRadius: 50 }}
                                     resizeMode="cover"
                                 />
-                                <Text className="text-white text-3xl font-bold mb-2">
+                                <Text className="text-slate-900 dark:text-white text-3xl font-bold mb-2">
                                     Stratos
                                 </Text>
-                                <Text className="text-slate-400 text-sm text-center">
+                                <Text className="text-slate-500 dark:text-slate-400 text-sm text-center">
                                     Strategic Oversight for the Retail Frontier
                                 </Text>
                             </View>
 
                             <View className="mb-8">
                                 <View className="mb-4">
-                                    <Text className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 ml-1">
+                                    <Text className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 ml-1">
                                         Email
                                     </Text>
                                     <View
                                         className={`flex-row items-center rounded-xl px-4 h-14 border ${emailFocused
-                                            ? 'bg-slate-800 border-sky-500/50'
-                                            : 'bg-slate-900 border-slate-700'
+                                            ? 'bg-white border-sky-500/60 dark:bg-slate-800 dark:border-sky-500/50'
+                                            : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
                                             }`}
                                     >
                                         <Ionicons
                                             name="mail-outline"
                                             size={20}
-                                            color={emailFocused ? '#38bdf8' : '#64748b'}
+                                            color={emailFocused ? colors.accent : colors.textSecondary}
                                         />
                                         <TextInput
-                                            className="flex-1 ml-3 text-white text-base"
+                                            className="flex-1 ml-3 text-slate-900 dark:text-white text-base"
                                             placeholder="Enter your email"
-                                            placeholderTextColor="#475569"
+                                            placeholderTextColor={isDark ? '#475569' : '#94a3b8'}
                                             value={email}
                                             onChangeText={setEmail}
                                             onFocus={() => setEmailFocused(true)}
@@ -97,24 +103,24 @@ export default function LoginScreen() {
                                 </View>
 
                                 <View className="mb-2">
-                                    <Text className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 ml-1">
+                                    <Text className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 ml-1">
                                         Password
                                     </Text>
                                     <View
                                         className={`flex-row items-center rounded-xl px-4 h-14 border ${passwordFocused
-                                            ? 'bg-slate-800 border-sky-500/50'
-                                            : 'bg-slate-900 border-slate-700'
+                                            ? 'bg-white border-sky-500/60 dark:bg-slate-800 dark:border-sky-500/50'
+                                            : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
                                             }`}
                                     >
                                         <Ionicons
                                             name="lock-closed-outline"
                                             size={20}
-                                            color={passwordFocused ? '#38bdf8' : '#64748b'}
+                                            color={passwordFocused ? colors.accent : colors.textSecondary}
                                         />
                                         <TextInput
-                                            className="flex-1 ml-3 text-white text-base"
+                                            className="flex-1 ml-3 text-slate-900 dark:text-white text-base"
                                             placeholder="Enter your password"
-                                            placeholderTextColor="#475569"
+                                            placeholderTextColor={isDark ? '#475569' : '#94a3b8'}
                                             value={password}
                                             onChangeText={setPassword}
                                             onFocus={() => setPasswordFocused(true)}
@@ -129,14 +135,14 @@ export default function LoginScreen() {
                                             <Ionicons
                                                 name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                                                 size={20}
-                                                color="#64748b"
+                                                color={colors.textSecondary}
                                             />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
 
                                 <TouchableOpacity className="self-end mt-1 mb-6">
-                                    <Text className="text-sky-400 text-xs font-semibold">
+                                    <Text className="text-sky-600 dark:text-sky-400 text-xs font-semibold">
                                         Forgot Password?
                                     </Text>
                                 </TouchableOpacity>
@@ -147,29 +153,29 @@ export default function LoginScreen() {
                                     className="rounded-xl overflow-hidden mb-5"
                                 >
                                     <LinearGradient
-                                        colors={['#0ea5e9', '#38bdf8']}
+                                        colors={['#0284c7', '#38bdf8']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
                                         className="h-14 items-center justify-center rounded-xl"
                                     >
-                                        <Text className="text-slate-950 text-base font-bold tracking-wide">
+                                        <Text className="text-white text-base font-bold tracking-wide">
                                             Sign In
                                         </Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
 
                                 <View className="flex-row items-center mb-5">
-                                    <View className="flex-1 h-[1px] bg-slate-700" />
-                                    <Text className="text-slate-500 text-xs mx-4 font-medium">
+                                    <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-700" />
+                                    <Text className="text-slate-500 dark:text-slate-400 text-xs mx-4 font-medium">
                                         OR
                                     </Text>
-                                    <View className="flex-1 h-[1px] bg-slate-700" />
+                                    <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-700" />
                                 </View>
 
                                 <TouchableOpacity
                                     onPress={loginWithGoogle}
                                     activeOpacity={0.8}
-                                    className="flex-row items-center justify-center h-14 rounded-xl bg-slate-900 border border-slate-700"
+                                    className="flex-row items-center justify-center h-14 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700"
                                 >
                                     <View className="w-5 h-5 mr-3 items-center justify-center">
                                         <Image
@@ -178,7 +184,7 @@ export default function LoginScreen() {
                                             resizeMode="contain"
                                         />
                                     </View>
-                                    <Text className="text-white text-sm font-semibold">
+                                    <Text className="text-slate-800 dark:text-white text-sm font-semibold">
                                         Continue with Google
                                     </Text>
                                 </TouchableOpacity>

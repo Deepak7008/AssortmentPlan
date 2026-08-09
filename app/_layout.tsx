@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { DataProvider } from "../context/DataContext";
 import { FilterProvider } from "../context/FilterContext";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { ThemeProvider, useTheme } from "../context/ThemeContext";
 import LoginScreen from "./login";
 import "../global.css";
 
@@ -21,6 +22,7 @@ LogBox.ignoreLogs([
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
+  const { isDark, colors } = useTheme();
   const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
@@ -43,7 +45,7 @@ function AppContent() {
 
   if (!isAuthenticated) {
     return (
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <View className={isDark ? 'dark flex-1' : 'flex-1'} onLayout={onLayoutRootView}>
         <LoginScreen />
       </View>
     );
@@ -52,25 +54,25 @@ function AppContent() {
   return (
     <DataProvider>
       <FilterProvider>
-        <View className="flex-1 bg-slate-950" onLayout={onLayoutRootView}>
-          <StatusBar style="light" />
+        <View className={isDark ? 'dark flex-1 bg-slate-950' : 'flex-1 bg-slate-50'} onLayout={onLayoutRootView}>
+          <StatusBar style={isDark ? "light" : "dark"} />
           <Stack
             screenOptions={{
               headerStyle: {
-                backgroundColor: "#020617",
+                backgroundColor: colors.headerBg,
               },
-              headerTintColor: "#fff",
+              headerTintColor: colors.headerTint,
               headerTitleStyle: {
                 fontWeight: "bold",
               },
               contentStyle: {
-                backgroundColor: "#020617",
+                backgroundColor: colors.headerBg,
               },
             }}
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
-            <Stack.Screen name="docs" options={{ presentation: "modal", headerShown: false }} />
+            <Stack.Screen name="about" options={{ presentation: "modal", headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
           </Stack>
         </View>
@@ -82,9 +84,11 @@ function AppContent() {
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

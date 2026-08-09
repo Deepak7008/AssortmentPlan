@@ -3,6 +3,7 @@ import { View, Text, Modal, ScrollView, TouchableOpacity, Image, Dimensions, Pla
 import { Ionicons } from '@expo/vector-icons';
 import { AssortmentItem } from '../services/dataService';
 import clsx from 'clsx';
+import { useTheme } from '../context/ThemeContext';
 
 interface ItemDetailModalProps {
     visible: boolean;
@@ -10,14 +11,18 @@ interface ItemDetailModalProps {
     onClose: () => void;
 }
 
-const MetricBox = ({ label, value, isPrimary = false }: { label: string, value: string, isPrimary?: boolean }) => (
-    <View className={clsx("p-2.5 rounded-xl flex-1 mx-0.5 border", isPrimary ? "bg-slate-700 border-sky-500/50" : "bg-slate-800 border-slate-700")}>
-        <Text className="text-slate-400 text-[9px] uppercase font-bold mb-0.5">{label}</Text>
-        <Text className={clsx("text-lg font-bold font-mono", isPrimary ? "text-sky-400" : "text-white")}>{value}</Text>
-    </View>
-);
+const MetricBox = ({ label, value, isPrimary = false }: { label: string, value: string, isPrimary?: boolean }) => {
+    const { colors, isDark } = useTheme();
+    return (
+        <View className={clsx("p-2.5 rounded-xl flex-1 mx-0.5 border", isPrimary ? "bg-sky-50 dark:bg-sky-500/15 border-sky-500/50 dark:border-sky-500/30" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700")}>
+            <Text className="text-slate-500 dark:text-slate-400 text-[9px] uppercase font-bold mb-0.5">{label}</Text>
+            <Text className={clsx("text-lg font-bold font-mono", isPrimary ? "text-sky-600 dark:text-sky-400" : "text-slate-900 dark:text-slate-100")}>{value}</Text>
+        </View>
+    );
+};
 
 export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps) => {
+    const { colors } = useTheme();
     if (!item) return null;
 
     const salesDollar = (item.sellingPrice * item.ros * item.storeCount).toFixed(0);
@@ -49,11 +54,11 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
                     style={{
                         width: Math.min(width * 0.9, 480),
                         maxHeight: height * 0.85,
-                        backgroundColor: '#0f172a',
+                        backgroundColor: colors.surface,
                         borderRadius: 16,
                         overflow: 'hidden',
                         borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderColor: colors.border,
                     }}
                 >
                     <ScrollView bounces={false} contentContainerStyle={{ paddingBottom: 20 }}>
@@ -102,21 +107,21 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
 
                         <View style={{ padding: 20 }}>
                             {/* Status + Lifecycle */}
-                            <View className="flex-row justify-between items-center mb-5 pb-4 border-b border-slate-800">
+                            <View className="flex-row justify-between items-center mb-5 pb-4 border-b border-slate-200 dark:border-slate-700">
                                 <View>
-                                    <Text className="text-slate-400 text-[10px] font-bold uppercase mb-1">Status</Text>
-                                    <Text className={clsx("text-lg font-bold", item.status === 'Approved' ? "text-green-400" : "text-amber-400")}>
+                                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1">Status</Text>
+                                    <Text className={clsx("text-lg font-bold", item.status === 'Approved' ? "text-green-600 dark:text-green-400" : "text-amber-600 dark:text-amber-400")}>
                                         {item.status}
                                     </Text>
                                 </View>
                                 <View className="items-end">
-                                    <Text className="text-slate-400 text-[10px] font-bold uppercase mb-1">Lifecycle</Text>
-                                    <Text className="text-lg font-bold text-white">{item.lifecycle || 'N/A'}</Text>
+                                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1">Lifecycle</Text>
+                                    <Text className="text-lg font-bold text-slate-900 dark:text-slate-100">{item.lifecycle || 'N/A'}</Text>
                                 </View>
                             </View>
 
                             {/* Economics Section */}
-                            <Text className="text-white text-sm font-bold uppercase mb-3 opacity-80">Economics</Text>
+                            <Text className="text-slate-900 dark:text-slate-100 text-sm font-bold uppercase mb-3 opacity-80">Economics</Text>
 
                             {/* Row 1: Selling Price, CP, ROS */}
                             <View className="flex-row mb-2">

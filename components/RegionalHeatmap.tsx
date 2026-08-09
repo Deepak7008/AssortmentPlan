@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GradientCard } from './ui/GradientCard';
+import { useTheme } from '../context/ThemeContext';
 
 interface HeatmapCell {
     region: string;
@@ -92,37 +93,40 @@ const CellTooltip = ({ info, onDismiss }: { info: TooltipInfo; onDismiss: () => 
 
 // ── Legend component ─────────────────────────────────────────────────────
 
-const ColorLegend = () => (
-    <View style={{ marginTop: 12, paddingHorizontal: 4 }}>
-        <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 4,
-        }}>
-            <Text style={{ color: '#64748b', fontSize: 9, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
-                Low
-            </Text>
-            <Text style={{ color: '#64748b', fontSize: 9, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
-                Sales Volume
-            </Text>
-            <Text style={{ color: '#64748b', fontSize: 9, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
-                High
-            </Text>
+const ColorLegend = () => {
+    const { colors } = useTheme();
+    return (
+        <View style={{ marginTop: 12, paddingHorizontal: 4 }}>
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: 4,
+            }}>
+                <Text style={{ color: colors.textSecondary, fontSize: 9, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
+                    Low
+                </Text>
+                <Text style={{ color: colors.textSecondary, fontSize: 9, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
+                    Sales Volume
+                </Text>
+                <Text style={{ color: colors.textSecondary, fontSize: 9, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1 }}>
+                    High
+                </Text>
+            </View>
+            <LinearGradient
+                colors={['#1e40af', '#0ea5e9', '#f59e0b', '#ef4444', '#b91c1c']}
+                locations={[0, 0.35, 0.55, 0.8, 1]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{
+                    height: 8,
+                    borderRadius: 4,
+                    overflow: 'hidden',
+                }}
+            />
         </View>
-        <LinearGradient
-            colors={['#1e40af', '#0ea5e9', '#f59e0b', '#ef4444', '#b91c1c']}
-            locations={[0, 0.35, 0.55, 0.8, 1]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{
-                height: 8,
-                borderRadius: 4,
-                overflow: 'hidden',
-            }}
-        />
-    </View>
-);
+    );
+};
 
 // ── Main component ───────────────────────────────────────────────────────
 
@@ -133,10 +137,16 @@ const LABEL_WIDTH = 84;
 
 export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
     const [tooltip, setTooltip] = useState<TooltipInfo | null>(null);
+    const [gridWidth, setGridWidth] = useState(0);
+    const { colors, isDark } = useTheme();
 
     const regions = [...new Set(data.map(d => d.region))];
     const classes = [...new Set(data.map(d => d.className))];
     const maxSales = Math.max(...data.map(d => d.sales), 1);
+
+    const cellWidth = regions.length > 0
+        ? Math.max(CELL_WIDTH, Math.floor((gridWidth - LABEL_WIDTH - CELL_GAP * regions.length) / regions.length))
+        : CELL_WIDTH;
 
     const getCellData = (region: string, className: string) => {
         const cell = data.find(d => d.region === region && d.className === className);
@@ -152,11 +162,11 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
     };
 
     return (
-        <View className="mb-4">
-            <Text className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">
+        <View className="mb-6">
+            <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
                 Regional Heatmap
             </Text>
-            <GradientCard className="p-3" colors={['rgba(30, 41, 59, 0.8)', 'rgba(15, 23, 42, 0.9)']}>
+            <GradientCard className="p-3" onLayout={(e) => setGridWidth(e.nativeEvent.layout.width)}>
                 <View style={{ position: 'relative' }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         <View>
@@ -166,10 +176,10 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                                 {regions.map(region => (
                                     <View
                                         key={region}
-                                        style={{ width: CELL_WIDTH + CELL_GAP, alignItems: 'center' }}
+                                        style={{ width: cellWidth + CELL_GAP, alignItems: 'center' }}
                                     >
                                         <Text style={{
-                                            color: '#94a3b8',
+                                            color: colors.textSecondary,
                                             fontSize: 10,
                                             fontWeight: '700',
                                             textTransform: 'uppercase',
@@ -186,7 +196,7 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                                 <View key={cls} style={{ flexDirection: 'row', marginBottom: CELL_GAP }}>
                                     <View style={{ width: LABEL_WIDTH, justifyContent: 'center', paddingRight: 4 }}>
                                         <Text
-                                            style={{ color: '#e2e8f0', fontSize: 11, fontWeight: '600' }}
+                                            style={{ color: colors.textPrimary, fontSize: 11, fontWeight: '600' }}
                                             numberOfLines={1}
                                         >
                                             {cls}
@@ -197,7 +207,7 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                                         const ratio = sales / maxSales;
                                         const isZero = sales === 0;
                                         const bgColor = isZero
-                                            ? 'rgba(30, 41, 59, 0.5)'
+                                            ? (isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.6)')
                                             : getHeatColor(ratio);
                                         const isActive = tooltip?.className === cls && tooltip?.region === region;
 
@@ -207,7 +217,7 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                                                 activeOpacity={0.7}
                                                 onPress={() => handleCellPress(cls, region, sales)}
                                                 style={{
-                                                    width: CELL_WIDTH,
+                                                    width: cellWidth,
                                                     height: CELL_HEIGHT,
                                                     marginHorizontal: CELL_GAP / 2,
                                                     borderRadius: 10,
@@ -216,8 +226,8 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                                                     justifyContent: 'center',
                                                     borderWidth: isActive ? 2 : 1,
                                                     borderColor: isActive
-                                                        ? 'rgba(255, 255, 255, 0.6)'
-                                                        : 'rgba(255, 255, 255, 0.08)',
+                                                        ? 'rgba(2, 132, 199, 0.6)'
+                                                        : 'rgba(15, 23, 42, 0.08)',
                                                     shadowColor: isZero ? 'transparent' : bgColor,
                                                     shadowOffset: { width: 0, height: 2 },
                                                     shadowOpacity: 0.4,
@@ -226,7 +236,7 @@ export const RegionalHeatmap = ({ data }: RegionalHeatmapProps) => {
                                                 }}
                                             >
                                                 <Text style={{
-                                                    color: isZero ? '#475569' : '#ffffff',
+                                                    color: isZero ? '#94a3b8' : '#ffffff',
                                                     fontSize: 11,
                                                     fontWeight: '700',
                                                     fontVariant: ['tabular-nums'],

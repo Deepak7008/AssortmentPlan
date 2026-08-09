@@ -19,12 +19,12 @@ const KPICard = ({ label, value, vsPlan, isPercent = false }: { label: string, v
     const changeText = vsPlan === 0 ? 'Flat' : `${isPositive ? '▲' : '▼'} ${Math.abs(vsPlan)}% vs Plan`;
 
     return (
-        <GradientCard className="flex-1 m-1 p-3" colors={['rgba(30, 41, 59, 0.9)', 'rgba(15, 23, 42, 0.95)']}>
-            <Text className="text-slate-400 text-[10px] uppercase font-bold mb-1">{label}</Text>
-            <Text className="text-white text-xl font-bold mb-1">{value}</Text>
+        <GradientCard className="flex-1 m-1 p-4">
+            <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold mb-1.5">{label}</Text>
+            <Text className="text-slate-900 dark:text-slate-100 text-2xl font-bold mb-1.5">{value}</Text>
             <Text className={clsx(
-                "text-[10px] font-semibold",
-                vsPlan === 0 ? "text-slate-400" : isPositive ? "text-green-400" : "text-red-400"
+                "text-[11px] font-semibold",
+                vsPlan === 0 ? "text-slate-400" : isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
             )}>
                 {changeText}
             </Text>
@@ -43,8 +43,8 @@ export const LastSeasonKPIs = ({ data }: { data: KPIData }) => {
     const sellThruVsPlan = Math.round(data.sellThru - data.sellThruPlan);
 
     return (
-        <View className="mb-4">
-            <Text className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">
+        <View className="mb-6">
+            <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
                 Last Season Performance
             </Text>
             <View className="flex-row flex-wrap -mx-1">

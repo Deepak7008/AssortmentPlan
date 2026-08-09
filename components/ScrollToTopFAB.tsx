@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext';
 
 interface ScrollToTopFABProps {
     visible: boolean;
@@ -10,6 +11,7 @@ interface ScrollToTopFABProps {
 export const ScrollToTopFAB = ({ visible, onPress }: ScrollToTopFABProps) => {
     const opacity = useRef(new Animated.Value(0)).current;
     const translateY = useRef(new Animated.Value(20)).current;
+    const { colors, isDark } = useTheme();
 
     useEffect(() => {
         Animated.parallel([
@@ -42,9 +44,9 @@ export const ScrollToTopFAB = ({ visible, onPress }: ScrollToTopFABProps) => {
             <TouchableOpacity
                 onPress={onPress}
                 activeOpacity={0.7}
-                style={styles.button}
+                style={[styles.button, { backgroundColor: isDark ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)' }]}
             >
-                <Ionicons name="arrow-up" size={20} color="#38bdf8" />
+                <Ionicons name="arrow-up" size={20} color={colors.accent} />
             </TouchableOpacity>
         </Animated.View>
     );
@@ -61,14 +63,13 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: 'rgba(15, 23, 42, 0.92)',
         borderWidth: 1,
-        borderColor: 'rgba(56, 189, 248, 0.3)',
+        borderColor: 'rgba(2, 132, 199, 0.4)',
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#0ea5e9',
+        shadowColor: '#0284c7',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.2,
         shadowRadius: 8,
         elevation: 6,
     },

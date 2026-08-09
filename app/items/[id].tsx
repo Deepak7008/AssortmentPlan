@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { fetchAssortmentData, AssortmentItem } from '../../services/dataService';
 import { Ionicons } from '@expo/vector-icons';
 import clsx from 'clsx';
-import { LinearGradient } from 'expo-linear-gradient'; // Need to be sure this is installed or use fallback view
-
-// Assuming we might not have linear-gradient installed by default in minimal template, 
-// I'll stick to View with opacity for overlay to be safe, or just standard styling.
+import { useTheme } from '../../context/ThemeContext';
 
 const MetricBox = ({ label, value, subValue, isGood = true }: any) => (
-    <View className="bg-slate-800 p-4 rounded-xl flex-1 m-1 border border-slate-700 min-w-[45%]">
-        <Text className="text-slate-400 text-xs mb-1 uppercase font-bold">{label}</Text>
-        <Text className="text-white text-xl font-bold">{value}</Text>
+    <View className="bg-white dark:bg-slate-800 p-4 rounded-xl flex-1 m-1 border border-slate-200 dark:border-slate-700 min-w-[45%]">
+        <Text className="text-slate-500 dark:text-slate-400 text-xs mb-1 uppercase font-bold">{label}</Text>
+        <Text className="text-slate-900 dark:text-slate-100 text-xl font-bold">{value}</Text>
         {subValue && (
-            <Text className={clsx("text-xs mt-1 font-bold", isGood ? "text-success" : "text-danger")}>
+            <Text className={clsx("text-xs mt-1 font-bold", isGood ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
                 {subValue}
             </Text>
         )}
@@ -25,6 +22,7 @@ export default function ItemDetail() {
     const { id } = useLocalSearchParams();
     const [item, setItem] = useState<AssortmentItem | null>(null);
     const router = useRouter();
+    const { colors, isDark } = useTheme();
 
     useEffect(() => {
         loadItem();
@@ -39,14 +37,14 @@ export default function ItemDetail() {
 
     if (!item) {
         return (
-            <View className="flex-1 bg-primary items-center justify-center">
-                <Text className="text-white">Loading...</Text>
+            <View className="flex-1 bg-slate-50 dark:bg-slate-950 items-center justify-center">
+                <Text className="text-slate-500 dark:text-slate-400">Loading...</Text>
             </View>
         );
     }
 
     return (
-        <View className="flex-1 bg-primary">
+        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
             <Stack.Screen options={{
                 headerShown: false, // We'll make a custom translucent header
             }} />
@@ -85,24 +83,24 @@ export default function ItemDetail() {
                 <View className="px-5 py-6">
 
                     {/* Status Section */}
-                    <View className="flex-row items-center mb-6 bg-slate-900 p-4 rounded-xl border border-slate-800">
-                        <View className={clsx("w-10 h-10 rounded-full items-center justify-center mr-4", item.status === 'Assorted' ? "bg-green-500/20" : "bg-slate-700")}>
+                    <View className="flex-row items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <View className={clsx("w-10 h-10 rounded-full items-center justify-center mr-4", item.status === 'Assorted' ? "bg-green-100 dark:bg-green-900/40" : "bg-slate-200 dark:bg-slate-700")}>
                             <Ionicons
                                 name={item.status === 'Assorted' ? "checkmark" : "time"}
                                 size={24}
-                                color={item.status === 'Assorted' ? "#22c55e" : "#94a3b8"}
+                                color={item.status === 'Assorted' ? "#16a34a" : colors.textSecondary}
                             />
                         </View>
                         <View>
-                            <Text className="text-slate-400 text-xs uppercase font-bold">Assortment Status</Text>
-                            <Text className={clsx("text-lg font-bold", item.status === 'Assorted' ? "text-success" : "text-white")}>
+                            <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold">Assortment Status</Text>
+                            <Text className={clsx("text-lg font-bold", item.status === 'Assorted' ? "text-green-600 dark:text-green-400" : "text-slate-900 dark:text-slate-100")}>
                                 {item.status} ({item.lifecycle})
                             </Text>
                         </View>
                     </View>
 
                     {/* Metrics Grid */}
-                    <Text className="text-white text-lg font-bold mb-4">Economics</Text>
+                    <Text className="text-slate-900 dark:text-slate-100 text-lg font-bold mb-4">Economics</Text>
                     <View className="flex-row flex-wrap justify-between -m-1">
                         <MetricBox
                             label="Selling Price"
@@ -128,17 +126,17 @@ export default function ItemDetail() {
                     </View>
 
                     {/* Store Count / Distribution */}
-                    <View className="mt-6 bg-slate-900 p-5 rounded-xl border border-slate-800 flex-row justify-between items-center">
+                    <View className="mt-6 bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex-row justify-between items-center">
                         <View>
-                            <Text className="text-slate-400 text-xs uppercase font-bold mb-1">Store Count</Text>
-                            <Text className="text-white text-2xl font-bold">{item.storeCount} Stores</Text>
+                            <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold mb-1">Store Count</Text>
+                            <Text className="text-slate-900 dark:text-slate-100 text-2xl font-bold">{item.storeCount} Stores</Text>
                         </View>
-                        <View className="h-10 w-32 bg-slate-800 rounded flex-row items-end pb-1 space-x-1 justify-center">
+                        <View className="h-10 w-32 bg-slate-100 dark:bg-slate-700 rounded flex-row items-end pb-1 space-x-1 justify-center">
                             {/* Mini Bar Chart Visual */}
-                            <View className="w-2 h-4 bg-slate-600 rounded-sm" />
-                            <View className="w-2 h-6 bg-slate-500 rounded-sm" />
+                            <View className="w-2 h-4 bg-slate-300 dark:bg-slate-600 rounded-sm" />
+                            <View className="w-2 h-6 bg-slate-400 dark:bg-slate-500 rounded-sm" />
                             <View className="w-2 h-8 bg-accent rounded-sm" />
-                            <View className="w-2 h-5 bg-slate-600 rounded-sm" />
+                            <View className="w-2 h-5 bg-slate-300 dark:bg-slate-600 rounded-sm" />
                         </View>
                     </View>
 

@@ -1,12 +1,31 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { fetchAssortmentData, AssortmentItem, parseCSV } from '../services/dataService';
 import { fetchPlannerData, parsePlannerCSV, PlannerRow } from '../services/plannerService';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Asset } from 'expo-asset';
+import * as FileSystem from 'expo-file-system/legacy';
 
 const STORAGE_KEYS = {
     ASSORTMENT: '@assortment_data',
     PLANNER: '@planner_data',
+};
+
+const DEFAULT_CSV = require('../assets/ItemData.csv');
+
+const loadDefaultCSVText = async (): Promise<string> => {
+    if (Platform.OS === 'web') {
+        const res = await fetch(DEFAULT_CSV);
+        return await res.text();
+    }
+    const asset = Asset.fromModule(DEFAULT_CSV);
+    if (!asset.localUri) {
+        await asset.downloadAsync();
+    }
+    if (!asset.localUri) {
+        throw new Error('Failed to resolve default CSV asset URI');
+    }
+    return await FileSystem.readAsStringAsync(asset.localUri);
 };
 
 interface UploadedFile {
@@ -60,8 +79,14 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
             if (stored.assortment && stored.assortment.length > 0) {
                 setData(stored.assortment);
             } else {
-                const result = await fetchAssortmentData();
-                setData(result);
+                try {
+                    const csvText = await loadDefaultCSVText();
+                    setData(parseCSV(csvText));
+                } catch (csvError) {
+                    console.error('Failed to load default CSV:', csvError);
+                    const result = await fetchAssortmentData();
+                    setData(result);
+                }
             }
 
             if (stored.planner && stored.planner.length > 0) {

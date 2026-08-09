@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Platform, Modal, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Filter, X } from 'lucide-react-native';
+import { useTheme } from '../context/ThemeContext';
 
 interface FilterBarProps {
     categories: string[];
@@ -34,6 +35,7 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
     const isActive = value !== 'All';
     const displayText = isActive ? value : label;
     const [modalVisible, setModalVisible] = useState(false);
+    const { colors } = useTheme();
 
     return (
         <View style={{ marginRight: 8, position: 'relative' }}>
@@ -54,14 +56,14 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: isActive ? 'rgba(56, 189, 248, 0.15)' : 'rgba(30, 41, 59, 0.8)',
+                        backgroundColor: isActive ? 'rgba(14, 165, 233, 0.08)' : colors.surface,
                         borderWidth: 1,
-                        borderColor: isActive ? 'rgba(56, 189, 248, 0.5)' : 'rgba(100, 116, 139, 0.3)',
+                        borderColor: isActive ? 'rgba(2, 132, 199, 0.4)' : 'rgba(148, 163, 184, 0.4)',
                     }}
                 >
                     <Text
                         style={{
-                            color: isActive ? '#38bdf8' : '#94a3b8',
+                            color: isActive ? colors.accent : colors.textSecondary,
                             fontSize: 12,
                             fontWeight: isActive ? '700' : '600',
                             marginRight: 4,
@@ -73,7 +75,7 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
                     <Ionicons
                         name="chevron-down"
                         size={12}
-                        color={isActive ? '#38bdf8' : '#64748b'}
+                        color={isActive ? colors.accent : colors.textSecondary}
                     />
                 </View>
             </TouchableOpacity>
@@ -104,11 +106,11 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
             ) : (
                 <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
                     <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-                        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 24}}>
+                        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 24}}>
                             <TouchableWithoutFeedback>
-                                <View style={{backgroundColor: '#1e293b', width: '100%', maxWidth: 320, borderRadius: 16, maxHeight: '80%', overflow: 'hidden', borderWidth: 1, borderColor: '#334155'}}>
-                                    <View style={{paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: '#334155', backgroundColor: '#0f172a'}}>
-                                        <Text style={{color: 'white', textAlign: 'center', fontSize: 16, fontWeight: '700'}}>Select {label}</Text>
+                                <View style={{backgroundColor: colors.surface, width: '100%', maxWidth: 320, borderRadius: 16, maxHeight: '80%', overflow: 'hidden', borderWidth: 1, borderColor: colors.track}}>
+                                    <View style={{paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: colors.track, backgroundColor: colors.surfaceAlt}}>
+                                        <Text style={{color: colors.textPrimary, textAlign: 'center', fontSize: 16, fontWeight: '700'}}>Select {label}</Text>
                                     </View>
                                     <ScrollView bounces={false}>
                                         {options.map((opt) => (
@@ -119,15 +121,15 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
                                                     paddingVertical: 16, 
                                                     paddingHorizontal: 20,
                                                     borderBottomWidth: 1,
-                                                    borderBottomColor: 'rgba(51, 65, 85, 0.5)',
+                                                    borderBottomColor: colors.border,
                                                     flexDirection: 'row',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
-                                                    backgroundColor: value === opt ? 'rgba(56, 189, 248, 0.1)' : 'transparent'
+                                                    backgroundColor: value === opt ? 'rgba(14, 165, 233, 0.08)' : 'transparent'
                                                 }}
                                             >
-                                                <Text style={{color: value === opt ? '#38bdf8' : '#cbd5e1', fontSize: 15, fontWeight: value === opt ? '700' : '500'}}>{opt}</Text>
-                                                {value === opt && <Ionicons name="checkmark" size={18} color="#38bdf8" />}
+                                                <Text style={{color: value === opt ? colors.accent : colors.textPrimary, fontSize: 15, fontWeight: value === opt ? '700' : '500'}}>{opt}</Text>
+                                                {value === opt && <Ionicons name="checkmark" size={18} color={colors.accent} />}
                                             </TouchableOpacity>
                                         ))}
                                     </ScrollView>
@@ -154,6 +156,7 @@ export const FilterBar = ({
         selectedCategory, selectedClass, selectedSeason,
         selectedBizLocation, selectedCountry,
     ].filter(v => v !== 'All').length;
+    const { colors } = useTheme();
 
     const clearAll = () => {
         setSelectedCategory('All');
@@ -169,7 +172,7 @@ export const FilterBar = ({
                 paddingTop: 16,
                 paddingBottom: 12,
                 borderBottomWidth: 1,
-                borderBottomColor: 'rgba(30, 41, 59, 0.6)',
+                borderBottomColor: colors.border,
                 backgroundColor: 'transparent',
             }}
         >
@@ -191,14 +194,14 @@ export const FilterBar = ({
                         borderRadius: 17,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: activeCount > 0 ? 'rgba(56, 189, 248, 0.15)' : 'rgba(30, 41, 59, 0.5)',
+                        backgroundColor: activeCount > 0 ? 'rgba(14, 165, 233, 0.08)' : colors.surface,
                         borderWidth: 1,
-                        borderColor: activeCount > 0 ? 'rgba(56, 189, 248, 0.5)' : 'rgba(100, 116, 139, 0.3)',
+                        borderColor: activeCount > 0 ? 'rgba(2, 132, 199, 0.4)' : 'rgba(148, 163, 184, 0.4)',
                         marginRight: 12,
                         position: 'relative',
                     }}
                 >
-                    <Filter size={16} color={activeCount > 0 ? '#38bdf8' : '#64748b'} strokeWidth={2.5} />
+                    <Filter size={16} color={activeCount > 0 ? colors.accent : colors.textSecondary} strokeWidth={2.5} />
                     {activeCount > 0 && (
                         <View style={{
                             position: 'absolute',
@@ -209,7 +212,7 @@ export const FilterBar = ({
                             borderRadius: 7,
                             backgroundColor: '#ef4444',
                             borderWidth: 2,
-                            borderColor: '#020617',
+                            borderColor: colors.surface,
                             alignItems: 'center',
                             justifyContent: 'center',
                         }}>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Grid Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-[#020617] text-slate-200 p-6 min-h-screen max-w-md mx-auto border-x border-slate-800">
+    
+    <div class="mb-6 border-b border-slate-800 pb-4">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Mobile 2-Column Grid (Proposed)</h2>
+        <p class="text-[10px] text-slate-500 mt-1">Replaces the cramped 3-column layout to allow larger images and readable typography.</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        
+        <!-- Card 1 -->
+        <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-xl shadow-black">
+            <div class="relative w-full h-44 bg-slate-800">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80" alt="T-Shirt" class="w-full h-full object-cover">
+                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-wide border border-white/10">
+                    Apparel
+                </div>
+            </div>
+            <div class="p-3">
+                <p class="text-[10px] text-[#38bdf8] font-bold mb-1 uppercase tracking-wider">TS-1029</p>
+                <h3 class="text-sm font-bold text-slate-100 leading-tight mb-2">Essential Basic Tee</h3>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-xs font-bold text-white">$24.99</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-[#4ade80]">↑ 62% Mg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-xl shadow-black relative">
+            <div class="absolute inset-0 border-2 border-[#38bdf8] rounded-2xl z-10 pointer-events-none"></div>
+            <div class="relative w-full h-44 bg-slate-800">
+                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&q=80" alt="Jacket" class="w-full h-full object-cover">
+                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-wide border border-white/10">
+                    Outerwear
+                </div>
+                 <div class="absolute bottom-2 left-2 flex gap-1 z-20">
+                    <span class="w-3 h-3 rounded-full bg-black border border-white/20"></span>
+                    <span class="w-3 h-3 rounded-full bg-slate-300 border border-white/20"></span>
+                </div>
+            </div>
+            <div class="p-3 bg-slate-800/50">
+                <p class="text-[10px] text-[#38bdf8] font-bold mb-1 uppercase tracking-wider">JK-4491</p>
+                <h3 class="text-sm font-bold text-slate-100 leading-tight mb-2">Varsity Bomber</h3>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-xs font-bold text-white">$89.00</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-[#4ade80]">↑ 58% Mg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-xl shadow-black opacity-80">
+            <div class="relative w-full h-44 bg-slate-800">
+                 <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                 </div>
+                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-wide border border-white/10">
+                    Accessories
+                </div>
+            </div>
+            <div class="p-3">
+                <p class="text-[10px] text-[#38bdf8] font-bold mb-1 uppercase tracking-wider">AC-9920</p>
+                <h3 class="text-sm font-bold text-slate-100 leading-tight mb-2">Leather Belt</h3>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <p class="text-xs font-bold text-white">$34.50</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-[#f87171]">↓ 42% Mg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

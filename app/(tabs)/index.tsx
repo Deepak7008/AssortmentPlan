@@ -10,30 +10,36 @@ import { FilterBar } from '../../components/FilterBar';
 import { LastSeasonKPIs } from '../../components/LastSeasonKPIs';
 import { ClassPerformanceTable } from '../../components/ClassPerformanceTable';
 import { RegionalHeatmap } from '../../components/RegionalHeatmap';
+import { TopRegions } from '../../components/TopRegions';
 import { AppHeader } from '../../components/AppHeader';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
+import { useTheme } from '../../context/ThemeContext';
 import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
+import { TopGradient } from '../../components/TopGradient';
 
-const SectionHeader = ({ title, icon }: { title: string, icon?: keyof typeof Ionicons.glyphMap }) => (
-  <View className="flex-row items-center mb-4 mt-6 pl-1">
-    {icon && <Ionicons name={icon} size={16} color="#94a3b8" style={{ marginRight: 8 }} />}
-    <Text className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-      {title}
-    </Text>
-    <View className="h-[1px] bg-slate-800 flex-1 ml-4" />
-  </View>
-);
+const SectionHeader = ({ title, icon }: { title: string, icon?: keyof typeof Ionicons.glyphMap }) => {
+  const { colors } = useTheme();
+  return (
+    <View className="flex-row items-center mb-4 mt-6 pl-1">
+      {icon && <Ionicons name={icon} size={16} color={colors.textSecondary} style={{ marginRight: 8 }} />}
+      <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+        {title}
+      </Text>
+      <View className="h-[1px] bg-slate-200 dark:bg-slate-700 flex-1 ml-4" />
+    </View>
+  );
+};
 
 const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }: any) => {
   const percent = Math.min(100, Math.max(0, (value / max) * 100));
   return (
     <View className="mb-4">
       <View className="flex-row justify-between mb-1.5">
-        <Text className="text-slate-300 text-xs font-medium">{label}</Text>
-        <Text className="text-white text-xs font-bold">{percent.toFixed(0)}%</Text>
+        <Text className="text-slate-600 dark:text-slate-400 text-xs font-medium">{label}</Text>
+        <Text className="text-slate-900 dark:text-white text-xs font-bold">{percent.toFixed(0)}%</Text>
       </View>
-      <View className="h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800/50">
+      <View className="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-300/50 dark:border-slate-700/50">
         <LinearGradient
           colors={colorColors}
           start={{ x: 0, y: 0 }}
@@ -47,6 +53,7 @@ const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }
 
 export default function Dashboard() {
   const { data, loading, handleMultiUpload, plannerData } = useData();
+  const { isDark, colors } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
@@ -214,17 +221,37 @@ export default function Dashboard() {
       : 0;
   }, [approvedItems, totalSales]);
 
+  const regionSummary = useMemo(() => {
+    const map: Record<string, { sales: number; margins: number; sellThrus: number; count: number }> = {};
+    approvedItems.forEach(item => {
+      if (!map[item.region]) map[item.region] = { sales: 0, margins: 0, sellThrus: 0, count: 0 };
+      const agg = map[item.region];
+      agg.sales += item.sellingPrice * item.ros * item.storeCount;
+      agg.margins += parseFloat(item.marginPercent) || 0;
+      agg.sellThrus += item.sellThru || 0;
+      agg.count += 1;
+    });
+    return Object.entries(map).map(([region, agg]) => ({
+      region,
+      sales: agg.sales,
+      avgMargin: agg.count > 0 ? Math.round(agg.margins / agg.count) : 0,
+      avgSellThru: agg.count > 0 ? Math.round(agg.sellThrus / agg.count) : 0,
+      itemCount: agg.count,
+    }));
+  }, [approvedItems]);
+
   if (loading) {
     return (
-      <View className="flex-1 bg-slate-950 items-center justify-center">
-        <ActivityIndicator size="large" color="#38bdf8" />
+      <View className="flex-1 bg-slate-50 dark:bg-slate-950 items-center justify-center">
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-slate-950">
-      <StatusBar barStyle="light-content" />
+    <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+      <TopGradient />
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       <SafeAreaView edges={['top']} className="flex-1">
         <AppHeader onUpload={handleMultiUpload} />
 
@@ -239,9 +266,9 @@ export default function Dashboard() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#38bdf8"
-              colors={['#38bdf8']}
-              progressBackgroundColor="#0f172a"
+              tintColor={colors.accent}
+              colors={[colors.accent]}
+              progressBackgroundColor={colors.refreshBg}
             />
           }
         >
@@ -252,22 +279,27 @@ export default function Dashboard() {
             bizLocations={bizLocations} selectedBizLocation={selectedBizLocation} setSelectedBizLocation={handleBizLocationChange}
             countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
           />
-          <View className="w-full md:max-w-7xl md:self-center">
+          <View className="w-full">
             <View className="px-4 pt-4 pb-2">
               <SectionHeader title="Current Season" icon="calendar-outline" />
-              <GradientCard className="p-4 mb-2" colors={['rgba(56, 189, 248, 0.1)', 'rgba(30, 41, 59, 0.6)']}>
+              <GradientCard
+                className="p-4 mb-2"
+                colors={isDark
+                  ? ['rgba(56, 189, 248, 0.08)', 'rgba(30, 41, 59, 0.9)']
+                  : ['rgba(56, 189, 248, 0.06)', 'rgba(241, 245, 249, 0.9)']}
+              >
                 <View className="flex-row justify-between items-center mb-4">
                   <View>
-                    <Text className="text-slate-400 text-[10px] uppercase font-bold">Total Sales Budget</Text>
-                    <Text className="text-white text-2xl font-bold">${(budget / 1000).toFixed(1)}k</Text>
+                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold">Total Sales Budget</Text>
+                    <Text className="text-slate-900 dark:text-white text-2xl font-bold">${(budget / 1000).toFixed(1)}k</Text>
                   </View>
                   <View className={clsx(
                     "px-2 py-1 rounded",
-                    vsLYPercent >= 0 ? "bg-green-500/20" : "bg-red-500/20"
+                    vsLYPercent >= 0 ? "bg-green-100 dark:bg-green-500/20" : "bg-red-100 dark:bg-red-500/20"
                   )}>
                     <Text className={clsx(
                       "text-xs font-bold",
-                      vsLYPercent >= 0 ? "text-green-400" : "text-red-400"
+                      vsLYPercent >= 0 ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"
                     )}>
                       {vsLYPercent >= 0 ? '+' : ''}{vsLYPercent}% vs LY
                     </Text>
@@ -281,7 +313,14 @@ export default function Dashboard() {
             <View className="px-4 pb-20">
               <LastSeasonKPIs data={lastSeasonData} />
               <ClassPerformanceTable data={classPerformanceData} />
-              <RegionalHeatmap data={heatmapData} />
+              <View className="flex-col md:flex-row">
+                <View className="w-full md:w-[60%] md:px-1">
+                  <RegionalHeatmap data={heatmapData} />
+                </View>
+                <View className="w-full md:w-[40%] md:px-1">
+                  <TopRegions data={regionSummary} />
+                </View>
+              </View>
             </View>
           </View>
         </ScrollView>

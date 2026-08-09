@@ -1,8 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system/legacy';
+import { useTheme } from '../context/ThemeContext';
 
 interface UploadedFile {
     name: string;
@@ -14,8 +13,14 @@ interface UploadButtonProps {
 }
 
 export const UploadButton = ({ onUpload }: UploadButtonProps) => {
+    const { colors } = useTheme();
+
     const pickDocuments = async () => {
         try {
+            // Lazy-load native-only modules so the web bundle never pulls them in
+            const DocumentPicker = require('expo-document-picker');
+            const FileSystem = require('expo-file-system/legacy');
+
             const documentPickerCache = `${FileSystem.cacheDirectory}DocumentPicker`;
             const dirInfo = await FileSystem.getInfoAsync(documentPickerCache);
             if (dirInfo.exists) {
@@ -77,9 +82,9 @@ export const UploadButton = ({ onUpload }: UploadButtonProps) => {
     return (
         <TouchableOpacity
             onPress={handlePress}
-            className="w-10 h-10 rounded-full bg-slate-800 items-center justify-center border border-slate-700"
+            className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 items-center justify-center border border-slate-200 dark:border-slate-700"
         >
-            <Ionicons name="cloud-upload-outline" size={20} color="#38bdf8" />
+            <Ionicons name="cloud-upload-outline" size={20} color={colors.accent} />
         </TouchableOpacity>
     );
 };

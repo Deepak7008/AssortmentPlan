@@ -126,6 +126,10 @@ npx expo start
 
 Scan the QR code with **Expo Go** (iOS/Android) or press `w` for web.
 
+> **Note (v2.2)**: The app is now **web-first**. It is exported as a static website
+> (`npm run web:build` → `dist/`) and used from any browser via a link — no Expo Go
+> or native install required.
+
 ---
 
 ## Documentation Index

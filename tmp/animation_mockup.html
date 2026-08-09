@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Animation Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        /* Staggered entry animations */
+        .stagger-1 { opacity: 0; transform: translateY(20px); animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--delay, 0) * 100ms) forwards; }
+        .stagger-2 { opacity: 0; transform: translateY(20px); animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--delay, 1) * 100ms) forwards; }
+        .stagger-3 { opacity: 0; transform: translateY(20px); animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--delay, 2) * 100ms) forwards; }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-[#020617] text-slate-200 p-6 min-h-screen max-w-sm mx-auto border-x border-slate-800">
+
+    <div class="mb-6 border-b border-slate-800 pb-4 stagger-1" style="--delay: 1">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Dashboard Entry Animation</h2>
+        <p class="text-[10px] text-slate-500 mt-1">Cards slide up and values tick up from zero dynamically.</p>
+    </div>
+
+    <div class="space-y-4">
+        <!-- KPI Card 1 -->
+        <div class="bg-gradient-to-br from-[#0ea5e9]/10 to-[#a855f7]/10 p-4 rounded-xl border border-white/5 stagger-2" style="--delay: 2">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Expected Retail Value</h3>
+            <div class="flex items-end gap-2">
+                <span class="text-3xl font-black text-white">$<span class="count-up" data-target="2">0</span>.<span class="count-up" data-target="4">0</span>M</span>
+                <span class="text-xs font-bold text-[#4ade80] mb-1">↑ +12%</span>
+            </div>
+        </div>
+
+        <!-- KPI Card 2 -->
+        <div class="bg-gradient-to-br from-[#0ea5e9]/10 to-[#a855f7]/10 p-4 rounded-xl border border-white/5 stagger-3" style="--delay: 3">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Overall Progress</h3>
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-end">
+                    <span class="text-3xl font-black text-white"><span class="count-up" data-target="85">0</span>%</span>
+                    <span class="text-[10px] text-slate-500 mb-1">128 assignments</span>
+                </div>
+                <!-- Progress bar also animating -->
+                <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-1.5 rounded-full bg-gradient-to-r from-[#0ea5e9] to-[#a855f7] w-0 transition-all duration-1000 ease-out" id="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Replan button to trigger the animation again -->
+    <div class="mt-10 flex justify-center stagger-3" style="--delay: 6">
+        <button onclick="playAnimations()" class="px-4 py-2 bg-slate-800 text-xs font-bold text-white rounded-full border border-slate-600 hover:bg-slate-700 active:scale-95 transition-all">
+            ⟳ Replay Animation
+        </button>
+    </div>
+
+    <script>
+        function easeOutQuart(x) {
+            return 1 - Math.pow(1 - x, 4);
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Apply easing function
+                const easedProgress = easeOutQuart(progress);
+                obj.innerHTML = Math.floor(easedProgress * (end - start) + start);
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    obj.innerHTML = end; // Ensure exact final value
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function playAnimations() {
+            // Reset stagger animations by re-triggering reflow
+            const staggers = document.querySelectorAll('[class*="stagger-"]');
+            staggers.forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; // trigger reflow
+                el.style.animation = null; 
+            });
+
+            // Reset and trigger count ups
+            const countUps = document.querySelectorAll('.count-up');
+            // Wait slightly for the slide-up to begin before starting numbers
+            setTimeout(() => {
+                countUps.forEach(el => {
+                    const target = parseInt(el.getAttribute('data-target'));
+                    el.innerHTML = "0";
+                    animateValue(el, 0, target, 1200); // 1.2s duration
+                });
+            }, 300);
+
+            // Animate progress bar width
+            const pb = document.getElementById('progress-bar');
+            pb.style.width = '0%';
+            setTimeout(() => {
+                pb.style.width = '85%';
+            }, 300);
+        }
+
+        // Run on load
+        window.onload = playAnimations;
+    </script>
+</body>
+</html>
