@@ -1,6 +1,6 @@
 # Stratos
 
-A **premium, mobile-first application** for Planners and Executives to review and track daily assortment planning activities.
+A **premium application** for Planners and Executives to review and track daily assortment planning activities and simulate planning scenarios, and make data-driven decisions.
 
 ---
 
