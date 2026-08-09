@@ -36,7 +36,7 @@ export const ExitFactorConfig = ({ weights, onWeightChange }: ExitFactorConfigPr
                     </Text>
                 </View>
             </View>
-            <Text className="text-slate-600 dark:text-slate-300 text-[11px] mb-4">
+            <Text className="text-slate-700 dark:text-slate-200 text-xs mb-4">
                 Define what matters most when identifying options for exit.
             </Text>
 

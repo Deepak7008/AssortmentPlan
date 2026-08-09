@@ -72,13 +72,13 @@ export const NumberField = ({
             </View>
 
             {baseText && (
-                <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-medium mt-1.5">
+                <Text className="text-slate-600 dark:text-slate-300 text-xs font-medium mt-1.5">
                     {baseText}
                 </Text>
             )}
 
             {showHint && hint && (
-                <Text className="text-slate-500 dark:text-slate-400 text-[10px] leading-4 mt-1.5">
+                <Text className="text-slate-600 dark:text-slate-300 text-xs leading-4 mt-1.5">
                     {hint}
                 </Text>
             )}

@@ -54,7 +54,7 @@ export const CalculationPanel = ({ result, expanded, onToggle }: CalculationPane
                             </View>
                             <View className="flex-1 border-l border-slate-200 dark:border-slate-700 pl-3">
                                 {step.lines.map(line => (
-                                    <Text key={line} className="text-slate-600 dark:text-slate-300 text-[11px] leading-5 font-mono">
+                                    <Text key={line} className="text-slate-700 dark:text-slate-200 text-xs leading-5 font-mono">
                                         {line}
                                     </Text>
                                 ))}

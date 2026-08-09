@@ -13,7 +13,7 @@ import { ItemDetailsTable } from '../../components/simulator/ItemDetailsTable';
 import { CalculationPanel } from '../../components/simulator/CalculationPanel';
 import {
     DEMO_ITEMS, DEFAULT_WEIGHTS, DEFAULT_ELASTICITY, DEFAULT_PRODUCTIVITY, DEFAULT_SUBSTITUTION,
-    buildBaseline, runSimulation, redistributeWeights,
+    buildBaseline, runSimulation,
     SimulationResult, ExitWeights,
 } from '../../services/simulationService';
 
@@ -67,7 +67,7 @@ export default function SimulatorScreen() {
     };
 
     const handleWeightChange = (key: keyof ExitWeights, value: number) => {
-        setWeights(prev => redistributeWeights(prev, key, value));
+        setWeights(prev => ({ ...prev, [key]: value }));
         setError(null);
     };
 
@@ -135,7 +135,7 @@ export default function SimulatorScreen() {
                                     Assortment Simulator
                                 </Text>
                                 <Text className="text-slate-600 dark:text-slate-300 text-xs mt-1 leading-4">
-                                    Simulate assortment depth, pricing and item exits to understand impact on key planning KPIs.
+                                    Evaluate the impact of assortment depth and pricing decisions on Units, Sales, Margin, and Sell Through.
                                 </Text>
                             </View>
                             <View className="items-end">

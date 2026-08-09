@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { GradientCard } from '../ui/GradientCard';
 import {
     SimulationResult, ExitWeights, RankedItem, SimItem,
-    fmtMoney, fmtNum, fmtFactor, whyText,
+    fmtMoney, fmtNum, fmtFactor,
     computeExitFactors, DEFAULT_WEIGHTS,
 } from '../../services/simulationService';
 import { useTheme } from '../../context/ThemeContext';
@@ -53,39 +53,30 @@ const Breakdown = ({ entry, weights }: { entry: RankedItem; weights: ExitWeights
 
     return (
         <View style={{ backgroundColor: colors.surfaceAlt, borderRadius: 12, padding: 12, marginTop: 8 }}>
-            <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider mb-2">
+            <Text className="text-slate-600 dark:text-slate-300 text-[11px] font-bold uppercase tracking-wider mb-2">
                 Exit Factor Breakdown
             </Text>
             {rows.map(row => (
                 <View key={row.label} className="flex-row items-center justify-between mb-1">
-                    <Text className="text-slate-600 dark:text-slate-300 text-[11px] font-medium flex-1">
+                    <Text className="text-slate-700 dark:text-slate-200 text-xs font-medium flex-1">
                         {row.label}: {row.raw}{' '}
-                        <Text className="text-slate-400 dark:text-slate-500">
+                        <Text className="text-slate-500 dark:text-slate-400">
                             (class avg {row.avg})
                         </Text>
                     </Text>
-                    <Text className="text-slate-900 dark:text-slate-100 text-[11px] font-bold tabular-nums">
+                    <Text className="text-slate-900 dark:text-slate-100 text-xs font-bold tabular-nums">
                         {row.score.toFixed(2)} × {row.weight}% = {(row.score * row.weight / 100).toFixed(3)}
                     </Text>
                 </View>
             ))}
             <View className="flex-row items-center justify-between mt-2 pt-2 border-t border-slate-200 dark:border-slate-700/60">
-                <Text className="text-slate-700 dark:text-slate-200 text-[11px] font-bold">
+                <Text className="text-slate-700 dark:text-slate-200 text-xs font-bold">
                     Exit Factor
                 </Text>
                 <Text className="text-sky-600 dark:text-sky-400 text-xs font-extrabold tabular-nums">
                     {fmtFactor(entry.exitFactor)}
                 </Text>
             </View>
-            <Text className="text-slate-500 dark:text-slate-400 text-[10px] leading-4 mt-2">
-                <Text className="font-bold">Why? </Text>
-                {entry.exitFactor === 0
-                    ? 'No weakness — this item is at or above class average on every factor.'
-                    : whyText(entry, weights)}
-            </Text>
-            <Text className="text-slate-400 dark:text-slate-500 text-[10px] leading-4 mt-2">
-                Score 0.00 = at or above class average. Higher score = weaker vs class.
-            </Text>
         </View>
     );
 };
@@ -151,7 +142,7 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
                     <Text className="text-slate-900 dark:text-white text-sm font-bold">
                         Item Level Details
                     </Text>
-                    <Text className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5">
+                    <Text className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
                         {summary}
                     </Text>
                 </View>

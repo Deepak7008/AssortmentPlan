@@ -190,24 +190,6 @@ export function decideActions(ranked: RankedItem[], targetOptions: number): Rank
     }));
 }
 
-// ── Weight redistribution (always totals 100) ───────────────────────────────
-
-export function redistributeWeights(
-    weights: ExitWeights,
-    key: keyof ExitWeights,
-    value: number
-): ExitWeights {
-    const clamped = Math.min(100, Math.max(0, Math.round(value)));
-    const others = (['sellThru', 'lySales', 'margin'] as const).filter(k => k !== key);
-    const remaining = 100 - clamped;
-    const otherTotal = weights[others[0]] + weights[others[1]];
-    const first = otherTotal > 0
-        ? Math.round((remaining * weights[others[0]]) / otherTotal)
-        : Math.round(remaining / 2);
-    const second = remaining - first;
-    return { ...weights, [key]: clamped, [others[0]]: first, [others[1]]: second };
-}
-
 // ── Simulation ──────────────────────────────────────────────────────────────
 
 export function runSimulation(
@@ -424,22 +406,4 @@ function buildSummary(base: BaseMetrics, params: SimParams, ctx: SummaryContext)
 
     parts.push('The combined effect results in the simulated unit, sales and margin outcome shown above.');
     return parts.join(' ');
-}
-
-// ── Item-level "Why" explanation ────────────────────────────────────────────
-
-export function whyText(entry: RankedItem, weights: ExitWeights): string {
-    const contributions = [
-        { value: entry.stScore * (weights.sellThru / 100), phrase: 'Low sell-through' },
-        { value: entry.lyScore * (weights.lySales / 100), phrase: 'weaker LY sales performance' },
-        { value: entry.marginScore * (weights.margin / 100), phrase: 'a thinner margin profile' },
-    ].filter(c => c.value > 0).sort((a, b) => b.value - a.value);
-
-    if (contributions.length === 0) {
-        return 'Scores are at or above the class average — no single factor drives this score.';
-    }
-    if (contributions.length === 1) {
-        return `${contributions[0].phrase} is the primary driver of the exit score.`;
-    }
-    return `${contributions[0].phrase} is the primary driver of the exit score, followed by ${contributions[1].phrase}.`;
 }
