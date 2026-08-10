@@ -6,12 +6,14 @@ import { NumberField } from './NumberField';
 export interface ControlsProps {
     targetOptions: string;
     targetASP: string;
+    targetCP: string;
     elasticity: string;
     productivity: string;
     substitution: string;
     onChange: (field: string, value: string) => void;
     baseOptions: number;
     baseASP: number;
+    baseCP: number;
 }
 
 const CONTROLS = [
@@ -25,6 +27,12 @@ const CONTROLS = [
         label: 'Target ASP',
         prefix: '$',
         hint: 'Target average selling price for the simulated assortment.',
+    },
+    {
+        key: 'targetCP',
+        label: 'Target CP',
+        prefix: '$',
+        hint: 'Target average cost price for the simulated assortment.',
     },
     {
         key: 'elasticity',
@@ -47,13 +55,14 @@ const CONTROLS = [
 
 export const SimulationControls = (props: ControlsProps) => {
     const {
-        targetOptions, targetASP, elasticity, productivity, substitution,
-        onChange, baseOptions, baseASP,
+        targetOptions, targetASP, targetCP, elasticity, productivity, substitution,
+        onChange, baseOptions, baseASP, baseCP,
     } = props;
 
     const values: Record<string, string> = {
         targetOptions,
         targetASP,
+        targetCP,
         elasticity,
         productivity,
         substitution,
@@ -62,7 +71,7 @@ export const SimulationControls = (props: ControlsProps) => {
     return (
         <View className="flex-row flex-wrap -mx-1">
             {CONTROLS.map(control => (
-                <View key={control.key} className="w-1/2 md:w-1/5 p-1">
+                <View key={control.key} className="w-1/2 md:w-1/6 p-1">
                     <GradientCard className="p-3" style={{ minHeight: 88 }}>
                         <NumberField
                             label={control.label}
@@ -74,7 +83,9 @@ export const SimulationControls = (props: ControlsProps) => {
                                     ? `Base: ${baseOptions} options`
                                     : control.key === 'targetASP'
                                         ? `Base: $${baseASP.toFixed(2)}`
-                                        : undefined
+                                        : control.key === 'targetCP'
+                                            ? `Base: $${baseCP.toFixed(2)}`
+                                            : undefined
                             }
                             value={values[control.key]}
                             onChangeText={t => onChange(control.key, t)}

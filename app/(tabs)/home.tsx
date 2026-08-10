@@ -1,21 +1,21 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { View, Text, ScrollView, StatusBar, TouchableOpacity, Modal, Pressable, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Modal, NativeScrollEvent, NativeSyntheticEvent, Pressable, RefreshControl, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { GradientCard } from '../../components/ui/GradientCard';
+import { AppHeader } from '../../components/AppHeader';
 import { FilterBar } from '../../components/FilterBar';
 import { PlannerProgressTable } from '../../components/PlannerProgressTable';
+import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
+import { TopGradient } from '../../components/TopGradient';
+import { GradientCard } from '../../components/ui/GradientCard';
 import { UpcomingDeadlines } from '../../components/UpcomingDeadlines';
-import { AppHeader } from '../../components/AppHeader';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
 import { useTheme } from '../../context/ThemeContext';
 import { PlannerRow } from '../../services/plannerService';
-import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
-import { TopGradient } from '../../components/TopGradient';
 
 const CURRENT_DATE = new Date();
 
@@ -307,7 +307,7 @@ export default function HomeScreen() {
                                     </LinearGradient>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity
+                                {/*<TouchableOpacity
                                     activeOpacity={0.7}
                                     onPress={() => setSelectedRow(null)}
                                     style={{ marginBottom: 4 }}
@@ -326,7 +326,7 @@ export default function HomeScreen() {
                                         <Ionicons name="warning-outline" size={18} color="#d97706" style={{ marginRight: 12 }} />
                                         <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>View Alerts</Text>
                                     </LinearGradient>
-                                </TouchableOpacity>
+                                </TouchableOpacity>*/}
 
                                 <TouchableOpacity
                                     onPress={() => setSelectedRow(null)}

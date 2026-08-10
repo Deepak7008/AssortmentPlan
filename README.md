@@ -12,7 +12,7 @@ A **premium application** for Planners and Executives to review and track daily 
 - **Smart Filtering**: Dynamic filters derived from uploaded data (Category, Business Location, Season on Home; Class, Country, Season on Dashboard/Items)
 - **Multi-File Upload**: Upload multiple CSV files (Planner Progress + Item Data) in a single action with auto-detection
 - **Contextual Navigation**: Tap a planner row → action sheet → navigate to Dashboard or Items with pre-applied filters
-- **What-If Simulator**: Adjust assortment depth (target options), target ASP, price elasticity, new-option productivity, and substitution rate, then run the simulation to see the impact
+- **What-If Simulator**: Adjust assortment depth (target options), target ASP, target CP, price elasticity, new-option productivity, and substitution rate, then run the simulation to see the impact
 
 ## Tech Stack
 

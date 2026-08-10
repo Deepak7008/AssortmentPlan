@@ -34,6 +34,7 @@ export default function SimulatorScreen() {
 
     const [targetOptions, setTargetOptions] = useState('7');
     const [targetASP, setTargetASP] = useState('50');
+    const [targetCP, setTargetCP] = useState('25');
     const [elasticity, setElasticity] = useState(String(DEFAULT_ELASTICITY));
     const [productivity, setProductivity] = useState(String(DEFAULT_PRODUCTIVITY));
     const [substitution, setSubstitution] = useState(String(DEFAULT_SUBSTITUTION));
@@ -61,6 +62,7 @@ export default function SimulatorScreen() {
         setError(null);
         if (field === 'targetOptions') setTargetOptions(value);
         if (field === 'targetASP') setTargetASP(value);
+        if (field === 'targetCP') setTargetCP(value);
         if (field === 'elasticity') setElasticity(value);
         if (field === 'productivity') setProductivity(value);
         if (field === 'substitution') setSubstitution(value);
@@ -74,6 +76,7 @@ export default function SimulatorScreen() {
     const handleRun = () => {
         const tOpt = parseInt(targetOptions, 10);
         const tAsp = parseFloat(targetASP);
+        const tCp = parseFloat(targetCP);
         const el = parseFloat(elasticity);
         const prod = parseFloat(productivity);
         const sub = parseFloat(substitution);
@@ -84,6 +87,10 @@ export default function SimulatorScreen() {
         }
         if (isNaN(tAsp) || tAsp <= 0) {
             setError('Target ASP must be greater than 0.');
+            return;
+        }
+        if (isNaN(tCp) || tCp <= 0) {
+            setError('Target CP must be greater than 0.');
             return;
         }
         if (isNaN(el) || el >= 0) {
@@ -106,6 +113,7 @@ export default function SimulatorScreen() {
         setResult(runSimulation(DEMO_ITEMS, {
             targetOptions: tOpt,
             targetASP: tAsp,
+            targetCP: tCp,
             priceElasticity: el,
             newOptionProductivity: prod,
             substitutionRate: sub,
@@ -180,12 +188,14 @@ export default function SimulatorScreen() {
                         <SimulationControls
                             targetOptions={targetOptions}
                             targetASP={targetASP}
+                            targetCP={targetCP}
                             elasticity={elasticity}
                             productivity={productivity}
                             substitution={substitution}
                             onChange={handleControlChange}
                             baseOptions={base.options}
                             baseASP={base.asp}
+                            baseCP={base.avgCp}
                         />
 
                         {/* Exit Factor Configuration */}

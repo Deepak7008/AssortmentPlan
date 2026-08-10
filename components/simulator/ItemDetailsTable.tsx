@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
 import { GradientCard } from '../ui/GradientCard';
 import {
     SimulationResult, ExitWeights, RankedItem, SimItem,
@@ -32,16 +32,18 @@ interface ColumnSpec {
 
 const COLUMNS: ColumnSpec[] = [
     { key: 'name', label: 'Item', flex: 1.5, align: 'left' },
+    { key: 'factor', label: 'Exit Factor', flex: 1, align: 'right' },
+    { key: 'rank', label: 'Rank', flex: 0.6, align: 'right' },
+    { key: 'action', label: 'Action', flex: 1, align: 'right' },
     { key: 'units', label: 'Units', flex: 1, align: 'right' },
     { key: 'cp', label: 'CP', flex: 1, align: 'right' },
     { key: 'sp', label: 'SP', flex: 1, align: 'right' },
     { key: 'margin', label: 'Margin', flex: 1, align: 'right' },
     { key: 'sellThru', label: 'Sell Thru', flex: 1, align: 'right' },
     { key: 'lySales', label: 'LY Sales', flex: 1, align: 'right' },
-    { key: 'factor', label: 'Exit Factor', flex: 1, align: 'right' },
-    { key: 'rank', label: 'Rank', flex: 0.6, align: 'right' },
-    { key: 'action', label: 'Action', flex: 1, align: 'right' },
 ];
+
+const MIN_TABLE_WIDTH = 640;
 
 const Breakdown = ({ entry, weights }: { entry: RankedItem; weights: ExitWeights }) => {
     const { colors } = useTheme();
@@ -103,6 +105,7 @@ const ActionChip = ({ entry, hasResult }: { entry: RankedItem; hasResult: boolea
 
 export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }: ItemDetailsTableProps) => {
     const { colors } = useTheme();
+    const { width } = useWindowDimensions();
     const [openRank, setOpenRank] = useState<number | null>(null);
 
     const hasResult = result !== null;
@@ -135,6 +138,70 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
         }
     };
 
+    const openEntry = ranked.find(entry => entry.rank === openRank) ?? null;
+
+    const renderRow = (entry: RankedItem, truncateName: boolean) => (
+        <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setOpenRank(openRank === entry.rank ? null : entry.rank)}
+            className="flex-row px-3 py-2.5 items-center border-b border-slate-100 dark:border-slate-800/60"
+        >
+            {COLUMNS.map(col => (
+                <View key={col.key} style={{ flex: col.flex }} className={clsx(col.align === 'right' && "items-end")}>
+                    {col.key === 'action' ? (
+                        <ActionChip entry={entry} hasResult={hasResult} />
+                    ) : (
+                        <Text
+                            numberOfLines={col.key === 'name' && truncateName ? 1 : undefined}
+                            className={clsx(
+                                "text-[11px] tabular-nums",
+                                col.key === 'name'
+                                    ? "text-slate-900 dark:text-slate-100 font-semibold"
+                                    : col.key === 'factor'
+                                        ? "text-slate-900 dark:text-white font-bold"
+                                        : "text-slate-700 dark:text-slate-200 font-medium",
+                                col.align === 'right' && "text-right"
+                            )}
+                        >
+                            {cellText(entry, col.key)}
+                        </Text>
+                    )}
+                </View>
+            ))}
+        </TouchableOpacity>
+    );
+
+    const renderRows = (breakdownInline: boolean, truncateName: boolean) => ranked.map(entry => (
+        <View key={entry.item.name}>
+            {renderRow(entry, truncateName)}
+            {breakdownInline && openRank === entry.rank && (
+                <View className="px-3 pb-3">
+                    <Breakdown entry={entry} weights={breakdownWeights} />
+                </View>
+            )}
+        </View>
+    ));
+
+    const renderTable = (minWidth: number | undefined, breakdownInline: boolean, truncateName: boolean) => (
+        <View style={minWidth ? { minWidth } : undefined}>
+            <View className="flex-row px-3 py-2 bg-slate-100 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
+                {COLUMNS.map(col => (
+                    <Text
+                        key={col.key}
+                        className={clsx(
+                            "text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase tracking-wider",
+                            col.align === 'right' && "text-right"
+                        )}
+                        style={{ flex: col.flex }}
+                    >
+                        {col.label}
+                    </Text>
+                ))}
+            </View>
+            {renderRows(breakdownInline, truncateName)}
+        </View>
+    );
+
     return (
         <GradientCard className="p-4 overflow-hidden">
             <TouchableOpacity onPress={onToggle} activeOpacity={0.7} className="flex-row items-center justify-between">
@@ -158,58 +225,24 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
 
             {expanded && (
                 <View style={{ marginTop: 14, borderRadius: 12, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' }}>
-                    <View className="flex-row px-3 py-2 bg-slate-100 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
-                        {COLUMNS.map(col => (
-                            <Text
-                                key={col.key}
-                                className={clsx(
-                                    "text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase tracking-wider",
-                                    col.align === 'right' && "text-right"
-                                )}
-                                style={{ flex: col.flex }}
+                    {width < 768 ? (
+                        <>
+                            <ScrollView
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                nestedScrollEnabled
                             >
-                                {col.label}
-                            </Text>
-                        ))}
-                    </View>
-
-                    {ranked.map(entry => (
-                        <View key={entry.item.name}>
-                            <TouchableOpacity
-                                activeOpacity={0.7}
-                                onPress={() => setOpenRank(openRank === entry.rank ? null : entry.rank)}
-                                className="flex-row px-3 py-2.5 items-center border-b border-slate-100 dark:border-slate-800/60"
-                            >
-                                {COLUMNS.map(col => (
-                                    <View key={col.key} style={{ flex: col.flex }} className={clsx(col.align === 'right' && "items-end")}>
-                                        {col.key === 'action' ? (
-                                            <ActionChip entry={entry} hasResult={hasResult} />
-                                        ) : (
-                                            <Text
-                                                className={clsx(
-                                                    "text-[11px] tabular-nums",
-                                                    col.key === 'name'
-                                                        ? "text-slate-900 dark:text-slate-100 font-semibold"
-                                                        : col.key === 'factor'
-                                                            ? "text-slate-900 dark:text-white font-bold"
-                                                            : "text-slate-700 dark:text-slate-200 font-medium",
-                                                    col.align === 'right' && "text-right"
-                                                )}
-                                            >
-                                                {cellText(entry, col.key)}
-                                            </Text>
-                                        )}
-                                    </View>
-                                ))}
-                            </TouchableOpacity>
-
-                            {openRank === entry.rank && (
+                                {renderTable(MIN_TABLE_WIDTH, false, true)}
+                            </ScrollView>
+                            {openEntry && (
                                 <View className="px-3 pb-3">
-                                    <Breakdown entry={entry} weights={breakdownWeights} />
+                                    <Breakdown entry={openEntry} weights={breakdownWeights} />
                                 </View>
                             )}
-                        </View>
-                    ))}
+                        </>
+                    ) : (
+                        renderTable(undefined, true, false)
+                    )}
                 </View>
             )}
         </GradientCard>

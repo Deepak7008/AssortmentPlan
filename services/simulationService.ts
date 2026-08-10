@@ -10,6 +10,7 @@ export interface SimItem {
 export interface SimParams {
     targetOptions: number;
     targetASP: number;
+    targetCP: number;
     priceElasticity: number;
     newOptionProductivity: number;
     substitutionRate: number;
@@ -228,7 +229,7 @@ export function runSimulation(
     const simUnits = Math.max(0, unitsBeforePrice * (1 + demandChangePct));
 
     const sales = simUnits * params.targetASP;
-    const margin = sales - simUnits * base.avgCp;
+    const margin = sales - simUnits * params.targetCP;
     const sellThru = simUnits > 0 ? base.sellThru * (base.units / simUnits) : 0;
 
     const sim: BaseMetrics = {
@@ -238,7 +239,7 @@ export function runSimulation(
         margin,
         sellThru,
         asp: params.targetASP,
-        avgCp: base.avgCp,
+        avgCp: params.targetCP,
     };
 
     const delta: Deltas = {
@@ -248,7 +249,7 @@ export function runSimulation(
         margin: margin - base.margin,
         sellThru: sellThru - base.sellThru,
         asp: params.targetASP - base.asp,
-        avgCp: 0,
+        avgCp: params.targetCP - base.avgCp,
     };
 
     return {
@@ -356,7 +357,7 @@ function buildSteps(base: BaseMetrics, params: SimParams, ctx: StepContext): Cal
     steps.push({
         label: 'Margin',
         lines: [
-            `${fmtMoney(ctx.sales)} − (${fmtNum(ctx.simUnits)} × ${fmtMoney(base.avgCp)}) ≈ ${fmtMoney(ctx.margin)}`,
+            `${fmtMoney(ctx.sales)} − (${fmtNum(ctx.simUnits)} × ${fmtMoney(params.targetCP)}) ≈ ${fmtMoney(ctx.margin)}`,
         ],
     });
     steps.push({
