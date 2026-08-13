@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Platform } from 'react-native';
+import { Platform, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type Theme = 'light' | 'dark';
@@ -24,37 +24,37 @@ export interface ThemeColors {
 }
 
 const LIGHT_COLORS: ThemeColors = {
-    background: '#f8fafc',
+    background: '#FAFAF9',
     surface: '#ffffff',
-    surfaceAlt: '#f1f5f9',
+    surfaceAlt: '#F5F5F4',
     card: '#ffffff',
-    border: 'rgba(15, 23, 42, 0.08)',
-    textPrimary: '#0f172a',
-    textSecondary: '#64748b',
-    textMuted: '#94a3b8',
-    track: '#e2e8f0',
-    accent: '#0284c7',
-    accentStrong: '#0ea5e9',
-    headerTint: '#0f172a',
-    headerBg: '#f8fafc',
-    refreshBg: '#f8fafc',
+    border: 'rgba(28, 25, 23, 0.1)',
+    textPrimary: '#1C1917',
+    textSecondary: '#57534E',
+    textMuted: '#78716C',
+    track: '#E7E5E4',
+    accent: '#B45309',
+    accentStrong: '#92400E',
+    headerTint: '#1C1917',
+    headerBg: '#FAFAF9',
+    refreshBg: '#FAFAF9',
 };
 
 const DARK_COLORS: ThemeColors = {
-    background: '#020617',
-    surface: '#0f172a',
-    surfaceAlt: '#1e293b',
-    card: '#0f172a',
-    border: 'rgba(255, 255, 255, 0.1)',
-    textPrimary: '#f1f5f9',
-    textSecondary: '#94a3b8',
-    textMuted: '#64748b',
-    track: '#1e293b',
-    accent: '#38bdf8',
-    accentStrong: '#0ea5e9',
-    headerTint: '#ffffff',
-    headerBg: '#020617',
-    refreshBg: '#0f172a',
+    background: '#1C1917',
+    surface: '#292524',
+    surfaceAlt: '#44403C',
+    card: '#292524',
+    border: 'rgba(255, 255, 255, 0.08)',
+    textPrimary: '#FAFAF9',
+    textSecondary: '#D6D3D1',
+    textMuted: '#A8A29E',
+    track: '#44403C',
+    accent: '#FBBF24',
+    accentStrong: '#F59E0B',
+    headerTint: '#FAFAF9',
+    headerBg: '#1C1917',
+    refreshBg: '#292524',
 };
 
 interface ThemeContextType {
@@ -67,7 +67,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const getInitialTheme = (): Theme => {
+const getStoredTheme = (): Theme | null => {
     if (Platform.OS === 'web' && typeof window !== 'undefined') {
         try {
             const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -76,21 +76,45 @@ const getInitialTheme = (): Theme => {
             // ignore
         }
     }
-    return 'dark';
+    return null;
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-    const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+    const systemScheme = useColorScheme();
+    const [manualTheme, setManualTheme] = useState<Theme | null>(getStoredTheme);
+
+    // Native storage can't be read synchronously — restore the persisted
+    // manual override once available (web already read it synchronously above).
+    useEffect(() => {
+        if (Platform.OS === 'web') return;
+        AsyncStorage.getItem(STORAGE_KEY)
+            .then(stored => {
+                if (stored === 'dark' || stored === 'light') setManualTheme(stored);
+            })
+            .catch(() => { });
+    }, []);
+
+    // No manual override → follow the OS setting (live), light-first fallback.
+    const theme: Theme = manualTheme ?? (systemScheme === 'dark' ? 'dark' : 'light');
 
     useEffect(() => {
-        AsyncStorage.setItem(STORAGE_KEY, theme).catch(() => { });
+        if (manualTheme) {
+            AsyncStorage.setItem(STORAGE_KEY, manualTheme).catch(() => { });
+            if (Platform.OS === 'web' && typeof window !== 'undefined') {
+                window.localStorage.setItem(STORAGE_KEY, manualTheme);
+            }
+        } else if (Platform.OS === 'web' && typeof window !== 'undefined') {
+            // Following the system — clear any previously pinned choice.
+            window.localStorage.removeItem(STORAGE_KEY);
+            AsyncStorage.removeItem(STORAGE_KEY).catch(() => { });
+        }
         if (Platform.OS === 'web' && typeof document !== 'undefined') {
             document.documentElement.classList.toggle('dark', theme === 'dark');
         }
-    }, [theme]);
+    }, [manualTheme, theme]);
 
-    const setTheme = (next: Theme) => setThemeState(next);
-    const toggleTheme = () => setThemeState(prev => (prev === 'light' ? 'dark' : 'light'));
+    const setTheme = (next: Theme) => setManualTheme(next);
+    const toggleTheme = () => setManualTheme(theme === 'light' ? 'dark' : 'light');
 
     return (
         <ThemeContext.Provider

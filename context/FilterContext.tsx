@@ -11,6 +11,7 @@ interface FilterContextType {
     setSelectedBizLocation: (value: string) => void;
     selectedCountry: string;
     setSelectedCountry: (value: string) => void;
+    resetFilters: () => void;
 }
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
@@ -22,6 +23,14 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
     const [selectedBizLocation, setSelectedBizLocation] = useState('All');
     const [selectedCountry, setSelectedCountry] = useState('All');
 
+    const resetFilters = () => {
+        setSelectedCategory('All');
+        setSelectedClass('All');
+        setSelectedSeason('All');
+        setSelectedBizLocation('All');
+        setSelectedCountry('All');
+    };
+
     return (
         <FilterContext.Provider value={{
             selectedCategory, setSelectedCategory,
@@ -29,6 +38,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
             selectedSeason, setSelectedSeason,
             selectedBizLocation, setSelectedBizLocation,
             selectedCountry, setSelectedCountry,
+            resetFilters,
         }}>
             {children}
         </FilterContext.Provider>

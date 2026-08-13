@@ -17,7 +17,7 @@ export const ExitFactorConfig = ({ weights, onWeightChange }: ExitFactorConfigPr
     return (
         <GradientCard className="p-4">
             <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-slate-900 dark:text-white text-sm font-bold">
+                <Text className="text-stone-900 dark:text-white text-sm font-sans-bold">
                     Exit Factor Configuration
                 </Text>
                 <View
@@ -29,14 +29,14 @@ export const ExitFactorConfig = ({ weights, onWeightChange }: ExitFactorConfigPr
                     )}
                 >
                     <Text className={clsx(
-                        "text-[10px] font-bold",
-                        isValid ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                        "text-[10px] font-sans-bold",
+                        isValid ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"
                     )}>
                         Total Weight: {total}%
                     </Text>
                 </View>
             </View>
-            <Text className="text-slate-700 dark:text-slate-200 text-xs mb-4">
+            <Text className="text-stone-700 dark:text-stone-200 text-xs mb-4">
                 Define what matters most when identifying options for exit.
             </Text>
 
@@ -59,7 +59,7 @@ export const ExitFactorConfig = ({ weights, onWeightChange }: ExitFactorConfigPr
             </View>
 
             {!isValid && (
-                <Text className="text-red-500 dark:text-red-400 text-[11px] font-semibold mt-2">
+                <Text className="text-red-500 dark:text-red-400 text-[11px] font-sans-semibold mt-2">
                     Weights must total exactly 100% before running a simulation.
                 </Text>
             )}

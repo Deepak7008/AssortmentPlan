@@ -56,16 +56,16 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: isActive ? 'rgba(14, 165, 233, 0.08)' : colors.surface,
+                        backgroundColor: isActive ? 'rgba(245, 158, 11, 0.08)' : colors.surface,
                         borderWidth: 1,
-                        borderColor: isActive ? 'rgba(2, 132, 199, 0.4)' : 'rgba(148, 163, 184, 0.4)',
+                        borderColor: isActive ? 'rgba(217, 119, 6, 0.4)' : 'rgba(120, 113, 108, 0.35)',
                     }}
                 >
                     <Text
                         style={{
                             color: isActive ? colors.accent : colors.textSecondary,
                             fontSize: 12,
-                            fontWeight: isActive ? '700' : '600',
+                            fontFamily: isActive ? 'Inter_700Bold' : 'Inter_600SemiBold',
                             marginRight: 4,
                         }}
                         numberOfLines={1}
@@ -110,7 +110,7 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
                             <TouchableWithoutFeedback>
                                 <View style={{backgroundColor: colors.surface, width: '100%', maxWidth: 320, borderRadius: 16, maxHeight: '80%', overflow: 'hidden', borderWidth: 1, borderColor: colors.track}}>
                                     <View style={{paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: colors.track, backgroundColor: colors.surfaceAlt}}>
-                                        <Text style={{color: colors.textPrimary, textAlign: 'center', fontSize: 16, fontWeight: '700'}}>Select {label}</Text>
+                                        <Text style={{color: colors.textPrimary, textAlign: 'center', fontSize: 16, fontFamily: 'Inter_700Bold'}}>Select {label}</Text>
                                     </View>
                                     <ScrollView bounces={false}>
                                         {options.map((opt) => (
@@ -125,10 +125,10 @@ const FilterChip = ({ label, value, options, onChange }: ChipProps) => {
                                                     flexDirection: 'row',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
-                                                    backgroundColor: value === opt ? 'rgba(14, 165, 233, 0.08)' : 'transparent'
+                                                    backgroundColor: value === opt ? 'rgba(245, 158, 11, 0.08)' : 'transparent'
                                                 }}
                                             >
-                                                <Text style={{color: value === opt ? colors.accent : colors.textPrimary, fontSize: 15, fontWeight: value === opt ? '700' : '500'}}>{opt}</Text>
+                                                <Text style={{color: value === opt ? colors.accent : colors.textPrimary, fontSize: 15, fontFamily: value === opt ? 'Inter_700Bold' : 'Inter_500Medium'}}>{opt}</Text>
                                                 {value === opt && <Ionicons name="checkmark" size={18} color={colors.accent} />}
                                             </TouchableOpacity>
                                         ))}
@@ -194,9 +194,9 @@ export const FilterBar = ({
                         borderRadius: 17,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: activeCount > 0 ? 'rgba(14, 165, 233, 0.08)' : colors.surface,
+                        backgroundColor: activeCount > 0 ? 'rgba(245, 158, 11, 0.08)' : colors.surface,
                         borderWidth: 1,
-                        borderColor: activeCount > 0 ? 'rgba(2, 132, 199, 0.4)' : 'rgba(148, 163, 184, 0.4)',
+                        borderColor: activeCount > 0 ? 'rgba(217, 119, 6, 0.4)' : 'rgba(120, 113, 108, 0.35)',
                         marginRight: 12,
                         position: 'relative',
                     }}

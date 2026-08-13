@@ -15,9 +15,9 @@ interface DeadlineEntry {
 
 const STATUS_COLORS: Record<DeadlineStatus, { dot: string; text: string; chipBg: string; chipBorder: string }> = {
     green: { dot: '#22c55e', text: '#16a34a', chipBg: 'rgba(34, 197, 94, 0.1)', chipBorder: 'rgba(34, 197, 94, 0.35)' },
-    orange: { dot: '#f59e0b', text: '#d97706', chipBg: 'rgba(245, 158, 11, 0.1)', chipBorder: 'rgba(245, 158, 11, 0.35)' },
+    orange: { dot: '#f59e0b', text: '#B45309', chipBg: 'rgba(245, 158, 11, 0.1)', chipBorder: 'rgba(245, 158, 11, 0.35)' },
     red: { dot: '#ef4444', text: '#dc2626', chipBg: 'rgba(239, 68, 68, 0.1)', chipBorder: 'rgba(239, 68, 68, 0.35)' },
-    na: { dot: '#64748b', text: '#64748b', chipBg: 'rgba(100, 116, 139, 0.1)', chipBorder: 'rgba(100, 116, 139, 0.35)' },
+    na: { dot: '#A8A29E', text: '#A8A29E', chipBg: 'rgba(120, 113, 108, 0.1)', chipBorder: 'rgba(120, 113, 108, 0.35)' },
 };
 
 const getRelativeDays = (date: string, currentDate: Date): { text: string; overdue: boolean } => {
@@ -36,7 +36,7 @@ interface UpcomingDeadlinesProps {
 }
 
 export const UpcomingDeadlines = ({ data, currentDate, limit = 5 }: UpcomingDeadlinesProps) => {
-    const { colors } = useTheme();
+    const { colors, isDark } = useTheme();
 
     const entries: DeadlineEntry[] = data.flatMap(row => [
         { plannerName: row.plannerName, detail: `${row.class} · ${row.country}`, phase: 'Option', date: row.optionPlanDate, status: getDeadlineStatus(row.optionPlanDate, currentDate) },
@@ -49,12 +49,12 @@ export const UpcomingDeadlines = ({ data, currentDate, limit = 5 }: UpcomingDead
 
     return (
         <View className="mb-6">
-            <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+            <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                 Upcoming Deadlines
             </Text>
             <GradientCard className="p-3">
                 {entries.length === 0 && (
-                    <Text className="text-slate-400 dark:text-slate-500 text-xs text-center py-4">
+                    <Text className="text-stone-400 dark:text-stone-500 text-xs text-center py-4">
                         No deadlines for selected filters
                     </Text>
                 )}
@@ -67,7 +67,7 @@ export const UpcomingDeadlines = ({ data, currentDate, limit = 5 }: UpcomingDead
                             key={`${entry.plannerName}-${entry.phase}-${index}`}
                             className={clsx(
                                 "flex-row items-center py-2.5",
-                                index < entries.length - 1 && "border-b border-slate-200/60 dark:border-slate-700/60"
+                                index < entries.length - 1 && "border-b border-stone-200/60 dark:border-stone-700/60"
                             )}
                         >
                             <View
@@ -86,7 +86,7 @@ export const UpcomingDeadlines = ({ data, currentDate, limit = 5 }: UpcomingDead
                             />
                             <View className="flex-1">
                                 <View className="flex-row items-center mb-0.5">
-                                    <Text className="text-slate-900 dark:text-slate-100 text-xs font-bold mr-2" numberOfLines={1}>
+                                    <Text className="text-stone-900 dark:text-stone-100 text-xs font-sans-bold mr-2" numberOfLines={1}>
                                         {entry.plannerName}
                                     </Text>
                                     <View
@@ -99,16 +99,16 @@ export const UpcomingDeadlines = ({ data, currentDate, limit = 5 }: UpcomingDead
                                             paddingVertical: 1,
                                         }}
                                     >
-                                        <Text style={{ color: sc.text, fontSize: 8, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                        <Text style={{ color: entry.status === 'orange' && isDark ? '#FBBF24' : sc.text, fontSize: 8, fontFamily: 'Inter_800ExtraBold', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                                             {entry.phase}
                                         </Text>
                                     </View>
                                 </View>
-                                <Text className="text-slate-400 dark:text-slate-500 text-[10px] font-medium">
+                                <Text className="text-stone-400 dark:text-stone-500 text-[10px] font-sans-medium">
                                     {entry.detail} · {formatted}
                                 </Text>
                             </View>
-                            <Text style={{ color: rel.overdue ? '#dc2626' : colors.textSecondary, fontSize: 10, fontWeight: '700' }}>
+                            <Text style={{ color: rel.overdue ? '#dc2626' : colors.textSecondary, fontSize: 10, fontFamily: 'Inter_700Bold' }}>
                                 {rel.text}
                             </Text>
                         </View>

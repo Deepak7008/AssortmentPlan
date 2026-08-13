@@ -43,12 +43,12 @@ export default function AboutScreen() {
     const { colors } = useTheme();
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <SafeAreaView edges={['top']} className="flex-1">
                 <View className="relative">
                     <GlassView intensity={10} className="px-5 py-4 border-b border-glass-border flex-row justify-between items-center">
                         <View>
-                            <Text className="text-sky-600 dark:text-sky-400 text-xl font-bold">About</Text>
+                            <Text className="text-amber-700 dark:text-amber-400 text-xl font-sans-bold">About</Text>
                         </View>
                         <TouchableOpacity
                             onPress={() => router.back()}
@@ -65,14 +65,14 @@ export default function AboutScreen() {
                     contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
                 >
                     <View className="items-center mb-6">
-                        <Text className="text-slate-900 dark:text-white text-3xl font-bold">Stratos</Text>
-                        <Text className="text-slate-700 dark:text-slate-200 text-sm font-medium text-center mt-3 leading-6">
+                        <Text className="text-stone-900 dark:text-white text-3xl font-display">Stratos</Text>
+                        <Text className="text-stone-700 dark:text-stone-200 text-sm font-sans-medium text-center mt-3 leading-6">
                             Strategic Oversight for the Retail Frontier. A native tool for Planners
                             and Executives to review and track daily assortment planning activities.
                         </Text>
                     </View>
 
-                    <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+                    <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                         Features
                     </Text>
                     <View className="flex-row flex-wrap -mx-1 mb-6">
@@ -81,64 +81,64 @@ export default function AboutScreen() {
                                 <GlassView intensity={10} className="p-3 rounded-xl flex-1">
                                     <View className="flex-row items-center mb-1">
                                         <Ionicons name={f.icon} size={16} color={colors.accent} style={{ marginRight: 6 }} />
-                                        <Text className="text-slate-900 dark:text-white text-xs font-bold">{f.title}</Text>
+                                        <Text className="text-stone-900 dark:text-white text-xs font-sans-bold">{f.title}</Text>
                                     </View>
-                                    <Text className="text-slate-700 dark:text-slate-200 text-[13px] font-medium leading-5">{f.desc}</Text>
+                                    <Text className="text-stone-700 dark:text-stone-200 text-[13px] font-sans-medium leading-5">{f.desc}</Text>
                                 </GlassView>
                             </View>
                         ))}
                     </View>
 
-                    <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+                    <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                         How to Use
                     </Text>
                     <GlassView intensity={10} className="p-4 rounded-xl mb-6">
                         {HOW_TO.map((item, index) => (
                             <View key={item.step} className="flex-row mb-3 last:mb-0">
-                                <View className="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-500/20 items-center justify-center mr-3 mt-0.5">
-                                    <Text className="text-sky-700 dark:text-sky-400 text-[11px] font-bold">{item.step}</Text>
+                                <View className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-600/20 items-center justify-center mr-3 mt-0.5">
+                                    <Text className="text-amber-800 dark:text-amber-400 text-[11px] font-sans-bold">{item.step}</Text>
                                 </View>
-                                <Text className="flex-1 text-slate-700 dark:text-slate-200 text-[13px] font-medium leading-6">{item.text}</Text>
+                                <Text className="flex-1 text-stone-700 dark:text-stone-200 text-[13px] font-sans-medium leading-6">{item.text}</Text>
                             </View>
                         ))}
                     </GlassView>
 
-                    <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+                    <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                         Assortment Simulator — How to Use & Data
                     </Text>
                     <GlassView intensity={10} className="p-4 rounded-xl mb-3">
-                        <Text className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3">
+                        <Text className="text-stone-900 dark:text-white text-xs font-sans-bold uppercase tracking-wider mb-3">
                             Using the Simulator
                         </Text>
                         {SIM_HOW_TO.map(item => (
                             <View key={item.step} className="flex-row mb-3 last:mb-0">
-                                <View className="w-6 h-6 rounded-full bg-sky-100 dark:bg-sky-500/20 items-center justify-center mr-3 mt-0.5">
-                                    <Text className="text-sky-700 dark:text-sky-400 text-[11px] font-bold">{item.step}</Text>
+                                <View className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-600/20 items-center justify-center mr-3 mt-0.5">
+                                    <Text className="text-amber-800 dark:text-amber-400 text-[11px] font-sans-bold">{item.step}</Text>
                                 </View>
-                                <Text className="flex-1 text-slate-700 dark:text-slate-200 text-[13px] font-medium leading-6">{item.text}</Text>
+                                <Text className="flex-1 text-stone-700 dark:text-stone-200 text-[13px] font-sans-medium leading-6">{item.text}</Text>
                             </View>
                         ))}
                     </GlassView>
                     <GlassView intensity={10} className="p-4 rounded-xl mb-6">
-                        <Text className="text-slate-900 dark:text-white text-xs font-bold uppercase tracking-wider mb-3">
+                        <Text className="text-stone-900 dark:text-white text-xs font-sans-bold uppercase tracking-wider mb-3">
                             How the Data Is Calculated
                         </Text>
                         {SIM_DATA.map((item, index) => (
                             <View key={index} className="flex-row mb-3 last:mb-0">
-                                <View className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-1.5 mr-3" />
-                                <Text className="flex-1 text-slate-700 dark:text-slate-200 text-[13px] font-medium leading-6">{item.text}</Text>
+                                <View className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 mr-3" />
+                                <Text className="flex-1 text-stone-700 dark:text-stone-200 text-[13px] font-sans-medium leading-6">{item.text}</Text>
                             </View>
                         ))}
                     </GlassView>
 
-                    <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+                    <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                         Tech Stack
                     </Text>
                     <GlassView intensity={10} className="p-4 rounded-xl mb-6">
-                        <Text className="text-slate-700 dark:text-slate-200 text-xs font-medium leading-6">{TECH_STACK}</Text>
+                        <Text className="text-stone-700 dark:text-stone-200 text-xs font-sans-medium leading-6">{TECH_STACK}</Text>
                     </GlassView>
 
-                    <Text className="text-slate-400 dark:text-slate-500 text-[10px] text-center mt-2">
+                    <Text className="text-stone-400 dark:text-stone-500 text-[10px] text-center mt-2">
                         © 2026 Stratos. Built for assortment planning teams.
                     </Text>
                 </ScrollView>

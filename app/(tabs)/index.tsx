@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { View, Text, ScrollView, ActivityIndicator, StatusBar, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { View, Text, ScrollView, StatusBar, RefreshControl, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import clsx from 'clsx';
 
@@ -12,34 +11,23 @@ import { ClassPerformanceTable } from '../../components/ClassPerformanceTable';
 import { RegionalHeatmap } from '../../components/RegionalHeatmap';
 import { TopRegions } from '../../components/TopRegions';
 import { AppHeader } from '../../components/AppHeader';
+import { EmptyState } from '../../components/EmptyState';
+import { Skeleton } from '../../components/Skeleton';
+import { SectionHeader } from '../../components/SectionHeader';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
 import { useTheme } from '../../context/ThemeContext';
 import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
-import { TopGradient } from '../../components/TopGradient';
 
-const SectionHeader = ({ title, icon }: { title: string, icon?: keyof typeof Ionicons.glyphMap }) => {
-  const { colors } = useTheme();
-  return (
-    <View className="flex-row items-center mb-4 mt-6 pl-1">
-      {icon && <Ionicons name={icon} size={16} color={colors.textSecondary} style={{ marginRight: 8 }} />}
-      <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-        {title}
-      </Text>
-      <View className="h-[1px] bg-slate-200 dark:bg-slate-700 flex-1 ml-4" />
-    </View>
-  );
-};
-
-const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }: any) => {
+const ProgressBar = ({ label, value, max, colorColors = ['#F59E0B', '#D97706'] }: any) => {
   const percent = Math.min(100, Math.max(0, (value / max) * 100));
   return (
     <View className="mb-4">
       <View className="flex-row justify-between mb-1.5">
-        <Text className="text-slate-600 dark:text-slate-400 text-xs font-medium">{label}</Text>
-        <Text className="text-slate-900 dark:text-white text-xs font-bold">{percent.toFixed(0)}%</Text>
+        <Text className="text-stone-600 dark:text-stone-400 text-xs font-sans-medium">{label}</Text>
+        <Text className="text-stone-900 dark:text-white text-xs font-sans-bold" style={{ fontVariant: ['tabular-nums'] }}>{percent.toFixed(0)}%</Text>
       </View>
-      <View className="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-300/50 dark:border-slate-700/50">
+      <View className="h-2 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden border border-stone-300/50 dark:border-stone-700/50">
         <LinearGradient
           colors={colorColors}
           start={{ x: 0, y: 0 }}
@@ -50,6 +38,21 @@ const ProgressBar = ({ label, value, max, colorColors = ['#0ea5e9', '#38bdf8'] }
     </View>
   );
 };
+
+const DashboardSkeleton = () => (
+  <View className="px-4 pt-4">
+    <Skeleton height={160} radius={16} style={{ marginBottom: 16 }} />
+    <View className="flex-row flex-wrap -mx-1 mb-2">
+      {[...Array(4)].map((_, i) => (
+        <View key={i} className="w-1/2 md:w-1/4 p-1">
+          <Skeleton height={90} radius={12} />
+        </View>
+      ))}
+    </View>
+    <Skeleton height={220} radius={16} style={{ marginBottom: 16 }} />
+    <Skeleton height={160} radius={16} />
+  </View>
+);
 
 export default function Dashboard() {
   const { data, loading, handleMultiUpload, plannerData } = useData();
@@ -77,6 +80,7 @@ export default function Dashboard() {
     selectedSeason, setSelectedSeason,
     selectedBizLocation, setSelectedBizLocation,
     selectedCountry, setSelectedCountry,
+    resetFilters,
   } = useFilters();
 
   const categoryToClasses = useMemo(() => {
@@ -180,8 +184,12 @@ export default function Dashboard() {
     return classNames.map(className => {
       const classItems = approvedItems.filter(item => item.className === className);
       const sales = classItems.reduce((sum, item) => sum + (item.sellingPrice * item.ros * item.storeCount), 0);
+      const lySales = classItems.reduce((sum, item) => sum + (item.lastYearSales || 0), 0);
       const avgMargin = classItems.length > 0
         ? Math.round(classItems.reduce((sum, item) => sum + parseFloat(item.marginPercent), 0) / classItems.length)
+        : 0;
+      const avgLYMargin = classItems.length > 0
+        ? classItems.reduce((sum, item) => sum + (item.lastYearMarginPercent || 0), 0) / classItems.length
         : 0;
       const avgROI = classItems.length > 0
         ? classItems.reduce((sum, item) => sum + item.roi, 0) / classItems.length
@@ -191,8 +199,8 @@ export default function Dashboard() {
         sales,
         marginPercent: avgMargin,
         roi: avgROI,
-        salesChange: Math.floor(Math.random() * 10) - 3,
-        marginChange: Math.floor(Math.random() * 6) - 2,
+        salesChange: lySales > 0 ? Math.round(((sales - lySales) / lySales) * 100) : 0,
+        marginChange: avgLYMargin > 0 ? Math.round(avgMargin - avgLYMargin) : 0,
       };
     }).filter(d => d.sales > 0 || approvedItems.some(i => i.className === d.className));
   }, [approvedItems]);
@@ -240,17 +248,8 @@ export default function Dashboard() {
     }));
   }, [approvedItems]);
 
-  if (loading) {
-    return (
-      <View className="flex-1 bg-slate-50 dark:bg-slate-950 items-center justify-center">
-        <ActivityIndicator size="large" color={colors.accent} />
-      </View>
-    );
-  }
-
   return (
-    <View className="flex-1 bg-slate-50 dark:bg-slate-950">
-      <TopGradient />
+    <View className="flex-1 bg-stone-50 dark:bg-stone-900">
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       <SafeAreaView edges={['top']} className="flex-1">
         <AppHeader onUpload={handleMultiUpload} />
@@ -280,25 +279,42 @@ export default function Dashboard() {
             countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
           />
           <View className="w-full">
+            {loading ? (
+              <DashboardSkeleton />
+            ) : data.length === 0 ? (
+              <EmptyState
+                icon="cloud-upload-outline"
+                title="No data yet"
+                message="Load the demo dataset or upload your own CSV files to explore the assortment."
+                actionLabel="Load Demo Data"
+                onAction={() => handleMultiUpload([{ name: '__RESET__', text: '__RESET__' }])}
+              />
+            ) : filteredData.length === 0 ? (
+              <EmptyState
+                icon="filter-outline"
+                title="No items match your filters"
+                message="Try adjusting or clearing the active filters to see more items."
+                actionLabel="Clear Filters"
+                onAction={resetFilters}
+              />
+            ) : (
+              <>
             <View className="px-4 pt-4 pb-2">
               <SectionHeader title="Current Season" icon="calendar-outline" />
               <GradientCard
                 className="p-4 mb-2"
-                colors={isDark
-                  ? ['rgba(56, 189, 248, 0.08)', 'rgba(30, 41, 59, 0.9)']
-                  : ['rgba(56, 189, 248, 0.06)', 'rgba(241, 245, 249, 0.9)']}
               >
                 <View className="flex-row justify-between items-center mb-4">
                   <View>
-                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold">Total Sales Budget</Text>
-                    <Text className="text-slate-900 dark:text-white text-2xl font-bold">${(budget / 1000).toFixed(1)}k</Text>
+                    <Text className="text-stone-500 dark:text-stone-400 text-[10px] uppercase font-sans-bold">Total Sales Budget</Text>
+                    <Text className="text-stone-900 dark:text-white text-2xl font-sans-bold" style={{ fontVariant: ['tabular-nums'] }}>${(budget / 1000).toFixed(1)}k</Text>
                   </View>
                   <View className={clsx(
                     "px-2 py-1 rounded",
                     vsLYPercent >= 0 ? "bg-green-100 dark:bg-green-500/20" : "bg-red-100 dark:bg-red-500/20"
                   )}>
                     <Text className={clsx(
-                      "text-xs font-bold",
+                      "text-xs font-sans-bold",
                       vsLYPercent >= 0 ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"
                     )}>
                       {vsLYPercent >= 0 ? '+' : ''}{vsLYPercent}% vs LY
@@ -322,6 +338,8 @@ export default function Dashboard() {
                 </View>
               </View>
             </View>
+            </>
+            )}
           </View>
         </ScrollView>
 

@@ -91,7 +91,7 @@ const TabItem = ({ isFocused, onPress, onLongPress, IconComponent, label }: any)
             styles.tabLabel,
             { 
               color: isFocused ? colors.accent : colors.textSecondary,
-              fontWeight: isFocused ? '700' : '500'
+              fontFamily: isFocused ? 'Inter_700Bold' : 'Inter_500Medium'
             }
           ]}>
             {label}

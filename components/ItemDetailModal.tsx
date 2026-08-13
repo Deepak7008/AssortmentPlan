@@ -14,9 +14,9 @@ interface ItemDetailModalProps {
 const MetricBox = ({ label, value, isPrimary = false }: { label: string, value: string, isPrimary?: boolean }) => {
     const { colors, isDark } = useTheme();
     return (
-        <View className={clsx("p-2.5 rounded-xl flex-1 mx-0.5 border", isPrimary ? "bg-sky-50 dark:bg-sky-500/15 border-sky-500/50 dark:border-sky-500/30" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700")}>
-            <Text className="text-slate-500 dark:text-slate-400 text-[9px] uppercase font-bold mb-0.5">{label}</Text>
-            <Text className={clsx("text-lg font-bold font-mono", isPrimary ? "text-sky-600 dark:text-sky-400" : "text-slate-900 dark:text-slate-100")}>{value}</Text>
+        <View className={clsx("p-2.5 rounded-xl flex-1 mx-0.5 border", isPrimary ? "bg-amber-50 dark:bg-amber-600/15 border-amber-600/50 dark:border-amber-600/30" : "bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700")}>
+            <Text className="text-stone-500 dark:text-stone-400 text-[9px] uppercase font-sans-bold mb-0.5">{label}</Text>
+            <Text className={clsx("text-lg font-sans-bold font-mono", isPrimary ? "text-amber-700 dark:text-amber-400" : "text-stone-900 dark:text-stone-100")} style={{ fontVariant: ['tabular-nums'] }}>{value}</Text>
         </View>
     );
 };
@@ -92,14 +92,14 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
                                 right: 16,
                                 padding: 16,
                                 borderRadius: 12,
-                                backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                                backgroundColor: 'rgba(28, 25, 23, 0.85)',
                                 borderWidth: 1,
                                 borderColor: 'rgba(255, 255, 255, 0.08)',
                             }}>
-                                <Text style={{ color: '#ffffff', fontSize: 20, fontWeight: '700', lineHeight: 24, marginBottom: 4 }}>
+                                <Text style={{ color: '#ffffff', fontSize: 20, fontFamily: 'Inter_700Bold', lineHeight: 24, marginBottom: 4 }}>
                                     {item.name}
                                 </Text>
-                                <Text style={{ color: '#cbd5e1', fontSize: 14 }}>
+                                <Text style={{ color: '#D6D3D1', fontSize: 14 }}>
                                     {item.className} • {item.season}
                                 </Text>
                             </View>
@@ -107,21 +107,21 @@ export const ItemDetailModal = ({ visible, item, onClose }: ItemDetailModalProps
 
                         <View style={{ padding: 20 }}>
                             {/* Status + Lifecycle */}
-                            <View className="flex-row justify-between items-center mb-5 pb-4 border-b border-slate-200 dark:border-slate-700">
+                            <View className="flex-row justify-between items-center mb-5 pb-4 border-b border-stone-200 dark:border-stone-700">
                                 <View>
-                                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1">Status</Text>
-                                    <Text className={clsx("text-lg font-bold", item.status === 'Approved' ? "text-green-600 dark:text-green-400" : "text-amber-600 dark:text-amber-400")}>
+                                    <Text className="text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase mb-1">Status</Text>
+                                    <Text className={clsx("text-lg font-sans-bold", item.status === 'Approved' ? "text-green-700 dark:text-green-400" : "text-amber-700 dark:text-amber-400")}>
                                         {item.status}
                                     </Text>
                                 </View>
                                 <View className="items-end">
-                                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-1">Lifecycle</Text>
-                                    <Text className="text-lg font-bold text-slate-900 dark:text-slate-100">{item.lifecycle || 'N/A'}</Text>
+                                    <Text className="text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase mb-1">Lifecycle</Text>
+                                    <Text className="text-lg font-sans-bold text-stone-900 dark:text-stone-100">{item.lifecycle || 'N/A'}</Text>
                                 </View>
                             </View>
 
                             {/* Economics Section */}
-                            <Text className="text-slate-900 dark:text-slate-100 text-sm font-bold uppercase mb-3 opacity-80">Economics</Text>
+                            <Text className="text-stone-900 dark:text-stone-100 text-sm font-sans-bold uppercase mb-3 opacity-80">Economics</Text>
 
                             {/* Row 1: Selling Price, CP, ROS */}
                             <View className="flex-row mb-2">

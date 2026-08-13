@@ -19,8 +19,8 @@ interface TopRegionsProps {
 
 const BAR_COLORS: [string, string][] = [
     ['#f59e0b', '#fbbf24'],
-    ['#38bdf8', '#0ea5e9'],
-    ['#64748b', '#94a3b8'],
+    ['#d97706', '#f59e0b'],
+    ['#78716c', '#a8a29e'],
 ];
 
 export const TopRegions = ({ data }: TopRegionsProps) => {
@@ -30,12 +30,12 @@ export const TopRegions = ({ data }: TopRegionsProps) => {
 
     return (
         <View className="mb-6">
-            <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+            <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                 Top Regions
             </Text>
             <GradientCard className="p-3">
                 {sorted.length === 0 && (
-                    <Text className="text-slate-400 dark:text-slate-500 text-xs text-center py-4">
+                    <Text className="text-stone-400 dark:text-stone-500 text-xs text-center py-4">
                         No data for selected filters
                     </Text>
                 )}
@@ -47,7 +47,7 @@ export const TopRegions = ({ data }: TopRegionsProps) => {
                             key={region.region}
                             className={clsx(
                                 "flex-row items-center py-2.5",
-                                index < sorted.length - 1 && "border-b border-slate-200/60 dark:border-slate-700/60"
+                                index < sorted.length - 1 && "border-b border-stone-200/60 dark:border-stone-700/60"
                             )}
                         >
                             <View
@@ -67,7 +67,7 @@ export const TopRegions = ({ data }: TopRegionsProps) => {
                                     style={{
                                         color: index < 3 ? BAR_COLORS[colorsIdx][1] : colors.textMuted,
                                         fontSize: 10,
-                                        fontWeight: '800',
+                                        fontFamily: 'Inter_800ExtraBold',
                                     }}
                                 >
                                     {index + 1}
@@ -75,15 +75,15 @@ export const TopRegions = ({ data }: TopRegionsProps) => {
                             </View>
                             <View className="flex-1">
                                 <View className="flex-row justify-between items-center mb-1">
-                                    <Text className="text-slate-900 dark:text-slate-100 text-xs font-bold">{region.region}</Text>
+                                    <Text className="text-stone-900 dark:text-stone-100 text-xs font-sans-bold">{region.region}</Text>
                                     <Text
-                                        className="text-slate-900 dark:text-white text-xs font-bold"
+                                        className="text-stone-900 dark:text-white text-xs font-sans-bold"
                                         style={{ fontVariant: ['tabular-nums'] }}
                                     >
                                         ${(region.sales / 1000).toFixed(1)}k
                                     </Text>
                                 </View>
-                                <View className="h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <View className="h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
                                     <LinearGradient
                                         colors={BAR_COLORS[colorsIdx]}
                                         start={{ x: 0, y: 0 }}
@@ -92,13 +92,13 @@ export const TopRegions = ({ data }: TopRegionsProps) => {
                                     />
                                 </View>
                                 <View className="flex-row mt-1">
-                                    <Text className="text-slate-400 dark:text-slate-500 text-[9px] font-semibold mr-3">
+                                    <Text className="text-stone-400 dark:text-stone-500 text-[9px] font-sans-semibold mr-3">
                                         Margin {region.avgMargin}%
                                     </Text>
-                                    <Text className="text-slate-400 dark:text-slate-500 text-[9px] font-semibold mr-3">
+                                    <Text className="text-stone-400 dark:text-stone-500 text-[9px] font-sans-semibold mr-3">
                                         Sell Thru {region.avgSellThru}%
                                     </Text>
-                                    <Text className="text-slate-400 dark:text-slate-500 text-[9px] font-semibold">
+                                    <Text className="text-stone-400 dark:text-stone-500 text-[9px] font-sans-semibold">
                                         {region.itemCount} items
                                     </Text>
                                 </View>

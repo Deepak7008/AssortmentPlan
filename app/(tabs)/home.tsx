@@ -9,9 +9,10 @@ import { AppHeader } from '../../components/AppHeader';
 import { FilterBar } from '../../components/FilterBar';
 import { PlannerProgressTable } from '../../components/PlannerProgressTable';
 import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
-import { TopGradient } from '../../components/TopGradient';
 import { GradientCard } from '../../components/ui/GradientCard';
 import { UpcomingDeadlines } from '../../components/UpcomingDeadlines';
+import { EmptyState } from '../../components/EmptyState';
+import { Skeleton } from '../../components/Skeleton';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -19,9 +20,16 @@ import { PlannerRow } from '../../services/plannerService';
 
 const CURRENT_DATE = new Date();
 
+const HomeSkeleton = () => (
+    <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
+        <Skeleton height={120} radius={16} style={{ marginBottom: 20 }} />
+        <Skeleton height={280} radius={16} />
+    </View>
+);
+
 
 export default function HomeScreen() {
-    const { plannerData, handleMultiUpload, data } = useData();
+    const { plannerData, handleMultiUpload, data, loading } = useData();
     const { isDark, colors } = useTheme();
     const {
         selectedCategory, setSelectedCategory,
@@ -29,6 +37,7 @@ export default function HomeScreen() {
         selectedSeason, setSelectedSeason,
         selectedBizLocation, setSelectedBizLocation,
         selectedCountry, setSelectedCountry,
+        resetFilters,
     } = useFilters();
     const router = useRouter();
 
@@ -128,8 +137,7 @@ export default function HomeScreen() {
     });
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
-            <TopGradient />
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
             <SafeAreaView edges={['top']} className="flex-1">
                 <AppHeader onUpload={handleMultiUpload} />
@@ -159,16 +167,46 @@ export default function HomeScreen() {
                         countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
                     />
                     <View className="w-full">
+                        {loading ? (
+                            <HomeSkeleton />
+                        ) : plannerData.length === 0 && data.length === 0 ? (
+                            <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
+                                <EmptyState
+                                    icon="cloud-upload-outline"
+                                    title="No data yet"
+                                    message="Load the demo dataset or upload your own CSV files to explore the assortment."
+                                    actionLabel="Load Demo Data"
+                                    onAction={() => handleMultiUpload([{ name: '__RESET__', text: '__RESET__' }])}
+                                />
+                            </View>
+                        ) : plannerData.length === 0 ? (
+                            <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
+                                <EmptyState
+                                    icon="clipboard-outline"
+                                    title="No assignments yet"
+                                    message="Upload a planner CSV to track assignment progress and deadlines."
+                                />
+                            </View>
+                        ) : filteredData.length === 0 ? (
+                            <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
+                                <EmptyState
+                                    icon="filter-outline"
+                                    title="No assignments match your filters"
+                                    message="Try adjusting or clearing the active filters to see more assignments."
+                                    actionLabel="Clear Filters"
+                                    onAction={resetFilters}
+                                />
+                            </View>
+                        ) : (
+                            <>
                         <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
                             <GradientCard
-                                colors={['rgba(56, 189, 248, 0.06)', 'rgba(168, 85, 247, 0.04)']}
                                 className="p-4 mb-5"
                             >
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                                    <Text style={{ color: colors.textSecondary, fontSize: 10, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' }}>
+                                    <Text style={{ color: colors.textPrimary, fontSize: 14, fontFamily: 'Inter_600SemiBold' }}>
                                         Overall Team Progress
-                                    </Text>
-                                    <Text style={{ color: colors.textPrimary, fontSize: 20, fontWeight: '800' }}>
+                                    </Text>                                    <Text style={{ color: colors.textPrimary, fontSize: 20, fontFamily: 'Inter_800ExtraBold', fontVariant: ['tabular-nums'] }}>
                                         {overallProgress}%
                                     </Text>
                                 </View>
@@ -181,7 +219,7 @@ export default function HomeScreen() {
                                     borderColor: colors.border,
                                 }}>
                                     <LinearGradient
-                                        colors={['#0ea5e9', '#a855f7']}
+                                        colors={['#F59E0B', '#D97706']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
                                         style={{
@@ -191,7 +229,7 @@ export default function HomeScreen() {
                                         }}
                                     />
                                 </View>
-                                <Text style={{ color: colors.textSecondary, fontSize: 10, marginTop: 6, textAlign: 'right' }}>
+                                <Text style={{ color: colors.textSecondary, fontSize: 10, marginTop: 6, textAlign: 'right', fontVariant: ['tabular-nums'] }}>
                                     {filteredData.length} assignments tracked
                                 </Text>
                             </GradientCard>
@@ -201,8 +239,8 @@ export default function HomeScreen() {
                             <View className="flex-col md:flex-row">
                                 <View className="w-full md:w-[60%] md:px-1">
                                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-                                        <Ionicons name="people-outline" size={14} color={colors.textSecondary} style={{ marginRight: 8 }} />
-                                        <Text style={{ color: colors.textSecondary, fontSize: 10, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase' }}>
+                                        <Ionicons name="people-outline" size={15} color={colors.accent} style={{ marginRight: 8 }} />
+                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontFamily: 'Inter_600SemiBold' }}>
                                             Planner Progress ({dateStr})
                                         </Text>
                                         <View style={{ height: 1, backgroundColor: colors.track, flex: 1, marginLeft: 12 }} />
@@ -214,6 +252,8 @@ export default function HomeScreen() {
                                 </View>
                             </View>
                         </View>
+                            </>
+                        )}
                     </View>
                 </ScrollView>
 
@@ -230,8 +270,8 @@ export default function HomeScreen() {
                         <Pressable onPress={() => { }} style={{ marginHorizontal: 12, marginBottom: 24, maxWidth: 560, width: '100%', alignSelf: 'center' }}>
                             <LinearGradient
                                 colors={isDark
-                                    ? ['rgba(30, 41, 59, 0.98)', 'rgba(15, 23, 42, 0.98)']
-                                    : ['rgba(255, 255, 255, 0.98)', 'rgba(241, 245, 249, 0.98)']}
+                                    ? ['rgba(41, 37, 36, 0.98)', 'rgba(41, 37, 36, 0.98)']
+                                    : ['rgba(255, 255, 255, 0.98)', 'rgba(245, 245, 244, 0.98)']}
                                 style={{
                                     borderRadius: 20,
                                     padding: 20,
@@ -241,7 +281,7 @@ export default function HomeScreen() {
                             >
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
                                     <Ionicons name="person-circle-outline" size={20} color={colors.accent} style={{ marginRight: 8 }} />
-                                    <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700' }}>
+                                    <Text style={{ color: colors.textPrimary, fontSize: 16, fontFamily: 'Inter_700Bold' }}>
                                         {selectedRow?.plannerName}
                                     </Text>
                                 </View>
@@ -263,18 +303,18 @@ export default function HomeScreen() {
                                     style={{ marginBottom: 8 }}
                                 >
                                     <LinearGradient
-                                        colors={['rgba(14, 165, 233, 0.12)', 'rgba(14, 165, 233, 0.04)']}
+                                        colors={['rgba(245, 158, 11, 0.12)', 'rgba(245, 158, 11, 0.04)']}
                                         style={{
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             padding: 14,
                                             borderRadius: 12,
                                             borderWidth: 1,
-                                            borderColor: 'rgba(2, 132, 199, 0.3)',
+                                            borderColor: 'rgba(217, 119, 6, 0.3)',
                                         }}
                                     >
                                         <Ionicons name="grid-outline" size={18} color={colors.accent} style={{ marginRight: 12 }} />
-                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>View Dashboard</Text>
+                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontFamily: 'Inter_600SemiBold' }}>View Dashboard</Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
 
@@ -292,18 +332,18 @@ export default function HomeScreen() {
                                     style={{ marginBottom: 8 }}
                                 >
                                     <LinearGradient
-                                        colors={['rgba(168, 85, 247, 0.12)', 'rgba(168, 85, 247, 0.04)']}
+                                        colors={['rgba(28, 25, 23, 0.06)', 'rgba(28, 25, 23, 0.02)']}
                                         style={{
                                             flexDirection: 'row',
                                             alignItems: 'center',
                                             padding: 14,
                                             borderRadius: 12,
                                             borderWidth: 1,
-                                            borderColor: 'rgba(147, 51, 234, 0.3)',
+                                            borderColor: colors.border,
                                         }}
                                     >
-                                        <Ionicons name="shirt-outline" size={18} color="#7c3aed" style={{ marginRight: 12 }} />
-                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>View Items</Text>
+                                        <Ionicons name="shirt-outline" size={18} color={colors.textSecondary} style={{ marginRight: 12 }} />
+                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontFamily: 'Inter_600SemiBold' }}>View Items</Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
 
@@ -324,7 +364,7 @@ export default function HomeScreen() {
                                         }}
                                     >
                                         <Ionicons name="warning-outline" size={18} color="#d97706" style={{ marginRight: 12 }} />
-                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>View Alerts</Text>
+                                        <Text style={{ color: colors.textPrimary, fontSize: 14, fontFamily: 'Inter_600SemiBold' }}>View Alerts</Text>
                                     </LinearGradient>
                                 </TouchableOpacity>*/}
 
@@ -332,7 +372,7 @@ export default function HomeScreen() {
                                     onPress={() => setSelectedRow(null)}
                                     style={{ alignItems: 'center', paddingVertical: 12, marginTop: 4 }}
                                 >
-                                    <Text style={{ color: colors.textSecondary, fontSize: 13, fontWeight: '600' }}>Cancel</Text>
+                                    <Text style={{ color: colors.textSecondary, fontSize: 13, fontFamily: 'Inter_600SemiBold' }}>Cancel</Text>
                                 </TouchableOpacity>
                             </LinearGradient>
                         </Pressable>

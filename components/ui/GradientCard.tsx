@@ -1,6 +1,5 @@
 import React from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
-import { ViewProps } from 'react-native';
+import { View, ViewProps } from 'react-native';
 import clsx from 'clsx';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -10,6 +9,11 @@ interface GradientCardProps extends ViewProps {
     children?: React.ReactNode;
 }
 
+/**
+ * Solid surface card with hairline border and soft shadow.
+ * (Kept the name/API so callers are unchanged; gradients are
+ * reserved for data visualization, not card backgrounds.)
+ */
 export const GradientCard = ({
     colors,
     className,
@@ -17,21 +21,26 @@ export const GradientCard = ({
     children,
     ...props
 }: GradientCardProps) => {
-    const { isDark } = useTheme();
-    const defaultColors = isDark
-        ? ['rgba(30, 41, 59, 0.9)', 'rgba(15, 23, 42, 0.9)']
-        : ['rgba(255, 255, 255, 0.95)', 'rgba(241, 245, 249, 0.85)'];
+    const { colors: themeColors } = useTheme();
 
     return (
-        <LinearGradient
-            colors={colors ?? defaultColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className={clsx("rounded-xl border border-glass-border overflow-hidden shadow-lg", className)}
-            style={style}
-            {...props as any}
+        <View
+            className={clsx("rounded-xl border", className)}
+            style={[
+                {
+                    backgroundColor: themeColors.card,
+                    borderColor: themeColors.border,
+                    shadowColor: '#1C1917',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.04,
+                    shadowRadius: 4,
+                    elevation: 1,
+                },
+                style,
+            ]}
+            {...props}
         >
             {children}
-        </LinearGradient>
+        </View>
     );
 };

@@ -1,6 +1,5 @@
 import React from 'react';
-import { BlurView } from 'expo-blur';
-import { ViewProps, Platform, View } from 'react-native';
+import { View, ViewProps } from 'react-native';
 import clsx from 'clsx';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -10,33 +9,21 @@ interface GlassViewProps extends ViewProps {
     children?: React.ReactNode;
 }
 
+/**
+ * Solid surface container with a hairline border.
+ * (Kept the name/API so callers are unchanged; blur/glass effects
+ * are now reserved for the floating tab bar only.)
+ */
 export const GlassView = ({ intensity = 20, className, style, children, ...props }: GlassViewProps) => {
-    const { isDark } = useTheme();
-    // Android doesn't support BlurView as well as iOS, so we might need a fallback or lighter touch
-    const isAndroid = Platform.OS === 'android';
-
-    if (isAndroid) {
-        // Fallback for Android: Semi-transparent background
-        return (
-            <View
-                className={clsx("bg-white/90 dark:bg-slate-900/90 border border-glass-border", className)}
-                style={style}
-                {...props}
-            >
-                {children}
-            </View>
-        );
-    }
+    const { colors } = useTheme();
 
     return (
-        <BlurView
-            intensity={intensity}
-            tint={isDark ? 'dark' : 'light'}
-            className={clsx("overflow-hidden border border-glass-border bg-white/60 dark:bg-slate-900/60", className)}
-            style={style}
+        <View
+            className={clsx("border", className)}
+            style={[{ backgroundColor: colors.surface, borderColor: colors.border }, style]}
             {...props}
         >
             {children}
-        </BlurView>
+        </View>
     );
 };

@@ -20,11 +20,11 @@ const KPICard = ({ label, value, vsPlan, isPercent = false }: { label: string, v
 
     return (
         <GradientCard className="flex-1 m-1 p-4">
-            <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold mb-1.5">{label}</Text>
-            <Text className="text-slate-900 dark:text-slate-100 text-2xl font-bold mb-1.5">{value}</Text>
+            <Text className="text-stone-500 dark:text-stone-400 text-xs uppercase font-sans-bold mb-1.5">{label}</Text>
+            <Text className="text-stone-900 dark:text-stone-100 text-2xl font-sans-bold mb-1.5" style={{ fontVariant: ['tabular-nums'] }}>{value}</Text>
             <Text className={clsx(
-                "text-[11px] font-semibold",
-                vsPlan === 0 ? "text-slate-400" : isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                "text-[11px] font-sans-semibold",
+                vsPlan === 0 ? "text-stone-400" : isPositive ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"
             )}>
                 {changeText}
             </Text>
@@ -44,7 +44,7 @@ export const LastSeasonKPIs = ({ data }: { data: KPIData }) => {
 
     return (
         <View className="mb-6">
-            <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 pl-1">
+            <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200 mb-3 pl-1">
                 Last Season Performance
             </Text>
             <View className="flex-row flex-wrap -mx-1">

@@ -12,17 +12,17 @@ interface AttributeData {
 
 const AttributeColumn = ({ title, items }: { title: string; items: { name: string; percent: number }[] }) => (
     <View className="flex-1 mx-1">
-        <Text className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase mb-2 text-center">{title}</Text>
+        <Text className="text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase mb-2 text-center">{title}</Text>
         {items.slice(0, 3).map((item, index) => (
-            <View key={index} className="flex-row justify-between py-1 px-2 mb-1 bg-slate-100 dark:bg-slate-800 rounded">
-                <Text className="text-slate-800 dark:text-slate-200 text-xs" numberOfLines={1}>{item.name || '-'}</Text>
-                <Text className="text-sky-600 dark:text-sky-400 text-xs font-bold">{item.percent}%</Text>
+            <View key={index} className="flex-row justify-between py-1 px-2 mb-1 bg-stone-100 dark:bg-stone-800 rounded">
+                <Text className="text-stone-800 dark:text-stone-200 text-xs" numberOfLines={1}>{item.name || '-'}</Text>
+                <Text className="text-amber-700 dark:text-amber-400 text-xs font-sans-bold">{item.percent}%</Text>
             </View>
         ))}
         {items.length < 3 && [...Array(3 - items.length)].map((_, i) => (
-            <View key={`empty-${i}`} className="flex-row justify-between py-1 px-2 mb-1 bg-slate-100 dark:bg-slate-800 rounded">
-                <Text className="text-slate-400 dark:text-slate-500 text-xs">-</Text>
-                <Text className="text-slate-400 dark:text-slate-500 text-xs">0%</Text>
+            <View key={`empty-${i}`} className="flex-row justify-between py-1 px-2 mb-1 bg-stone-100 dark:bg-stone-800 rounded">
+                <Text className="text-stone-400 dark:text-stone-500 text-xs">-</Text>
+                <Text className="text-stone-400 dark:text-stone-500 text-xs">0%</Text>
             </View>
         ))}
     </View>
@@ -38,7 +38,7 @@ export const AttributeDistribution = ({ data }: { data: AttributeData }) => {
                 onPress={() => setIsExpanded(!isExpanded)}
                 className="flex-row items-center justify-between mb-3 pl-1"
             >
-                <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200">
                     Attribute Distribution
                 </Text>
                 <Ionicons

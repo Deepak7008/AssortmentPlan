@@ -9,9 +9,9 @@ interface ItemCardProps {
 }
 
 const getColumns = (width: number) => {
-    if (width >= 1280) return 6;
+    if (width >= 1280) return 5;
     if (width >= 768) return 4;
-    return 3;
+    return 2;
 };
 
 export const ItemCard = ({ item, onPress }: ItemCardProps) => {
@@ -28,16 +28,16 @@ export const ItemCard = ({ item, onPress }: ItemCardProps) => {
         ? 'bg-green-500'
         : item.status === 'Under Review'
             ? 'bg-yellow-500'
-            : 'bg-slate-500';
+            : 'bg-stone-500';
 
     return (
         <TouchableOpacity
             onPress={() => onPress(item)}
-            className="bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700"
-            style={{ width: CARD_WIDTH, marginBottom: 6 }}
+            className="bg-white dark:bg-stone-800 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700"
+            style={{ width: CARD_WIDTH, marginBottom: 10 }}
             activeOpacity={0.8}
         >
-            <View className="relative" style={{ height: 100 }}>
+            <View className="relative" style={{ height: 140 }}>
                 <Image
                     source={imageSource}
                     className="w-full h-full"
@@ -46,22 +46,22 @@ export const ItemCard = ({ item, onPress }: ItemCardProps) => {
                 />
                 <View className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-black/40 to-transparent" />
                 <View className={clsx(
-                    "absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded",
+                    "absolute top-2 left-2 px-2 py-0.5 rounded",
                     statusColor
                 )}>
-                    <Text className="text-[8px] font-bold text-white">{item.status}</Text>
+                    <Text className="text-[9px] font-sans-bold text-white">{item.status}</Text>
                 </View>
             </View>
 
-            <View className="p-1.5">
-                <Text className="text-slate-900 dark:text-slate-100 text-[10px] font-bold" numberOfLines={1}>
+            <View className="p-2">
+                <Text className="text-stone-900 dark:text-stone-100 text-xs font-sans-bold" numberOfLines={1}>
                     {item.name}
                 </Text>
-                <View className="flex-row justify-between items-baseline mt-0.5">
-                    <Text className="text-slate-500 dark:text-slate-400 text-[8px]" numberOfLines={1}>
+                <View className="flex-row justify-between items-baseline mt-1">
+                    <Text className="text-stone-500 dark:text-stone-400 text-[10px]" numberOfLines={1}>
                         {item.className}
                     </Text>
-                    <Text className="text-sky-600 dark:text-sky-400 text-xs font-bold">
+                    <Text className="text-amber-700 dark:text-amber-400 text-sm font-sans-bold" style={{ fontVariant: ['tabular-nums'] }}>
                         ${item.sellingPrice.toFixed(0)}
                     </Text>
                 </View>

@@ -3,7 +3,6 @@ import { View, Text, ScrollView, StatusBar, TouchableOpacity, NativeSyntheticEve
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../../context/ThemeContext';
-import { TopGradient } from '../../components/TopGradient';
 import { DocsButton } from '../../components/DocsButton';
 import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
 import { SimulationControls } from '../../components/simulator/SimulationControls';
@@ -16,17 +15,7 @@ import {
     buildBaseline, runSimulation,
     SimulationResult, ExitWeights,
 } from '../../services/simulationService';
-
-const SectionHeader = ({ title }: { title: string }) => {
-    return (
-        <View className="flex-row items-center mb-4 mt-6 pl-1">
-            <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                {title}
-            </Text>
-            <View className="h-[1px] bg-slate-200 dark:bg-slate-700 flex-1 ml-4" />
-        </View>
-    );
-};
+import { SectionHeader } from '../../components/SectionHeader';
 
 export default function SimulatorScreen() {
     const { isDark } = useTheme();
@@ -123,8 +112,7 @@ export default function SimulatorScreen() {
     };
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
-            <TopGradient />
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
             <SafeAreaView edges={['top']} className="flex-1">
                 <ScrollView
@@ -139,10 +127,10 @@ export default function SimulatorScreen() {
                         {/* Page header */}
                         <View className="flex-row items-center justify-between pt-4">
                             <View className="flex-1 pr-4">
-                                <Text className="text-slate-900 dark:text-white text-2xl font-bold">
+                                <Text className="text-stone-900 dark:text-stone-100 text-3xl font-display">
                                     Assortment Simulator
                                 </Text>
-                                <Text className="text-slate-600 dark:text-slate-300 text-xs mt-1 leading-4">
+                                <Text className="text-stone-600 dark:text-stone-300 text-xs mt-1 leading-4">
                                     Evaluate the impact of assortment depth and pricing decisions on Units, Sales, Margin, and Sell Through.
                                 </Text>
                             </View>
@@ -155,20 +143,20 @@ export default function SimulatorScreen() {
                                         activeOpacity={0.85}
                                     >
                                         <LinearGradient
-                                            colors={canRun ? ['#0284c7', '#0ea5e9'] : ['#64748b', '#94a3b8']}
+                                            colors={canRun ? ['#D97706', '#F59E0B'] : ['#A8A29E', '#D6D3D1']}
                                             start={{ x: 0, y: 0 }}
                                             end={{ x: 1, y: 0 }}
                                             className="px-5 py-2.5 rounded-xl"
                                             style={{ opacity: canRun ? 1 : 0.6 }}
                                         >
-                                            <Text className="text-white text-sm font-bold">
+                                            <Text className="text-stone-900 text-sm font-sans-bold">
                                                 {result ? 'Simulation Updated' : 'Run Simulation'}
                                             </Text>
                                         </LinearGradient>
                                     </TouchableOpacity>
                                 </View>
                                 {lastRunAt && (
-                                    <Text className="text-slate-500 dark:text-slate-400 text-[10px] mt-1.5 font-medium">
+                                    <Text className="text-stone-500 dark:text-stone-400 text-[10px] mt-1.5 font-sans-medium">
                                         Last simulated: {lastRunAt}
                                     </Text>
                                 )}
@@ -177,7 +165,7 @@ export default function SimulatorScreen() {
 
                         {error && (
                             <View className="mt-3 bg-red-100 dark:bg-red-500/15 border border-red-300 dark:border-red-500/40 rounded-xl px-4 py-2.5">
-                                <Text className="text-red-600 dark:text-red-400 text-xs font-semibold">
+                                <Text className="text-red-700 dark:text-red-400 text-xs font-sans-semibold">
                                     {error}
                                 </Text>
                             </View>

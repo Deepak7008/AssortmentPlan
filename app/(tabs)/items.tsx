@@ -9,11 +9,12 @@ import { ItemDetailModal } from '../../components/ItemDetailModal';
 import { AttributeDistribution } from '../../components/AttributeDistribution';
 import { AppHeader } from '../../components/AppHeader';
 import { FilterBar } from '../../components/FilterBar';
+import { EmptyState } from '../../components/EmptyState';
+import { Skeleton, SkeletonItemCard } from '../../components/Skeleton';
 import { useData } from '../../context/DataContext';
 import { useFilters } from '../../context/FilterContext';
 import { useTheme } from '../../context/ThemeContext';
 import { ScrollToTopFAB } from '../../components/ScrollToTopFAB';
-import { TopGradient } from '../../components/TopGradient';
 
 const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title: string, children: React.ReactNode, defaultExpanded?: boolean }) => {
     const [expanded, setExpanded] = useState(defaultExpanded);
@@ -25,7 +26,7 @@ const CollapsibleSection = ({ title, children, defaultExpanded = true }: { title
                 onPress={() => setExpanded(!expanded)}
                 className="flex-row items-center justify-between py-2"
             >
-                <Text className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{title}</Text>
+                <Text className="text-sm font-sans-semibold text-stone-700 dark:text-stone-200">{title}</Text>
                 <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={16} color={colors.textSecondary} />
             </TouchableOpacity>
             {expanded && children}
@@ -43,6 +44,7 @@ export default function ItemsScreen() {
         selectedSeason, setSelectedSeason,
         selectedBizLocation, setSelectedBizLocation,
         selectedCountry, setSelectedCountry,
+        resetFilters,
     } = useFilters();
 
     const [selectedItem, setSelectedItem] = useState<AssortmentItem | null>(null);
@@ -167,8 +169,7 @@ export default function ItemsScreen() {
     }, [filteredData]);
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
-            <TopGradient />
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <SafeAreaView edges={['top']} className="flex-1">
                 <AppHeader onUpload={handleMultiUpload} />
 
@@ -193,29 +194,59 @@ export default function ItemsScreen() {
                         countries={countries} selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry}
                     />
                     <View className="w-full">
-                        <View className="px-4 mt-4">
-
-                            <CollapsibleSection title="Options Count">
-                                <View className="flex-row justify-between bg-white dark:bg-slate-900 p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
-                                    <View className="items-center flex-1 border-r border-slate-200 dark:border-slate-700/50">
-                                        <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold mb-1">Approved</Text>
-                                        <Text className="text-green-600 dark:text-green-400 text-3xl font-bold">{approvedCount}</Text>
-                                    </View>
-                                    <View className="items-center flex-1 border-r border-slate-200 dark:border-slate-700/50">
-                                        <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold mb-1">Under Review</Text>
-                                        <Text className="text-amber-600 dark:text-amber-400 text-3xl font-bold">{underReviewCount}</Text>
-                                    </View>
-                                    <View className="items-center flex-1">
-                                        <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold mb-1">Suggested</Text>
-                                        <Text className="text-sky-600 dark:text-sky-400 text-3xl font-bold">{suggestedCount || 0}</Text>
-                                    </View>
+                        {loading ? (
+                            <View className="px-4 mt-4">
+                                <Skeleton height={96} radius={12} style={{ marginBottom: 16 }} />
+                                <Skeleton height={96} radius={12} style={{ marginBottom: 20 }} />
+                                <View className="flex-row flex-wrap justify-between">
+                                    {[...Array(6)].map((_, i) => (
+                                        <SkeletonItemCard key={i} />
+                                    ))}
                                 </View>
-                            </CollapsibleSection>
+                            </View>
+                        ) : data.length === 0 ? (
+                            <EmptyState
+                                icon="cloud-upload-outline"
+                                title="No data yet"
+                                message="Load the demo dataset or upload your own CSV files to explore the assortment."
+                                actionLabel="Load Demo Data"
+                                onAction={() => handleMultiUpload([{ name: '__RESET__', text: '__RESET__' }])}
+                            />
+                        ) : filteredData.length === 0 ? (
+                            <EmptyState
+                                icon="filter-outline"
+                                title="No items match your filters"
+                                message="Try adjusting or clearing the active filters to see more items."
+                                actionLabel="Clear Filters"
+                                onAction={resetFilters}
+                            />
+                        ) : (
+                            <>
+                                <View className="px-4 mt-4">
 
-                            <AttributeDistribution data={attributeData} />
-                        </View>
+                                    <CollapsibleSection title="Options Count">
+                                        <View className="flex-row justify-between bg-white dark:bg-stone-800 p-4 rounded-xl border border-dashed border-stone-200 dark:border-stone-700">
+                                            <View className="items-center flex-1 border-r border-stone-200 dark:border-stone-700/50">
+                                                <Text className="text-stone-500 dark:text-stone-400 text-[10px] uppercase font-sans-bold mb-1">Approved</Text>
+                                                <Text className="text-green-700 dark:text-green-400 text-3xl font-sans-bold" style={{ fontVariant: ['tabular-nums'] }}>{approvedCount}</Text>
+                                            </View>
+                                            <View className="items-center flex-1 border-r border-stone-200 dark:border-stone-700/50">
+                                                <Text className="text-stone-500 dark:text-stone-400 text-[10px] uppercase font-sans-bold mb-1">Under Review</Text>
+                                                <Text className="text-amber-700 dark:text-amber-400 text-3xl font-sans-bold" style={{ fontVariant: ['tabular-nums'] }}>{underReviewCount}</Text>
+                                            </View>
+                                            <View className="items-center flex-1">
+                                                <Text className="text-stone-500 dark:text-stone-400 text-[10px] uppercase font-sans-bold mb-1">Suggested</Text>
+                                                <Text className="text-amber-700 dark:text-amber-400 text-3xl font-sans-bold" style={{ fontVariant: ['tabular-nums'] }}>{suggestedCount || 0}</Text>
+                                            </View>
+                                        </View>
+                                    </CollapsibleSection>
 
-                        <ItemGrid items={filteredData} onItemPress={handleItemPress} />
+                                    <AttributeDistribution data={attributeData} />
+                                </View>
+
+                                <ItemGrid items={filteredData} onItemPress={handleItemPress} />
+                            </>
+                        )}
 
                         <View className="h-20" />
                     </View>

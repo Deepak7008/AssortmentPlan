@@ -42,29 +42,29 @@ export const ResultsTable = ({ result }: ResultsTableProps) => {
         <GradientCard className="p-4 overflow-hidden">
             {!result ? (
                 <View className="items-center py-10">
-                    <View className="w-10 h-10 rounded-full bg-sky-100 dark:bg-sky-500/15 items-center justify-center mb-3">
-                        <View className="w-4 h-4 rounded-sm border-2 border-sky-500" style={{ transform: [{ rotate: '45deg' }] }} />
+                    <View className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-600/15 items-center justify-center mb-3">
+                        <View className="w-4 h-4 rounded-sm border-2 border-amber-600" style={{ transform: [{ rotate: '45deg' }] }} />
                     </View>
-                    <Text className="text-slate-600 dark:text-slate-300 text-sm font-bold">
+                    <Text className="text-stone-600 dark:text-stone-300 text-sm font-sans-bold">
                         No simulation yet
                     </Text>
-                    <Text className="text-slate-500 dark:text-slate-400 text-xs mt-1 text-center px-6">
+                    <Text className="text-stone-500 dark:text-stone-400 text-xs mt-1 text-center px-6">
                         Set your assumptions and press Run Simulation to see the impact.
                     </Text>
                 </View>
             ) : (
                 <View>
-                    <View className="flex-row border-b border-slate-200 dark:border-slate-700 pb-2 mb-1">
-                        <Text className="flex-[1.4] text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+                    <View className="flex-row border-b border-stone-200 dark:border-stone-700 pb-2 mb-1">
+                        <Text className="flex-[1.4] text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase tracking-wider">
                             KPI
                         </Text>
-                        <Text className="flex-1 text-right text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+                        <Text className="flex-1 text-right text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase tracking-wider">
                             Base
                         </Text>
-                        <Text className="flex-1 text-right text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+                        <Text className="flex-1 text-right text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase tracking-wider">
                             Simulation
                         </Text>
-                        <Text className="flex-1 text-right text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+                        <Text className="flex-1 text-right text-stone-500 dark:text-stone-400 text-[10px] font-sans-bold uppercase tracking-wider">
                             Delta
                         </Text>
                     </View>
@@ -81,26 +81,26 @@ export const ResultsTable = ({ result }: ResultsTableProps) => {
                         const isNeutral = delta === 0;
 
                         return (
-                            <View key={row.key} className="flex-row items-center py-2 border-b border-slate-100 dark:border-slate-800/60 last:border-b-0">
-                                <Text className="flex-[1.4] text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                            <View key={row.key} className="flex-row items-center py-2 border-b border-stone-100 dark:border-stone-800/60 last:border-b-0">
+                                <Text className="flex-[1.4] text-stone-600 dark:text-stone-300 text-xs font-sans-semibold">
                                     {row.label}
                                 </Text>
-                                <Text className="flex-1 text-right text-slate-700 dark:text-slate-200 text-xs font-semibold tabular-nums">
+                                <Text className="flex-1 text-right text-stone-700 dark:text-stone-200 text-xs font-sans-semibold tabular-nums">
                                     {formatValue(base, row.format)}
                                 </Text>
-                                <Text className="flex-1 text-right text-slate-900 dark:text-white text-xs font-bold tabular-nums">
+                                <Text className="flex-1 text-right text-stone-900 dark:text-white text-xs font-sans-bold tabular-nums">
                                     {formatValue(sim, row.format)}
                                 </Text>
                                 <View className="flex-1 items-end">
                                     <Text className={clsx(
-                                        "text-xs font-bold tabular-nums",
-                                        isNeutral ? "text-slate-400 dark:text-slate-500" : delta > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                                        "text-xs font-sans-bold tabular-nums",
+                                        isNeutral ? "text-stone-400 dark:text-stone-500" : delta > 0 ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"
                                     )}>
                                         {delta > 0 ? '+' : ''}{formatValue(delta, row.format)}
                                     </Text>
                                     <Text className={clsx(
-                                        "text-[9px] font-semibold",
-                                        isNeutral ? "text-slate-400 dark:text-slate-500" : delta > 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                                        "text-[9px] font-sans-semibold",
+                                        isNeutral ? "text-stone-400 dark:text-stone-500" : delta > 0 ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400"
                                     )}>
                                         {row.key === 'sellThru' ? pct : pct}
                                     </Text>

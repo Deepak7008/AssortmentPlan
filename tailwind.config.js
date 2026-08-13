@@ -6,14 +6,22 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: "#0f172a", // Deep Navy (Slate-900)
-                secondary: "#1e293b", // Slate-800
-                accent: "#38bdf8", // Sky-400
-                success: "#22c55e", // Green-500
-                danger: "#ef4444", // Red-500
-                warning: "#f59e0b", // Amber-500
-                "glass-border": "rgba(15, 23, 42, 0.08)",
-                "glass-bg": "rgba(255, 255, 255, 0.7)",
+                primary: "#1C1917", // Warm ink (Stone-900)
+                secondary: "#292524", // Stone-800
+                accent: "#B45309", // Amber-700 (gold)
+                success: "#15803D", // Green-700
+                danger: "#B91C1C", // Red-800
+                warning: "#B45309", // Amber-700
+                "glass-border": "rgba(28, 25, 23, 0.1)",
+                "glass-bg": "rgba(255, 255, 255, 0.85)",
+            },
+            fontFamily: {
+                sans: ["Inter_400Regular", "system-ui", "-apple-system", "sans-serif"],
+                "sans-medium": ["Inter_500Medium", "system-ui", "-apple-system", "sans-serif"],
+                "sans-semibold": ["Inter_600SemiBold", "system-ui", "-apple-system", "sans-serif"],
+                "sans-bold": ["Inter_700Bold", "system-ui", "-apple-system", "sans-serif"],
+                "sans-extrabold": ["Inter_800ExtraBold", "system-ui", "-apple-system", "sans-serif"],
+                display: ["Fraunces_600SemiBold", "Georgia", "serif"],
             },
         },
     },

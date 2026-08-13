@@ -44,7 +44,7 @@ export const ScrollToTopFAB = ({ visible, onPress }: ScrollToTopFABProps) => {
             <TouchableOpacity
                 onPress={onPress}
                 activeOpacity={0.7}
-                style={[styles.button, { backgroundColor: isDark ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)' }]}
+                style={[styles.button, { backgroundColor: isDark ? 'rgba(41, 37, 36, 0.95)' : 'rgba(255, 255, 255, 0.95)' }]}
             >
                 <Ionicons name="arrow-up" size={20} color={colors.accent} />
             </TouchableOpacity>
@@ -64,10 +64,10 @@ const styles = StyleSheet.create({
         height: 44,
         borderRadius: 22,
         borderWidth: 1,
-        borderColor: 'rgba(2, 132, 199, 0.4)',
+        borderColor: 'rgba(217, 119, 6, 0.4)',
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#0284c7',
+        shadowColor: '#B45309',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 8,

@@ -82,7 +82,8 @@ export const UploadButton = ({ onUpload }: UploadButtonProps) => {
     return (
         <TouchableOpacity
             onPress={handlePress}
-            className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 items-center justify-center border border-slate-200 dark:border-slate-700"
+            accessibilityLabel="Upload data files"
+            className="w-10 h-10 rounded-full bg-white dark:bg-stone-800 items-center justify-center border border-stone-200 dark:border-stone-700"
         >
             <Ionicons name="cloud-upload-outline" size={20} color={colors.accent} />
         </TouchableOpacity>

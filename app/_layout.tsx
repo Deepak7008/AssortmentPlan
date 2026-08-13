@@ -4,6 +4,9 @@ import { StatusBar } from "expo-status-bar";
 import { View, LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold } from "@expo-google-fonts/inter";
+import { Fraunces_400Regular, Fraunces_600SemiBold, Fraunces_700Bold } from "@expo-google-fonts/fraunces";
 import { DataProvider } from "../context/DataContext";
 import { FilterProvider } from "../context/FilterContext";
 import { AuthProvider, useAuth } from "../context/AuthContext";
@@ -54,7 +57,7 @@ function AppContent() {
   return (
     <DataProvider>
       <FilterProvider>
-        <View className={isDark ? 'dark flex-1 bg-slate-950' : 'flex-1 bg-slate-50'} onLayout={onLayoutRootView}>
+        <View className={isDark ? 'dark flex-1 bg-stone-950' : 'flex-1 bg-stone-50'} onLayout={onLayoutRootView}>
           <StatusBar style={isDark ? "light" : "dark"} />
           <Stack
             screenOptions={{
@@ -63,7 +66,7 @@ function AppContent() {
               },
               headerTintColor: colors.headerTint,
               headerTitleStyle: {
-                fontWeight: "bold",
+                fontFamily: "Inter_700Bold",
               },
               contentStyle: {
                 backgroundColor: colors.headerBg,
@@ -73,7 +76,6 @@ function AppContent() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: "modal", headerShown: false }} />
             <Stack.Screen name="about" options={{ presentation: "modal", headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
           </Stack>
         </View>
       </FilterProvider>
@@ -82,6 +84,21 @@ function AppContent() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    Fraunces_400Regular,
+    Fraunces_600SemiBold,
+    Fraunces_700Bold,
+  });
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
     <SafeAreaProvider>
       <ThemeProvider>

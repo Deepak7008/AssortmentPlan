@@ -7,11 +7,11 @@ import clsx from 'clsx';
 import { useTheme } from '../../context/ThemeContext';
 
 const MetricBox = ({ label, value, subValue, isGood = true }: any) => (
-    <View className="bg-white dark:bg-slate-800 p-4 rounded-xl flex-1 m-1 border border-slate-200 dark:border-slate-700 min-w-[45%]">
-        <Text className="text-slate-500 dark:text-slate-400 text-xs mb-1 uppercase font-bold">{label}</Text>
-        <Text className="text-slate-900 dark:text-slate-100 text-xl font-bold">{value}</Text>
+    <View className="bg-white dark:bg-stone-800 p-4 rounded-xl flex-1 m-1 border border-stone-200 dark:border-stone-700 min-w-[45%]">
+        <Text className="text-stone-500 dark:text-stone-400 text-xs mb-1 uppercase font-sans-bold">{label}</Text>
+        <Text className="text-stone-900 dark:text-stone-100 text-xl font-sans-bold">{value}</Text>
         {subValue && (
-            <Text className={clsx("text-xs mt-1 font-bold", isGood ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
+            <Text className={clsx("text-xs mt-1 font-sans-bold", isGood ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400")}>
                 {subValue}
             </Text>
         )}
@@ -37,14 +37,14 @@ export default function ItemDetail() {
 
     if (!item) {
         return (
-            <View className="flex-1 bg-slate-50 dark:bg-slate-950 items-center justify-center">
-                <Text className="text-slate-500 dark:text-slate-400">Loading...</Text>
+            <View className="flex-1 bg-stone-50 dark:bg-stone-900 items-center justify-center">
+                <Text className="text-stone-500 dark:text-stone-400">Loading...</Text>
             </View>
         );
     }
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <Stack.Screen options={{
                 headerShown: false, // We'll make a custom translucent header
             }} />
@@ -61,13 +61,13 @@ export default function ItemDetail() {
                     <View className="absolute inset-0 bg-black/30" />
                     <View className="absolute bottom-0 left-0 right-0 p-6 bg-black/60">
                         <View className="flex-row justify-between items-center mb-1">
-                            <Text className="text-slate-300 text-sm font-bold tracking-widest uppercase">{item.className}</Text>
+                            <Text className="text-stone-300 text-sm font-sans-bold tracking-widest uppercase">{item.className}</Text>
                             <View className="bg-white/20 px-2 py-1 rounded">
-                                <Text className="text-white text-xs font-bold">{item.season}</Text>
+                                <Text className="text-white text-xs font-sans-bold">{item.season}</Text>
                             </View>
                         </View>
-                        <Text className="text-white text-3xl font-bold leading-tight mb-2">{item.name}</Text>
-                        <Text className="text-slate-300 text-sm">SKU: {item.id} • {item.country}</Text>
+                        <Text className="text-white text-3xl font-sans-bold leading-tight mb-2">{item.name}</Text>
+                        <Text className="text-stone-300 text-sm">SKU: {item.id} • {item.country}</Text>
                     </View>
 
                     {/* Back Button Overlay */}
@@ -83,8 +83,8 @@ export default function ItemDetail() {
                 <View className="px-5 py-6">
 
                     {/* Status Section */}
-                    <View className="flex-row items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                        <View className={clsx("w-10 h-10 rounded-full items-center justify-center mr-4", item.status === 'Assorted' ? "bg-green-100 dark:bg-green-900/40" : "bg-slate-200 dark:bg-slate-700")}>
+                    <View className="flex-row items-center mb-6 bg-white dark:bg-stone-800 p-4 rounded-xl border border-stone-200 dark:border-stone-700">
+                        <View className={clsx("w-10 h-10 rounded-full items-center justify-center mr-4", item.status === 'Assorted' ? "bg-green-100 dark:bg-green-900/40" : "bg-stone-200 dark:bg-stone-700")}>
                             <Ionicons
                                 name={item.status === 'Assorted' ? "checkmark" : "time"}
                                 size={24}
@@ -92,15 +92,15 @@ export default function ItemDetail() {
                             />
                         </View>
                         <View>
-                            <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold">Assortment Status</Text>
-                            <Text className={clsx("text-lg font-bold", item.status === 'Assorted' ? "text-green-600 dark:text-green-400" : "text-slate-900 dark:text-slate-100")}>
+                            <Text className="text-stone-500 dark:text-stone-400 text-xs uppercase font-sans-bold">Assortment Status</Text>
+                            <Text className={clsx("text-lg font-sans-bold", item.status === 'Assorted' ? "text-green-700 dark:text-green-400" : "text-stone-900 dark:text-stone-100")}>
                                 {item.status} ({item.lifecycle})
                             </Text>
                         </View>
                     </View>
 
                     {/* Metrics Grid */}
-                    <Text className="text-slate-900 dark:text-slate-100 text-lg font-bold mb-4">Economics</Text>
+                    <Text className="text-stone-900 dark:text-stone-100 text-lg font-sans-bold mb-4">Economics</Text>
                     <View className="flex-row flex-wrap justify-between -m-1">
                         <MetricBox
                             label="Selling Price"
@@ -126,17 +126,17 @@ export default function ItemDetail() {
                     </View>
 
                     {/* Store Count / Distribution */}
-                    <View className="mt-6 bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 flex-row justify-between items-center">
+                    <View className="mt-6 bg-white dark:bg-stone-800 p-5 rounded-xl border border-stone-200 dark:border-stone-700 flex-row justify-between items-center">
                         <View>
-                            <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold mb-1">Store Count</Text>
-                            <Text className="text-slate-900 dark:text-slate-100 text-2xl font-bold">{item.storeCount} Stores</Text>
+                            <Text className="text-stone-500 dark:text-stone-400 text-xs uppercase font-sans-bold mb-1">Store Count</Text>
+                            <Text className="text-stone-900 dark:text-stone-100 text-2xl font-sans-bold">{item.storeCount} Stores</Text>
                         </View>
-                        <View className="h-10 w-32 bg-slate-100 dark:bg-slate-700 rounded flex-row items-end pb-1 space-x-1 justify-center">
+                        <View className="h-10 w-32 bg-stone-100 dark:bg-stone-700 rounded flex-row items-end pb-1 space-x-1 justify-center">
                             {/* Mini Bar Chart Visual */}
-                            <View className="w-2 h-4 bg-slate-300 dark:bg-slate-600 rounded-sm" />
-                            <View className="w-2 h-6 bg-slate-400 dark:bg-slate-500 rounded-sm" />
+                            <View className="w-2 h-4 bg-stone-300 dark:bg-stone-600 rounded-sm" />
+                            <View className="w-2 h-6 bg-stone-400 dark:bg-stone-500 rounded-sm" />
                             <View className="w-2 h-8 bg-accent rounded-sm" />
-                            <View className="w-2 h-5 bg-slate-300 dark:bg-slate-600 rounded-sm" />
+                            <View className="w-2 h-5 bg-stone-300 dark:bg-stone-600 rounded-sm" />
                         </View>
                     </View>
 

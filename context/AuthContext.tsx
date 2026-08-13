@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -10,8 +9,6 @@ interface AuthContextType {
     loginWithGoogle: () => void;
     logout: () => void;
 }
-
-const AUTH_STORAGE_KEY = '@stratos_auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -25,38 +22,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userEmail, setUserEmail] = useState<string | null>(null);
     const [userName, setUserName] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    // Restore auth state on mount
-    useEffect(() => {
-        const restoreAuth = async () => {
-            try {
-                const stored = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
-                if (stored) {
-                    const { email, name } = JSON.parse(stored);
-                    setUserEmail(email);
-                    setUserName(name);
-                    setIsAuthenticated(true);
-                }
-            } catch (e) {
-                // Silently fail — user will just see login
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        restoreAuth();
-    }, []);
+    const [isLoading, setIsLoading] = useState(false);
 
     const login = async (email: string, _password: string) => {
         const name = extractName(email);
         setUserEmail(email);
         setUserName(name);
         setIsAuthenticated(true);
-        try {
-            await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ email, name }));
-        } catch (e) {
-            // Storage write failed — login still works in memory
-        }
     };
 
     const loginWithGoogle = async () => {
@@ -65,22 +37,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUserEmail(email);
         setUserName(name);
         setIsAuthenticated(true);
-        try {
-            await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ email, name }));
-        } catch (e) {
-            // Storage write failed
-        }
     };
 
     const logout = async () => {
         setUserEmail(null);
         setUserName(null);
         setIsAuthenticated(false);
-        try {
-            await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
-        } catch (e) {
-            // Storage removal failed
-        }
     };
 
     return (

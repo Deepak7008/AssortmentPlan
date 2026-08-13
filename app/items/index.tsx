@@ -10,29 +10,29 @@ import { useTheme } from '../../context/ThemeContext';
 const ItemCard = ({ item, onPress }: { item: AssortmentItem, onPress: () => void }) => (
     <TouchableOpacity
         onPress={onPress}
-        className="bg-white dark:bg-slate-800 mb-3 rounded-xl p-3 flex-row border border-slate-200 dark:border-slate-700"
+        className="bg-white dark:bg-stone-800 mb-3 rounded-xl p-3 flex-row border border-stone-200 dark:border-stone-700"
     >
         <Image
             source={{ uri: item.imageUrl }}
-            className="w-20 h-24 rounded-lg bg-slate-100 dark:bg-slate-700"
+            className="w-20 h-24 rounded-lg bg-stone-100 dark:bg-stone-700"
             resizeMode="cover"
         />
         <View className="flex-1 ml-3 justify-between py-1">
             <View>
                 <View className="flex-row justify-between items-start">
-                    <Text className="text-slate-900 dark:text-slate-100 font-bold text-base flex-1 mr-2" numberOfLines={2}>{item.name}</Text>
-                    <View className={clsx("px-2 py-1 rounded text-[10px]", item.status === 'Assorted' ? "bg-green-100 dark:bg-green-900/40" : "bg-slate-200 dark:bg-slate-700")}>
-                        <Text className={clsx("text-[10px] font-bold", item.status === 'Assorted' ? "text-green-700 dark:text-green-400" : "text-slate-500 dark:text-slate-400")}>
+                    <Text className="text-stone-900 dark:text-stone-100 font-sans-bold text-base flex-1 mr-2" numberOfLines={2}>{item.name}</Text>
+                    <View className={clsx("px-2 py-1 rounded text-[10px]", item.status === 'Assorted' ? "bg-green-100 dark:bg-green-900/40" : "bg-stone-200 dark:bg-stone-700")}>
+                        <Text className={clsx("text-[10px] font-sans-bold", item.status === 'Assorted' ? "text-green-700 dark:text-green-400" : "text-stone-500 dark:text-stone-400")}>
                             {item.status}
                         </Text>
                     </View>
                 </View>
-                <Text className="text-slate-500 dark:text-slate-400 text-xs mt-1">{item.className} • {item.country}</Text>
+                <Text className="text-stone-500 dark:text-stone-400 text-xs mt-1">{item.className} • {item.country}</Text>
             </View>
 
             <View className="flex-row justify-between items-end">
-                <Text className="text-slate-900 dark:text-slate-100 font-bold text-lg">${item.sellingPrice.toFixed(0)}</Text>
-                <Ionicons name="chevron-forward" color="#64748b" size={16} />
+                <Text className="text-stone-900 dark:text-stone-100 font-sans-bold text-lg">${item.sellingPrice.toFixed(0)}</Text>
+                <Ionicons name="chevron-forward" color="#A8A29E" size={16} />
             </View>
         </View>
     </TouchableOpacity>
@@ -79,7 +79,7 @@ export default function ItemList() {
     const classes = ['All', ...new Set(data.map(d => d.className))];
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <Stack.Screen options={{
                 title: "Assortment Items",
                 headerShown: true,
@@ -88,28 +88,28 @@ export default function ItemList() {
                 headerBackVisible: false
             }} />
 
-            <View className="p-4 border-b border-slate-200 dark:border-slate-800">
+            <View className="p-4 border-b border-stone-200 dark:border-stone-800">
                 {/* Search */}
-                <View className="bg-white dark:bg-slate-800 rounded-lg flex-row items-center px-3 h-10 mb-4 border border-slate-200 dark:border-slate-700">
+                <View className="bg-white dark:bg-stone-800 rounded-lg flex-row items-center px-3 h-10 mb-4 border border-stone-200 dark:border-stone-700">
                     <Ionicons name="search" size={18} color={colors.textSecondary} />
                     <TextInput
-                        className="flex-1 ml-2 text-slate-900 dark:text-slate-100"
+                        className="flex-1 ml-2 text-stone-900 dark:text-stone-100"
                         placeholder="Search items..."
-                        placeholderTextColor="#94a3b8"
+                        placeholderTextColor="#A8A29E"
                         value={search}
                         onChangeText={setSearch}
                     />
                 </View>
 
                 {/* Summary Header */}
-                <View className="flex-row justify-between bg-white dark:bg-slate-800 p-3 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
-                    <View className="items-center flex-1 border-r border-slate-200 dark:border-slate-700">
-                        <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold">Assorted</Text>
-                        <Text className="text-slate-900 dark:text-slate-100 text-2xl font-bold">{assortedCount}</Text>
+                <View className="flex-row justify-between bg-white dark:bg-stone-800 p-3 rounded-xl border border-dashed border-stone-200 dark:border-stone-700">
+                    <View className="items-center flex-1 border-r border-stone-200 dark:border-stone-700">
+                        <Text className="text-stone-500 dark:text-stone-400 text-xs uppercase font-sans-bold">Assorted</Text>
+                        <Text className="text-stone-900 dark:text-stone-100 text-2xl font-sans-bold">{assortedCount}</Text>
                     </View>
                     <View className="items-center flex-1">
-                        <Text className="text-slate-500 dark:text-slate-400 text-xs uppercase font-bold">Suggested</Text>
-                        <Text className="text-slate-900 dark:text-slate-100 text-2xl font-bold">{suggestedCount}</Text>
+                        <Text className="text-stone-500 dark:text-stone-400 text-xs uppercase font-sans-bold">Suggested</Text>
+                        <Text className="text-stone-900 dark:text-stone-100 text-2xl font-sans-bold">{suggestedCount}</Text>
                     </View>
                 </View>
 
@@ -124,10 +124,10 @@ export default function ItemList() {
                             onPress={() => setFilterClass(item)}
                             className={clsx(
                                 "px-4 py-2 rounded-full mr-2 border",
-                                filterClass === item ? "bg-accent border-accent" : "bg-transparent border-slate-300 dark:border-slate-600"
+                                filterClass === item ? "bg-accent border-accent" : "bg-transparent border-stone-300 dark:border-stone-600"
                             )}
                         >
-                            <Text className={clsx("font-medium", filterClass === item ? "text-slate-900 dark:text-slate-900" : "text-slate-600 dark:text-slate-300")}>
+                            <Text className={clsx("font-sans-medium", filterClass === item ? "text-stone-900 dark:text-stone-900" : "text-stone-600 dark:text-stone-300")}>
                                 {item}
                             </Text>
                         </TouchableOpacity>

@@ -20,7 +20,7 @@ interface ItemDetailsTableProps {
 const ACTION_STYLES: Record<string, { text: string; bg: string; border: string }> = {
     KEEP: { text: '#16a34a', bg: 'rgba(34, 197, 94, 0.12)', border: 'rgba(34, 197, 94, 0.4)' },
     EXIT: { text: '#dc2626', bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.4)' },
-    NEW: { text: '#0284c7', bg: 'rgba(14, 165, 233, 0.12)', border: 'rgba(14, 165, 233, 0.4)' },
+    NEW: { text: '#B45309', bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(217, 119, 6, 0.4)' },
 };
 
 interface ColumnSpec {
@@ -55,27 +55,27 @@ const Breakdown = ({ entry, weights }: { entry: RankedItem; weights: ExitWeights
 
     return (
         <View style={{ backgroundColor: colors.surfaceAlt, borderRadius: 12, padding: 12, marginTop: 8 }}>
-            <Text className="text-slate-600 dark:text-slate-300 text-[11px] font-bold uppercase tracking-wider mb-2">
+            <Text className="text-stone-600 dark:text-stone-300 text-[11px] font-sans-bold uppercase tracking-wider mb-2">
                 Exit Factor Breakdown
             </Text>
             {rows.map(row => (
                 <View key={row.label} className="flex-row items-center justify-between mb-1">
-                    <Text className="text-slate-700 dark:text-slate-200 text-xs font-medium flex-1">
+                    <Text className="text-stone-700 dark:text-stone-200 text-xs font-sans-medium flex-1">
                         {row.label}: {row.raw}{' '}
-                        <Text className="text-slate-500 dark:text-slate-400">
+                        <Text className="text-stone-500 dark:text-stone-400">
                             (class avg {row.avg})
                         </Text>
                     </Text>
-                    <Text className="text-slate-900 dark:text-slate-100 text-xs font-bold tabular-nums">
+                    <Text className="text-stone-900 dark:text-stone-100 text-xs font-sans-bold tabular-nums">
                         {row.score.toFixed(2)} × {row.weight}% = {(row.score * row.weight / 100).toFixed(3)}
                     </Text>
                 </View>
             ))}
-            <View className="flex-row items-center justify-between mt-2 pt-2 border-t border-slate-200 dark:border-slate-700/60">
-                <Text className="text-slate-700 dark:text-slate-200 text-xs font-bold">
+            <View className="flex-row items-center justify-between mt-2 pt-2 border-t border-stone-200 dark:border-stone-700/60">
+                <Text className="text-stone-700 dark:text-stone-200 text-xs font-sans-bold">
                     Exit Factor
                 </Text>
-                <Text className="text-sky-600 dark:text-sky-400 text-xs font-extrabold tabular-nums">
+                <Text className="text-amber-700 dark:text-amber-400 text-xs font-sans-extrabold tabular-nums">
                     {fmtFactor(entry.exitFactor)}
                 </Text>
             </View>
@@ -85,7 +85,7 @@ const Breakdown = ({ entry, weights }: { entry: RankedItem; weights: ExitWeights
 
 const ActionChip = ({ entry, hasResult }: { entry: RankedItem; hasResult: boolean }) => {
     if (!hasResult) {
-        return <Text className="text-slate-400 dark:text-slate-500 text-[11px] font-bold">—</Text>;
+        return <Text className="text-stone-400 dark:text-stone-500 text-[11px] font-sans-bold">—</Text>;
     }
     const sc = ACTION_STYLES[entry.action];
     return (
@@ -98,7 +98,7 @@ const ActionChip = ({ entry, hasResult }: { entry: RankedItem; hasResult: boolea
             paddingVertical: 2,
             alignSelf: 'flex-end',
         }}>
-            <Text style={{ color: sc.text, fontSize: 9, fontWeight: '800' }}>{entry.action}</Text>
+            <Text style={{ color: sc.text, fontSize: 9, fontFamily: 'Inter_800ExtraBold' }}>{entry.action}</Text>
         </View>
     );
 };
@@ -144,7 +144,7 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
         <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => setOpenRank(openRank === entry.rank ? null : entry.rank)}
-            className="flex-row px-3 py-2.5 items-center border-b border-slate-100 dark:border-slate-800/60"
+            className="flex-row px-3 py-2.5 items-center border-b border-stone-100 dark:border-stone-800/60"
         >
             {COLUMNS.map(col => (
                 <View key={col.key} style={{ flex: col.flex }} className={clsx(col.align === 'right' && "items-end")}>
@@ -156,10 +156,10 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
                             className={clsx(
                                 "text-[11px] tabular-nums",
                                 col.key === 'name'
-                                    ? "text-slate-900 dark:text-slate-100 font-semibold"
+                                    ? "text-stone-900 dark:text-stone-100 font-sans-semibold"
                                     : col.key === 'factor'
-                                        ? "text-slate-900 dark:text-white font-bold"
-                                        : "text-slate-700 dark:text-slate-200 font-medium",
+                                        ? "text-stone-900 dark:text-white font-sans-bold"
+                                        : "text-stone-700 dark:text-stone-200 font-sans-medium",
                                 col.align === 'right' && "text-right"
                             )}
                         >
@@ -184,12 +184,12 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
 
     const renderTable = (minWidth: number | undefined, breakdownInline: boolean, truncateName: boolean) => (
         <View style={minWidth ? { minWidth } : undefined}>
-            <View className="flex-row px-3 py-2 bg-slate-100 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
+            <View className="flex-row px-3 py-2 bg-stone-100 dark:bg-stone-800/60 border-b border-stone-200 dark:border-stone-700">
                 {COLUMNS.map(col => (
                     <Text
                         key={col.key}
                         className={clsx(
-                            "text-slate-500 dark:text-slate-400 text-[9px] font-bold uppercase tracking-wider",
+                            "text-stone-500 dark:text-stone-400 text-[9px] font-sans-bold uppercase tracking-wider",
                             col.align === 'right' && "text-right"
                         )}
                         style={{ flex: col.flex }}
@@ -206,18 +206,18 @@ export const ItemDetailsTable = ({ items, result, weights, expanded, onToggle }:
         <GradientCard className="p-4 overflow-hidden">
             <TouchableOpacity onPress={onToggle} activeOpacity={0.7} className="flex-row items-center justify-between">
                 <View className="flex-1">
-                    <Text className="text-slate-900 dark:text-white text-sm font-bold">
+                    <Text className="text-stone-900 dark:text-white text-sm font-sans-bold">
                         Item Level Details
                     </Text>
-                    <Text className="text-slate-600 dark:text-slate-300 text-xs mt-0.5">
+                    <Text className="text-stone-600 dark:text-stone-300 text-xs mt-0.5">
                         {summary}
                     </Text>
                 </View>
                 <View className="flex-row items-center">
-                    <Text className="text-sky-600 dark:text-sky-400 text-xs font-bold mr-1">
+                    <Text className="text-amber-700 dark:text-amber-400 text-xs font-sans-bold mr-1">
                         {expanded ? 'Hide Details' : 'Show Details'}
                     </Text>
-                    <Text className="text-sky-600 dark:text-sky-400 text-xs font-bold">
+                    <Text className="text-amber-700 dark:text-amber-400 text-xs font-sans-bold">
                         {expanded ? '▲' : '▼'}
                     </Text>
                 </View>

@@ -6,9 +6,9 @@ import { useTheme } from '../context/ThemeContext';
 
 const STATUS_COLORS: Record<DeadlineStatus, { bg: string; border: string; text: string; label: string }> = {
     green: { bg: '#22c55e20', border: '#22c55e', text: '#16a34a', label: 'On Track' },
-    orange: { bg: '#f59e0b20', border: '#f59e0b', text: '#d97706', label: 'Due Soon' },
+    orange: { bg: '#f59e0b20', border: '#f59e0b', text: '#B45309', label: 'Due Soon' },
     red: { bg: '#ef444420', border: '#ef4444', text: '#dc2626', label: 'Overdue' },
-    na: { bg: 'transparent', border: '#64748b', text: '#64748b', label: 'No Date' },
+    na: { bg: 'transparent', border: '#A8A29E', text: '#A8A29E', label: 'No Date' },
 };
 
 const RISK_ORDER: Record<DeadlineStatus, number> = { red: 0, orange: 1, green: 2, na: 3 };
@@ -44,15 +44,15 @@ const ProgressBarMini = ({ value }: { value: number }) => {
     const clampedValue = Math.min(100, Math.max(0, value));
     return (
         <View className="flex-1 mr-3">
-            <View className="h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+            <View className="h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
                 <LinearGradient
-                    colors={['#0ea5e9', '#a855f7']}
+                    colors={['#F59E0B', '#D97706']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={{ width: `${clampedValue}%`, height: '100%', borderRadius: 3 }}
                 />
             </View>
-            <Text className="text-slate-900 dark:text-slate-100 text-[10px] font-bold mt-1">
+            <Text className="text-stone-900 dark:text-stone-100 text-[10px] font-sans-bold mt-1" style={{ fontVariant: ['tabular-nums'] }}>
                 {clampedValue}%
             </Text>
         </View>
@@ -83,10 +83,10 @@ const StatusCell = ({ row, currentDate }: { row: PlannerRow; currentDate: Date }
                         elevation: 3,
                     }}
                 />
-                <Text style={{ color: sc.text, fontSize: 11, fontWeight: '700' }}>{sc.label}</Text>
+                <Text style={{ color: sc.text, fontSize: 11, fontFamily: 'Inter_700Bold' }}>{sc.label}</Text>
             </View>
             {formatted !== '' && (
-                <Text className="text-slate-400 dark:text-slate-500 text-[9px] font-medium">
+                <Text className="text-stone-400 dark:text-stone-500 text-[9px] font-sans-medium">
                     {formatted}
                 </Text>
             )}
@@ -105,7 +105,7 @@ export const PlannerProgressTable = ({ data, currentDate, onRowPress }: PlannerP
     const headerStyle = {
         color: colors.textSecondary,
         fontSize: 9 as number,
-        fontWeight: '700' as const,
+        fontFamily: 'Inter_700Bold' as const,
         textTransform: 'uppercase' as const,
         letterSpacing: 1,
     };
@@ -124,12 +124,12 @@ export const PlannerProgressTable = ({ data, currentDate, onRowPress }: PlannerP
             borderColor: colors.border,
         }}>
             <LinearGradient
-                colors={isDark ? ['rgba(30, 41, 59, 0.9)', 'rgba(15, 23, 42, 0.9)'] : ['rgba(255, 255, 255, 0.98)', 'rgba(241, 245, 249, 0.96)']}
+                colors={isDark ? ['rgba(41, 37, 36, 0.95)', 'rgba(41, 37, 36, 0.9)'] : ['rgba(255, 255, 255, 0.98)', 'rgba(245, 245, 244, 0.96)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
             >
                 <LinearGradient
-                    colors={['rgba(14, 165, 233, 0.06)', 'rgba(168, 85, 247, 0.05)']}
+                    colors={['rgba(245, 158, 11, 0.06)', 'rgba(217, 119, 6, 0.05)']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={{
@@ -170,18 +170,18 @@ export const PlannerProgressTable = ({ data, currentDate, onRowPress }: PlannerP
                                 paddingVertical: 14,
                                 paddingHorizontal: 16,
                                 alignItems: 'center',
-                                backgroundColor: isEven ? 'rgba(148, 163, 184, 0.12)' : 'transparent',
+                                backgroundColor: isEven ? 'rgba(120, 113, 108, 0.12)' : 'transparent',
                                 borderBottomWidth: 1,
                                 borderBottomColor: colors.border,
                             }}
                         >
                             <View style={{ width: 90 }}>
-                                <Text style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600' }}>
+                                <Text style={{ color: colors.textPrimary, fontSize: 12, fontFamily: 'Inter_600SemiBold' }}>
                                     {shortName}
                                 </Text>
                             </View>
                             <View style={{ width: 100 }}>
-                                <Text style={{ color: colors.textSecondary, fontSize: 11, fontWeight: '500' }} numberOfLines={1}>
+                                <Text style={{ color: colors.textSecondary, fontSize: 11, fontFamily: 'Inter_500Medium' }} numberOfLines={1}>
                                     {row.class}, {row.country}
                                 </Text>
                             </View>

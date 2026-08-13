@@ -40,7 +40,7 @@ export default function LoginScreen() {
     };
 
     return (
-        <View className="flex-1 bg-slate-50 dark:bg-slate-950">
+        <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
             <SafeAreaView edges={['top', 'bottom']} className="flex-1">
                 <View className="flex-row justify-end px-5 pt-4">
@@ -63,23 +63,23 @@ export default function LoginScreen() {
                                     style={{ width: 100, height: 100, borderRadius: 50 }}
                                     resizeMode="cover"
                                 />
-                                <Text className="text-slate-900 dark:text-white text-3xl font-bold mb-2">
+                                <Text className="text-stone-900 dark:text-stone-100 text-4xl font-display mb-2">
                                     Stratos
                                 </Text>
-                                <Text className="text-slate-500 dark:text-slate-400 text-sm text-center">
+                                <Text className="text-stone-500 dark:text-stone-400 text-sm text-center">
                                     Strategic Oversight for the Retail Frontier
                                 </Text>
                             </View>
 
                             <View className="mb-8">
                                 <View className="mb-4">
-                                    <Text className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 ml-1">
+                                    <Text className="text-stone-600 dark:text-stone-400 text-xs font-sans-bold uppercase tracking-wider mb-2 ml-1">
                                         Email
                                     </Text>
                                     <View
                                         className={`flex-row items-center rounded-xl px-4 h-14 border ${emailFocused
-                                            ? 'bg-white border-sky-500/60 dark:bg-slate-800 dark:border-sky-500/50'
-                                            : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
+                                            ? 'bg-white border-amber-600/60 dark:bg-stone-800 dark:border-amber-600/50'
+                                            : 'bg-white border-stone-200 dark:bg-stone-800 dark:border-stone-700'
                                             }`}
                                     >
                                         <Ionicons
@@ -88,9 +88,9 @@ export default function LoginScreen() {
                                             color={emailFocused ? colors.accent : colors.textSecondary}
                                         />
                                         <TextInput
-                                            className="flex-1 ml-3 text-slate-900 dark:text-white text-base"
+                                            className="flex-1 ml-3 text-stone-900 dark:text-white text-base"
                                             placeholder="Enter your email"
-                                            placeholderTextColor={isDark ? '#475569' : '#94a3b8'}
+                                            placeholderTextColor={isDark ? '#57534E' : '#A8A29E'}
                                             value={email}
                                             onChangeText={setEmail}
                                             onFocus={() => setEmailFocused(true)}
@@ -103,13 +103,13 @@ export default function LoginScreen() {
                                 </View>
 
                                 <View className="mb-2">
-                                    <Text className="text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 ml-1">
+                                    <Text className="text-stone-600 dark:text-stone-400 text-xs font-sans-bold uppercase tracking-wider mb-2 ml-1">
                                         Password
                                     </Text>
                                     <View
                                         className={`flex-row items-center rounded-xl px-4 h-14 border ${passwordFocused
-                                            ? 'bg-white border-sky-500/60 dark:bg-slate-800 dark:border-sky-500/50'
-                                            : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-slate-700'
+                                            ? 'bg-white border-amber-600/60 dark:bg-stone-800 dark:border-amber-600/50'
+                                            : 'bg-white border-stone-200 dark:bg-stone-800 dark:border-stone-700'
                                             }`}
                                     >
                                         <Ionicons
@@ -118,9 +118,9 @@ export default function LoginScreen() {
                                             color={passwordFocused ? colors.accent : colors.textSecondary}
                                         />
                                         <TextInput
-                                            className="flex-1 ml-3 text-slate-900 dark:text-white text-base"
+                                            className="flex-1 ml-3 text-stone-900 dark:text-white text-base"
                                             placeholder="Enter your password"
-                                            placeholderTextColor={isDark ? '#475569' : '#94a3b8'}
+                                            placeholderTextColor={isDark ? '#57534E' : '#A8A29E'}
                                             value={password}
                                             onChangeText={setPassword}
                                             onFocus={() => setPasswordFocused(true)}
@@ -142,7 +142,7 @@ export default function LoginScreen() {
                                 </View>
 
                                 <TouchableOpacity className="self-end mt-1 mb-6">
-                                    <Text className="text-sky-600 dark:text-sky-400 text-xs font-semibold">
+                                    <Text className="text-amber-700 dark:text-amber-400 text-xs font-sans-semibold">
                                         Forgot Password?
                                     </Text>
                                 </TouchableOpacity>
@@ -153,29 +153,29 @@ export default function LoginScreen() {
                                     className="rounded-xl overflow-hidden mb-5"
                                 >
                                     <LinearGradient
-                                        colors={['#0284c7', '#38bdf8']}
+                                        colors={['#D97706', '#F59E0B']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
                                         className="h-14 items-center justify-center rounded-xl"
                                     >
-                                        <Text className="text-white text-base font-bold tracking-wide">
+                                        <Text className="text-stone-900 text-base font-sans-bold tracking-wide">
                                             Sign In
                                         </Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
 
                                 <View className="flex-row items-center mb-5">
-                                    <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-700" />
-                                    <Text className="text-slate-500 dark:text-slate-400 text-xs mx-4 font-medium">
+                                    <View className="flex-1 h-[1px] bg-stone-200 dark:bg-stone-700" />
+                                    <Text className="text-stone-500 dark:text-stone-400 text-xs mx-4 font-sans-medium">
                                         OR
                                     </Text>
-                                    <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-700" />
+                                    <View className="flex-1 h-[1px] bg-stone-200 dark:bg-stone-700" />
                                 </View>
 
                                 <TouchableOpacity
                                     onPress={loginWithGoogle}
                                     activeOpacity={0.8}
-                                    className="flex-row items-center justify-center h-14 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-700"
+                                    className="flex-row items-center justify-center h-14 rounded-xl bg-white border border-stone-200 dark:bg-stone-800 dark:border-stone-700"
                                 >
                                     <View className="w-5 h-5 mr-3 items-center justify-center">
                                         <Image
@@ -184,7 +184,7 @@ export default function LoginScreen() {
                                             resizeMode="contain"
                                         />
                                     </View>
-                                    <Text className="text-slate-800 dark:text-white text-sm font-semibold">
+                                    <Text className="text-stone-800 dark:text-white text-sm font-sans-semibold">
                                         Continue with Google
                                     </Text>
                                 </TouchableOpacity>

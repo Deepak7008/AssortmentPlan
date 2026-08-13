@@ -30,7 +30,7 @@ export const NumberField = ({
     return (
         <View>
             <View className="flex-row items-center mb-1">
-                <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider">
+                <Text className="text-stone-500 dark:text-stone-400 text-[10px] uppercase font-sans-bold tracking-wider">
                     {label}
                 </Text>
                 {hint && (
@@ -59,26 +59,26 @@ export const NumberField = ({
                     paddingVertical: 6,
                 }}
             >
-                {prefix && <Text className="text-slate-500 dark:text-slate-400 text-sm font-semibold mr-1">{prefix}</Text>}
+                {prefix && <Text className="text-stone-500 dark:text-stone-400 text-sm font-sans-semibold mr-1">{prefix}</Text>}
                 <TextInput
                     value={value}
                     onChangeText={onChangeText}
                     keyboardType={keyboardType}
-                    className="flex-1 text-slate-900 dark:text-white text-sm font-bold py-0"
+                    className="flex-1 text-stone-900 dark:text-white text-sm font-sans-bold py-0"
                     style={{ outlineStyle: 'none' as any }}
                     placeholderTextColor={colors.textMuted}
                 />
-                {suffix && <Text className="text-slate-500 dark:text-slate-400 text-sm font-semibold ml-1">{suffix}</Text>}
+                {suffix && <Text className="text-stone-500 dark:text-stone-400 text-sm font-sans-semibold ml-1">{suffix}</Text>}
             </View>
 
             {baseText && (
-                <Text className="text-slate-600 dark:text-slate-300 text-xs font-medium mt-1.5">
+                <Text className="text-stone-600 dark:text-stone-300 text-xs font-sans-medium mt-1.5">
                     {baseText}
                 </Text>
             )}
 
             {showHint && hint && (
-                <Text className="text-slate-600 dark:text-slate-300 text-xs leading-4 mt-1.5">
+                <Text className="text-stone-600 dark:text-stone-300 text-xs leading-4 mt-1.5">
                     {hint}
                 </Text>
             )}

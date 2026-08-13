@@ -17,7 +17,7 @@ export const WeightSlider = ({ label, value, onChange }: WeightSliderProps) => {
     return (
         <View className="flex-1 mb-4 md:mb-0 md:px-3">
             <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider">
+                <Text className="text-stone-500 dark:text-stone-400 text-[10px] uppercase font-sans-bold tracking-wider">
                     {label}
                 </Text>
                 <View className="flex-row items-center">
@@ -28,10 +28,10 @@ export const WeightSlider = ({ label, value, onChange }: WeightSliderProps) => {
                             if (!isNaN(parsed)) onChange(clamp(parsed));
                         }}
                         keyboardType="numeric"
-                        className="text-slate-900 dark:text-white text-xs font-bold"
+                        className="text-stone-900 dark:text-white text-xs font-sans-bold"
                         style={{ width: 36, textAlign: 'right', outlineStyle: 'none' as any }}
                     />
-                    <Text className="text-slate-400 dark:text-slate-500 text-xs font-semibold ml-0.5">%</Text>
+                    <Text className="text-stone-400 dark:text-stone-500 text-xs font-sans-semibold ml-0.5">%</Text>
                 </View>
             </View>
             <Slider

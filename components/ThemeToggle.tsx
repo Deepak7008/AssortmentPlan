@@ -9,12 +9,13 @@ export const ThemeToggle = () => {
     return (
         <TouchableOpacity
             onPress={toggleTheme}
-            className="flex-row items-center bg-white dark:bg-slate-800 w-9 h-9 justify-center rounded-lg border border-slate-200 dark:border-slate-700 mr-2"
+            accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="flex-row items-center bg-white dark:bg-stone-800 w-9 h-9 justify-center rounded-lg border border-stone-200 dark:border-stone-700 mr-2"
         >
             <Ionicons
                 name={isDark ? "sunny-outline" : "moon-outline"}
                 size={18}
-                color={isDark ? "#38bdf8" : "#64748b"}
+                color={isDark ? "#FBBF24" : "#A8A29E"}
             />
         </TouchableOpacity>
     );
