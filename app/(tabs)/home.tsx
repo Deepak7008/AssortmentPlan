@@ -140,7 +140,6 @@ export default function HomeScreen() {
         <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
             <SafeAreaView edges={['top']} className="flex-1">
-                <AppHeader onUpload={handleMultiUpload} />
 
                 <ScrollView
                     ref={scrollRef}
@@ -159,6 +158,7 @@ export default function HomeScreen() {
                         />
                     }
                 >
+                    <AppHeader onUpload={handleMultiUpload} />
                     <FilterBar
                         categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
                         classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}

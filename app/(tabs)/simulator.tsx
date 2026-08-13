@@ -16,6 +16,7 @@ import {
     SimulationResult, ExitWeights,
 } from '../../services/simulationService';
 import { SectionHeader } from '../../components/SectionHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 export default function SimulatorScreen() {
     const { isDark } = useTheme();
@@ -125,42 +126,40 @@ export default function SimulatorScreen() {
                 >
                     <View className="w-full px-4">
                         {/* Page header */}
-                        <View className="flex-row items-center justify-between pt-4">
-                            <View className="flex-1 pr-4">
-                                <Text className="text-stone-900 dark:text-stone-100 text-3xl font-display">
-                                    Assortment Simulator
-                                </Text>
-                                <Text className="text-stone-600 dark:text-stone-300 text-xs mt-1 leading-4">
-                                    Evaluate the impact of assortment depth and pricing decisions on Units, Sales, Margin, and Sell Through.
-                                </Text>
-                            </View>
-                            <View className="items-end">
-                                <View className="flex-row items-center">
-                                    <DocsButton />
-                                    <TouchableOpacity
-                                        onPress={handleRun}
-                                        disabled={!canRun}
-                                        activeOpacity={0.85}
-                                    >
-                                        <LinearGradient
-                                            colors={canRun ? ['#D97706', '#F59E0B'] : ['#A8A29E', '#D6D3D1']}
-                                            start={{ x: 0, y: 0 }}
-                                            end={{ x: 1, y: 0 }}
-                                            className="px-5 py-2.5 rounded-xl"
-                                            style={{ opacity: canRun ? 1 : 0.6 }}
-                                        >
-                                            <Text className="text-stone-900 text-sm font-sans-bold">
-                                                {result ? 'Simulation Updated' : 'Run Simulation'}
+                        <View className="pt-4">
+                            <PageHeader
+                                title="Assortment Simulator"
+                                subtitle="Evaluate the impact of assortment depth and pricing decisions on Units, Sales, Margin, and Sell Through."
+                                actions={
+                                    <View className="items-end">
+                                        <View className="flex-row items-center">
+                                            <DocsButton />
+                                            <TouchableOpacity
+                                                onPress={handleRun}
+                                                disabled={!canRun}
+                                                activeOpacity={0.85}
+                                            >
+                                                <LinearGradient
+                                                    colors={canRun ? ['#D97706', '#F59E0B'] : ['#A8A29E', '#D6D3D1']}
+                                                    start={{ x: 0, y: 0 }}
+                                                    end={{ x: 1, y: 0 }}
+                                                    className="px-5 py-2.5 rounded-xl"
+                                                    style={{ opacity: canRun ? 1 : 0.6 }}
+                                                >
+                                                    <Text className="text-stone-900 text-sm font-sans-bold">
+                                                        {result ? 'Simulation Updated' : 'Run Simulation'}
+                                                    </Text>
+                                                </LinearGradient>
+                                            </TouchableOpacity>
+                                        </View>
+                                        {lastRunAt && (
+                                            <Text className="text-stone-500 dark:text-stone-400 text-[10px] mt-1.5 font-sans-medium">
+                                                Last simulated: {lastRunAt}
                                             </Text>
-                                        </LinearGradient>
-                                    </TouchableOpacity>
-                                </View>
-                                {lastRunAt && (
-                                    <Text className="text-stone-500 dark:text-stone-400 text-[10px] mt-1.5 font-sans-medium">
-                                        Last simulated: {lastRunAt}
-                                    </Text>
-                                )}
-                            </View>
+                                        )}
+                                    </View>
+                                }
+                            />
                         </View>
 
                         {error && (

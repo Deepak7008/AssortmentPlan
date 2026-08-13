@@ -171,7 +171,6 @@ export default function ItemsScreen() {
     return (
         <View className="flex-1 bg-stone-50 dark:bg-stone-900">
             <SafeAreaView edges={['top']} className="flex-1">
-                <AppHeader onUpload={handleMultiUpload} />
 
         <ScrollView ref={scrollRef} className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}
                     onScroll={onScroll}
@@ -186,6 +185,7 @@ export default function ItemsScreen() {
                         />
                     }
                 >
+                    <AppHeader onUpload={handleMultiUpload} />
                     <FilterBar
                         categories={categories} selectedCategory={selectedCategory} setSelectedCategory={handleCategoryChange}
                         classes={classes} selectedClass={selectedClass} setSelectedClass={setSelectedClass}
